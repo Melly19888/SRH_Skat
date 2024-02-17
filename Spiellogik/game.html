@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skat Spiel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+  <h1 id="skat">Skat Spiel</h1>
+  <canvas id="canvas" width="1920" height="1080"></canvas>
+  <canvas id="canvasSecondary" width="750" height="1334"></canvas>
+    <button id="showCards">Spielstarten</button>
+   <button id="confirmGameBtn" style="display: none;">OK</button>
+    <section id="RFBtn">
+      <h2 id="Reihenfolge">Reihenfolge</h2>
+      <button class="Reihenfolge1" id="karo"> Karo </button>
+      <button class="Reihenfolge1" id="herz"> Herz </button>
+      <button class="Reihenfolge1" id="pik"> Pik </button>
+      <button class="Reihenfolge1" id="kreuz"> Kreuz </button>
+    </section>
+    <section id="RFBtn">
+      <button class="Reihenfolge2" id="grand"> Grand </button>
+      <button class="Reihenfolge2" id="null"> Null </button>
+      <button class="Reihenfolge2" id="nullover"> Nullover </button>  
+    </section>
+  <div class="playerNames">
+    <input type="text" id="player1Name" placeholder="Spieler 1">
+    <input type="text" id="player2Name" placeholder="Spieler 2">
+    <input type="text" id="player3Name" placeholder="Spieler 3">
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
