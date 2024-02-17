@@ -3,7 +3,7 @@ const canvas = document.getElementById('canvas');
 const canvasSecondary = document.getElementById('canvasSecondary');
 const ctx = canvas.getContext('2d');
 const ctxSecondary = canvasSecondary.getContext('2d');
-
+ let textToShow = "";
 // Button zum Anzeigen der Karten
 const showCardsBtn = document.getElementById('showCards');
 
@@ -57,6 +57,12 @@ const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif
  'img/card25.gif', 'img/card26.gif', 'img/card27.gif',' img/card28.gif',' img/card29.gif',
 ' img/card30.gif', ' img/card31.gif',' img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
 
+// Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
+function extractCardNumber(card) {
+    return parseInt(card.match(/\d+/)[0]);
+}
+
+// Funktion zum Mischen des Arrays
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -64,6 +70,9 @@ function shuffle(array) {
     }
 }
 
+
+
+// Mische die sortierten Karten
 shuffle(cards);
 
 // Karten für jeden Spieler erstellen
@@ -72,8 +81,14 @@ let player2Cards = cards.slice(10, 20);
 let player3Cards = cards.slice(20, 30);
 let player4Cards = cards.slice(30, 32);
 
+// Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
+player1Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player2Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player3Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+
 // Reizwerte definieren
 const reizZahlen = [18, 20, 22, 24];
+
 
 // Funktion zum Zeichnen einer Karte auf dem Canvas
 function drawCard(x, y, card) {
@@ -139,16 +154,18 @@ function showPlayerRoles() {
     const lineHeight = 60;
     const textOffset = lineHeight / 2;
 
+	let Aray ="";
+	
     for (let i = 0; i < rolesArray.length; i++) {
         switch (rolesArray[i]) {
             case "Vorhand":
-                ctxSecondary.fillText(`${player3Name}: Vorhand`, canvasWidth/2, lineHeight*(i*2+1) + textOffset);
+              ctxSecondary.fillText(`${player3Name}: Vorhand`, canvasWidth/2, lineHeight*(i*2+1) + textOffset);
                 break;
             case "Mittelhand":
-                ctxSecondary.fillText(`${player1Name}: Mittelhand`, canvasWidth/2, lineHeight*(i*2+1) + textOffset);
+              ctxSecondary.fillText(`${player1Name}: Mittelhand`, canvasWidth/2, lineHeight*(i*2+1) + textOffset);
                 break;
             case "Hinterhand":
-                ctxSecondary.fillText(`${player2Name}: Hinterhand`, canvasWidth/2, lineHeight*(i*2+1) + textOffset);
+              ctxSecondary.fillText(`${player2Name}: Hinterhand`, canvasWidth/2, lineHeight*(i*2+1) + textOffset);
                 break;
             default:
                 break;
@@ -185,47 +202,55 @@ function showPlayerRoles() {
         loadCustomCard();
     }
 }
-
+ 
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function(){
-    switch(currentPlayer){ case "Dummie":
-            resetGame();
-            currentPlayer = "Vorhand";
-            break;		
+    switch(currentPlayer){ 
+			
         case "Vorhand":
+			 textToShow = `${player3Name} du bist dran`;
             loadPlayerCards(player1Cards);
             currentPlayer = "Dummy";
             break;
         case "Dummy":
             resetGame();
+			 textToShow = `${player1Name} du bist dran`;
             currentPlayer = "Mittelhand";
             break;
         case "Mittelhand":
             loadPlayerCards(player2Cards);
+			ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height);
             currentPlayer = "Dumm";
             break;
         case "Dumm":
             resetGame();
+			  textToShow = `${player2Name} du bist dran`;
             currentPlayer = "Hinterhand";
             break;
         case "Hinterhand":
             loadPlayerCards(player3Cards);
+			ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height);
             currentPlayer = "Dum";
             break;
         case "Dum":
             resetGame();
             currentPlayer = "Skat";
+			ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height);
             break;
         case "Skat":
             loadPlayerCards(player4Cards);
             currentPlayer = "Meiste gereizt";
             break; 
     }
+	 ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
+    ctxSecondary.fillStyle="red";
+    ctxSecondary.font="bold 60px Arial";
+    ctxSecondary.fillText(textToShow, canvasSecondary.width/2 ,canvasSecondary.height/2);
 });
 
 function resetGame() {
     let lineHeight = 60; // Deklaration von lineHeight innerhalb der Funktion
-    ctx.clearRect(0,0,canvas.width,canvas.height); // Altes Canvas löschen
+   
 
     loadCustomCard();
 
@@ -245,27 +270,6 @@ function resetGame() {
         default:
             break;
     }
-
-    // Den Text im neuen Canvas anzeigen
-    let textToShow = "";
-    switch(currentPlayer) {
-        case "Vorhand":
-            textToShow = `${player3Name} du bist dran`;
-            break;
-        case "Mittelhand":
-            textToShow = `${player1Name} du bist dran`;
-            break;
-        case "Hinterhand":
-            textToShow = `${player2Name} du bist dran`;
-            break;
-        default:
-            break;
-    }
-
-    ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
-    ctxSecondary.fillStyle="red";
-    ctxSecondary.font="bold 60px Arial";
-    ctxSecondary.fillText(textToShow, canvasSecondary.width/2 ,canvasSecondary.height/2);
 
     showPlayerRoles(); // Die Spielerrollen erneut anzeigen, um den Namen zu aktualisieren
 }
