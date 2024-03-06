@@ -10,7 +10,8 @@ const ctxthirdCanvas = thirdCanvas.getContext('2d');
 let textToShow = "";
 let currentBidderIndex = 0;
  // Deklarieren Sie highestBidder im globalen Scope
-let highestBidder = { name: "", bid: 0 };
+let highestBidder = { id: -1, name: "", bid: 0, stich: []};
+let gegenspieler ={stich:[]};
 // Button zum Anzeigen der Karten
 const showCardsBtn = document.getElementById('showCards');
 
@@ -128,7 +129,7 @@ let player2Cards = cards.slice(10, 20);
 let player3Cards = cards.slice(20, 30);
 let player4Cards = cards.slice(30, 32);
 
-console.log(player1Cards, player2Cards, player3Cards);
+console.log(player1Cards, player2Cards, player3Cards, player4Cards);
 
 
 // Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
@@ -179,9 +180,7 @@ function loadPlayerCards(playerCards) {
             // Karte zeichnen
             drawCard(posX, posY, card);
         });
-    } else {
-        console.error('loadPlayerCards wurde mit einem ungültigen Argument aufgerufen:', playerCards);
-    }
+    } 
 }
 // Funktion zum Laden der benutzerdefinierten Karten
 function loadCustomCard() {
@@ -541,7 +540,24 @@ player3Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 });
 }    
 
+// Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
+function clearMiddleCards() {
+	    console.log("clearMiddleCards called"); // Zum Debuggen hinzugefügt
 
+    const ctxSpielfeld = spielfeld.getContext('2d');
+
+    // Angenommen, die Karten von Player4 befinden sich in der Mitte des Canvas,
+    // dann löschen wir diesen Bereich.
+    const middleCardX1 = spielfeld.width / 2 - cardWidth / 2;
+    const middleCardY = spielfeld.height / 2 - cardHeight / 2;
+    const middleCardX2 = middleCardX1 + cardWidth - 10; // Position der zweiten Karte
+
+    // Lösche den Bereich für die erste Karte
+    ctxSpielfeld.clearRect(middleCardX1, middleCardY, cardWidth, cardHeight);
+
+    // Lösche den Bereich für die zweite Karte (wenn vorhanden)
+    ctxSpielfeld.clearRect(middleCardX2, middleCardY, cardWidth, cardHeight);
+}
 
 
 // Event Listener für den Button "confirmGameBtn"
@@ -600,7 +616,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
           
             
         default:
-            console.error('Unbekannter currentPlayer:', currentPlayer);
+           
             break;
     }
 
@@ -672,6 +688,8 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
     } else if (selectedReizValue > highestBidder.bid) {
         highestBidder.bid = selectedReizValue;
         highestBidder.name = getPlayerName(currentBidderIndex);
+		highestBidder.id = currentBidderIndex;
+		console.log("Höchstbietende"+currentBidderIndex);
         displayBidValueOnThirdCanvas(selectedReizValue);
         passCount = 0; // Setze den Pass-Zähler zurück, da ein gültiges Gebot abgegeben wurde
     }
@@ -756,7 +774,12 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
 document.getElementById("handBtn").addEventListener("click", function() {
     // Setze isHandGame auf true, da Hand gespielt wird
     isHandGame = true;
-
+	highestBidder.stich.push(...player4Cards);
+	console.log(highestBidder);
+	
+	player4Cards = [];
+	
+	
     // Verstecke den handBtn
     this.style.display = 'none';
 
@@ -782,8 +805,30 @@ document.getElementById("handBtn").addEventListener("click", function() {
 
 // Event Listener für den Button "aufnehmenBtn"
 document.getElementById("aufnehmenBtn").addEventListener("click", function() {
-    // Zeige player4Cards an
+	
+	// Zeige player4Cards an
     loadPlayerCards(player4Cards);
+	
+	console.log(highestBidder);
+	switch (highestBidder.id ) {
+		case 0:
+			player1Cards.push(...player4Cards);
+			break
+		case 1:
+			player2Cards.push(...player4Cards);
+			break
+		case 2:
+			player3Cards.push(...player4Cards);
+			break
+	}
+	 // Leere das Array player4Cards und lösche die Karten aus der Mitte des Canvas
+    player4Cards = [];
+  
+	
+	console.log(player1Cards, player2Cards, player3Cards);
+	
+	
+	
 
 
     // Optional: Verstecke den aufnehmenBtn nach dem Aufnehmen der Karten
@@ -815,7 +860,7 @@ const confirmGameBtn = document.getElementById("confirmGameBtn");
 
 confirmGameBtn.addEventListener("click", function() {
 	
-	
+	  clearMiddleCards();
 
 	 // Ausblenden des reizwerte Elements
     document.getElementById("reizwerte").style.display = "none";
