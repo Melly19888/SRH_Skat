@@ -335,70 +335,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
 });
 
 
-// Event Listener für den Button "confirmGameBtn"
-document.getElementById("confirmGameBtn").addEventListener("click", function() {
-    let textToShow = "";
-
-    switch(currentPlayer){
-        case "Vorhand":
-            
-            currentPlayer = "Dummy";
-            textToShow = `${player1Name} du bist dran`;
-			 loadCustomCard;
-            break;
-        case "Dummy":
-	
-            loadPlayerCards(player1Cards); // Lade card33.gif über die Karten von Mittelhand
-			 textToShow = `${player1Name} du bist dran`;
-			  currentPlayer = "Mittelhand";
-			break;
-		case "Mittelhand":
-            loadCustomCard; // Lade card33.gif über die Karten von Vorhand
-            currentPlayer = "Dumm";
-            textToShow = `${player2Name} du bist dran`;
-            break;
-			  case "Dumm":
-            loadPlayerCards(player2Cards); // Lade card33.gif über die Karten von Mittelhand
-			 textToShow = `${player2Name} du bist dran`;
-			 currentPlayer = "Hinterhand";
-			break;
-        case "Hinterhand":
-            loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
-            currentPlayer = "Skat";
-            textToShow = `${player3Name} du bist dran`;
-			 currentPlayer = "Dumm";
-            break;
-		  case "Dumm":
-            loadPlayerCards(player3Cards); // Lade card33.gif über die Karten von Mittelhand
-			 textToShow = `${player3Name} du bist dran`;
-			 currentPlayer = "Skat";
-
-			 break;
-		 case "Skat":
-            loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
-			currentPlayer = "Meist gereizt";
-          break;
-		 case "Meist gereizt":
-			loadCustomCard();		 
-           		 // Zeige die Buttons "Hand" und "Aufnehmen" an
-    showGameOptions();
-            break;
-        default:
-            console.error('Unbekannter currentPlayer:', currentPlayer);
-            return; // Beenden der Funktion bei unbekanntem currentPlayer
-    }
-
-    if (currentPlayer !== "") {
-        updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
-
-        document.getElementById("reizwerte").style.display = "block"; // Dropdown-Menü anzeigen für aktuellen Spieler
-        document.getElementById("leftGameButton").style.display = "block"; // Zeige leftGameButton an
-
-        document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
-    } else {
-        updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
-    }
-});
 
 
 
@@ -794,12 +730,70 @@ function showGameOptions() {
 }
 
 
-
-
-
-
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
+    let textToShow = "";
+
+    switch(currentPlayer){
+        case "Vorhand":
+            
+            currentPlayer = "Dummy";
+            textToShow = `${player1Name} du bist dran`;
+			 loadCustomCard;
+            break;
+        case "Dummy":
+	
+            loadPlayerCards(player1Cards); // Lade card33.gif über die Karten von Mittelhand
+			 textToShow = `${player1Name} du bist dran`;
+			  currentPlayer = "Mittelhand";
+			break;
+		case "Mittelhand":
+            loadCustomCard; // Lade card33.gif über die Karten von Vorhand
+            currentPlayer = "Dumm";
+            textToShow = `${player2Name} du bist dran`;
+            break;
+			  case "Dumm":
+            loadPlayerCards(player2Cards); // Lade card33.gif über die Karten von Mittelhand
+			 textToShow = `${player2Name} du bist dran`;
+			 currentPlayer = "Hinterhand";
+			break;
+        case "Hinterhand":
+            loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
+            currentPlayer = "Skat";
+            textToShow = `${player3Name} du bist dran`;
+			 currentPlayer = "Dumm";
+            break;
+		  case "Dumm":
+            loadPlayerCards(player3Cards); // Lade card33.gif über die Karten von Mittelhand
+			 textToShow = `${player3Name} du bist dran`;
+			 currentPlayer = "Skat";
+
+			 break;
+		 case "Skat":
+            loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
+			currentPlayer = "Meist gereizt";
+          break;
+		 case "Meist gereizt":
+			loadCustomCard();		 
+           		 // Zeige die Buttons "Hand" und "Aufnehmen" an
+    showGameOptions();
+            break;
+        default:
+            console.error('Unbekannter currentPlayer:', currentPlayer);
+            return; // Beenden der Funktion bei unbekanntem currentPlayer
+    }
+
+    if (currentPlayer !== "") {
+        updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
+
+        document.getElementById("reizwerte").style.display = "block"; // Dropdown-Menü anzeigen für aktuellen Spieler
+        document.getElementById("leftGameButton").style.display = "block"; // Zeige leftGameButton an
+
+        document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
+    } else {
+        updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
+    }
+
 	 // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1Name) {
         loadPlayerCards(player1Cards); // Lade die Karten von Spieler 1
