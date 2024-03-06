@@ -671,32 +671,7 @@ function displayPassedGame() {
 
 
 
-// Event Listener für den Button "handBtn"
-document.getElementById("handBtn").addEventListener("click", function() {
-    // Setze isHandGame auf true, da Hand gespielt wird
-    isHandGame = true;
 
-    // Verstecke den handBtn
-    this.style.display = 'none';
-
-    // Verstecke den aufnehmenBtn
-    document.getElementById("aufnehmenBtn").style.display = 'none';
-
-    // Verstecke das reizwerte Element
-    document.getElementById("reizwerte").style.display = "none";
-
-    // Verstecke den leftGameButton
-    document.getElementById("leftGameButton").style.display = "none";
-	
-	// Einblenden den confirmGameBtn
-    document.getElementById("confirmGameBtn").style.display = "block";
-
-
-    // Zeige die Elemente mit der Klasse ReihenfolgeButtons an
-    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
-        button.style.display = 'block';
-    });
-});
 
 // Funktion zum Löschen der Karten in der Mitte des Canvas
 function clearMiddleCards() {
@@ -753,10 +728,32 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
 // Globale Variable für den Hand-Spielzustand
 let isHandGame = false;
 
+
 // Event Listener für den Button "handBtn"
 document.getElementById("handBtn").addEventListener("click", function() {
-    isHandGame = true; // Setze isHandGame auf true, da Hand gespielt wird
-    this.style.display = 'none'; // Optional: Blende den Hand-Button aus
+    // Setze isHandGame auf true, da Hand gespielt wird
+    isHandGame = true;
+
+    // Verstecke den handBtn
+    this.style.display = 'none';
+
+    // Verstecke den aufnehmenBtn
+    document.getElementById("aufnehmenBtn").style.display = 'none';
+
+    // Verstecke das reizwerte Element
+    document.getElementById("reizwerte").style.display = "none";
+
+    // Verstecke den leftGameButton
+    document.getElementById("leftGameButton").style.display = "none";
+	
+	// Einblenden den confirmGameBtn
+    document.getElementById("confirmGameBtn").style.display = "block";
+
+
+    // Zeige die Elemente mit der Klasse ReihenfolgeButtons an
+    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
+        button.style.display = 'block';
+    });
 });
 
 // Funktion zum Anzeigen des ausgewählten Spiels auf dem canvasSecondary
