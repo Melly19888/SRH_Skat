@@ -357,7 +357,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
             currentPlayer = "Dumm";
             textToShow = `${player2Name} du bist dran`;
             break;
-			  case "Dumm":
+		case "Dumm":
             loadPlayerCards(player2Cards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player2Name} du bist dran`;
 			 currentPlayer = "Hinterhand";
@@ -366,19 +366,19 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
             loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
             currentPlayer = "Skat";
             textToShow = `${player3Name} du bist dran`;
-			 currentPlayer = "Dumm";
+			 currentPlayer = "Dum";
             break;
-		  case "Dumm":
+		case "Dum":
             loadPlayerCards(player3Cards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player3Name} du bist dran`;
 			 currentPlayer = "Skat";
 
 			 break;
-		 case "Skat":
+		case "Skat":
             loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
 			currentPlayer = "Meist gereizt";
           break;
-		 case "Meist gereizt":
+		case "Meist gereizt":
 			loadCustomCard();		 
            		 // Zeige die Buttons "Hand" und "Aufnehmen" an
     showGameOptions();
