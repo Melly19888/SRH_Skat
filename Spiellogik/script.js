@@ -6,8 +6,9 @@ const innerCanvas = document.getElementById('innerCanvas');
 const ctx = Spielfeld.getContext('2d');
 const ctxSecondary = canvasSecondary.getContext('2d');
 const ctxthirdCanvas = thirdCanvas.getContext('2d');
- let textToShow = "";
- let currentBidderIndex = 0;
+
+let textToShow = "";
+let currentBidderIndex = 0;
  // Deklarieren Sie highestBidder im globalen Scope
 let highestBidder = { name: "", bid: 0 };
 // Button zum Anzeigen der Karten
