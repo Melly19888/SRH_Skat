@@ -129,7 +129,7 @@ let player2Cards = cards.slice(10, 20);
 let player3Cards = cards.slice(20, 30);
 let player4Cards = cards.slice(30, 32);
 
-console.log(player1Cards, player2Cards, player3Cards, player4Cards);
+
 
 
 // Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
@@ -334,7 +334,7 @@ function resetGame() {
 
     loadCustomCard(); // Blende alle Karten aus mit card33.gif
 
-    console.log('Neues Spiel gestartet');
+   
 }
 
 function updateCanvasSecondaryText(text) {
@@ -501,7 +501,7 @@ player3Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 
     loadCustomCard(); // Blende alle Karten aus mit card33.gif
 
-    console.log('Neues Spiel gestartet');
+    
 
     // Stelle sicher, dass der showCards-Button sichtbar ist und andere Buttons versteckt sind
     document.getElementById("showCards").style.display = "block";
@@ -542,7 +542,7 @@ player3Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
-	    console.log("clearMiddleCards called"); // Zum Debuggen hinzugefügt
+	   
 
     const ctxSpielfeld = spielfeld.getContext('2d');
 
@@ -566,7 +566,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
 
     switch(currentPlayer) {
         case "Vorhand":
-			console.log("fkt1 Vorhand");
+			
             textToShow = `${player1Name} du bist dran`;
             loadPlayerCards(player1Cards);
             document.getElementById("reizwerte").style.display = "block";
@@ -578,7 +578,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
             break;
         
         case "Mittelhand":
-			console.log("fkt1 Mittelhand");
+			
             textToShow = `${player2Name} du bist dran`;
             loadPlayerCards(player2Cards);
             document.getElementById("reizwerte").style.display = "block";
@@ -590,7 +590,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
             break;
 			
         case "Hinterhand":
-			console.log("fkt1 Hinterhand");
+			
             textToShow = `${player3Name} du bist dran`;
             loadPlayerCards(player3Cards);
             document.getElementById("reizwerte").style.display = "block";
@@ -600,7 +600,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
 			 currentPlayer = "Skat";			
             break;
 		case "Skat":
-			console.log("fkt1 Skat");
+			
 			currentPlayer = "Meist gereizt";
 			loadCustomCard();		 
            	// Zeige die Buttons "Hand" und "Aufnehmen" an
@@ -689,7 +689,7 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
         highestBidder.bid = selectedReizValue;
         highestBidder.name = getPlayerName(currentBidderIndex);
 		highestBidder.id = currentBidderIndex;
-		console.log("Höchstbietende"+currentBidderIndex);
+		
         displayBidValueOnThirdCanvas(selectedReizValue);
         passCount = 0; // Setze den Pass-Zähler zurück, da ein gültiges Gebot abgegeben wurde
     }
@@ -772,7 +772,7 @@ document.getElementById("handBtn").addEventListener("click", function() {
     // Setze isHandGame auf true, da Hand gespielt wird
     isHandGame = true;
 	highestBidder.stich.push(...player4Cards);
-	console.log(highestBidder);
+	
 	
 	player4Cards = [];
 	
@@ -807,7 +807,7 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 	// Zeige player4Cards an
     loadPlayerCards(player4Cards);
 	
-	console.log(highestBidder);
+
 	switch (highestBidder.id ) {
 		case 0:
 			player1Cards.push(...player4Cards);
@@ -823,7 +823,7 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function() {
     player4Cards = [];
   
 	
-	console.log(player1Cards, player2Cards, player3Cards);
+	
 	
 	
 	
