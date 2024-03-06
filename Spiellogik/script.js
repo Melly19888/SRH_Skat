@@ -550,42 +550,47 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
 
     switch(currentPlayer) {
         case "Vorhand":
+			console.log("fkt1 Vorhand");
             textToShow = `${player1Name} du bist dran`;
             loadPlayerCards(player1Cards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            currentPlayer = "Dummy"; // Wechsle zum nächsten Spieler
+            loadPlayerCards(player1Cards); // Lade card33.gif über die Karten von Mittelhand
+			 textToShow = `${player1Name} du bist dran`;
+			  currentPlayer = "Mittelhand";
+            
             break;
-        case "Dummy":
-			  document.getElementById("reizwerte").style.display = "block";
-            document.getElementById("leftGameButton").style.display = "block";
-            currentPlayer = "Mittelhand"; // Wechsle zum nächsten Spieler ohne Aktion
-            break;
+        
         case "Mittelhand":
+			console.log("fkt1 Mittelhand");
             textToShow = `${player2Name} du bist dran`;
             loadPlayerCards(player2Cards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            currentPlayer = "Dumm"; // Wechsle zum nächsten Spieler
+            loadPlayerCards(player2Cards); // Lade card33.gif über die Karten von Mittelhand
+			 textToShow = `${player2Name} du bist dran`;
+			 currentPlayer = "Hinterhand";
+           
             break;
-        case "Dumm":
-            currentPlayer = "Hinterhand"; // Wechsle zum nächsten Spieler ohne Aktion
-            break;
+			
         case "Hinterhand":
+			console.log("fkt1 Hinterhand");
             textToShow = `${player3Name} du bist dran`;
             loadPlayerCards(player3Cards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            currentPlayer = "Dum"; // Wechsle zum nächsten Spieler			
+            loadPlayerCards(player3Cards); // Lade card33.gif über die Karten von Mittelhand
+			 textToShow = `${player3Name} du bist dran`;
+			 currentPlayer = "Skat";			
             break;
-			case "Dum":
-           currentPlayer = "Skat";
 		case "Skat":
-           
+			console.log("fkt1 Skat");
 			currentPlayer = "Meist gereizt";
+			loadCustomCard();		 
+           	// Zeige die Buttons "Hand" und "Aufnehmen" an
+			showGameOptions();
 			break;
-		case "Meist gereizt":
-			 
+		
 			 // Zeige den höchsten Bieter an und blende alle Karten aus
             displayHighestBidderAndHideCards(); 
             document.getElementById("reizwerte").style.display = "none";
@@ -609,60 +614,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         document.getElementById("confirmGameBtn").style.display = "none";
         updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
     }
-});
-
-// Event Listener für den Button "confirmGameBtn"
-document.getElementById("confirmGameBtn").addEventListener("click", function() {
-    let textToShow = "";
-
-    switch(currentPlayer){
-        case "Vorhand":
-            
-            currentPlayer = "Dummy";
-            textToShow = `${player1Name} du bist dran`;
-			 loadCustomCard;
-            break;
-        case "Dummy":
-	
-            loadPlayerCards(player1Cards); // Lade card33.gif über die Karten von Mittelhand
-			 textToShow = `${player1Name} du bist dran`;
-			  currentPlayer = "Mittelhand";
-			break;
-		case "Mittelhand":
-            loadCustomCard; // Lade card33.gif über die Karten von Vorhand
-            currentPlayer = "Dumm";
-            textToShow = `${player2Name} du bist dran`;
-            break;
-		case "Dumm":
-            loadPlayerCards(player2Cards); // Lade card33.gif über die Karten von Mittelhand
-			 textToShow = `${player2Name} du bist dran`;
-			 currentPlayer = "Hinterhand";
-			break;
-        case "Hinterhand":
-            loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
-            currentPlayer = "Skat";
-            textToShow = `${player3Name} du bist dran`;
-			 currentPlayer = "Dum";
-            break;
-		case "Dum":
-            loadPlayerCards(player3Cards); // Lade card33.gif über die Karten von Mittelhand
-			 textToShow = `${player3Name} du bist dran`;
-			 currentPlayer = "Skat";
-
-			 break;
-		case "Skat":
-            loadCustomCard(); // Lade card33.gif über die Karten von Hinterhand
-			currentPlayer = "Meist gereizt";
-          break;
-		case "Meist gereizt":
-			loadCustomCard();		 
-           		 // Zeige die Buttons "Hand" und "Aufnehmen" an
-    showGameOptions();
-            break;
-        default:
-            console.error('Unbekannter currentPlayer:', currentPlayer);
-            return; // Beenden der Funktion bei unbekanntem currentPlayer
-    }
 
     if (currentPlayer !== "") {
         updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
@@ -674,10 +625,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
     } else {
         updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
     }
-});
 
-// Event Listener für den Button "confirmGameBtn"
-document.getElementById("confirmGameBtn").addEventListener("click", function() {
 	 loadHighestBidderCards();
     // Überprüfe, ob das Spiel eingepasst wurde
     if (passCount === 3) {
