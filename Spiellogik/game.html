@@ -1,36 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skat Spiel</title>
 <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 <div id="game">
-  <h1 id="skat">Skat Spiel</h1>
-  <canvas id="canvas" width="1920" height="1080"></canvas>
+  <!--Erschaffung von geregleten Bereichen für verschiedene Anzeigeelemente-->
+  <canvas id="Spielfeld" width="1920" height="1080"></canvas>
   <canvas id="canvasSecondary" width="750" height="1334"></canvas>
-    <button id="showCards">Spiel starten</button>
-   <button id="confirmGameBtn" style="display: none;">OK</button>
-    <section id="RFBtn">
-      <h2 id="Reihenfolge">Reihenfolge</h2>
-      <button class="Reihenfolge1" id="karo"> Karo </button>
-      <button class="Reihenfolge1" id="herz"> Herz </button>
-      <button class="Reihenfolge1" id="pik"> Pik </button>
-      <button class="Reihenfolge1" id="kreuz"> Kreuz </button>
-    </section>
-    <section id="RFBtn">
-      <button class="Reihenfolge2" id="grand"> Grand </button>
-      <button class="Reihenfolge2" id="null"> Null </button>
-      <button class="Reihenfolge2" id="nullover"> Nullover </button>  
-    </section>
-  <div class="playerNames">
-    <input type="text" id="player1Name" placeholder="Spieler 1">
-    <input type="text" id="player2Name" placeholder="Spieler 2">
-    <input type="text" id="player3Name" placeholder="Spieler 3">
+  <canvas id="innerCanvas" width="750" height="550"></canvas>
+  <canvas id="thirdCanvas" width="750" height="1334"></canvas>
+  <!--Dropdownmenü für die Reizwerte-->
+  <form>
+      <select id="reizwerte">
+        <option value="" disabled selected>Wähle einen Reizwert</option>
+		 <option value="0">Passe</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="22">22</option>
+		<option value="23">23</option>
+		<option value="24">24</option>
+		<option value="27">27</option>
+		<option value="30">30</option>
+		<option value="33">33</option>
+		<option value="35">35</option>
+		<option value="36">36</option>
+		<option value="40">40</option>
+		<option value="44">44</option>
+		<option value="45">45</option>
+		<option value="46">46</option>
+		<option value="48">48</option>
+		<option value="50">50</option>
+		<option value="54">54</option>
+		<option value="55">55</option>
+		<option value="59">59</option>
+		<option value="60">60</option>
+		<option value="63">63</option>
+		<option value="66">66</option>
+		<option value="70">70</option>
+		<option value="72">72</option>
+		<option value="77">77</option>
+		<option value="81">81</option>
+		<option value="82">82</option>
+		<option value="84">84</option>
+		<option value="88">88</option>
+		<option value="90">90</option>
+		<option value="96">96</option>
+		<option value="99">99</option>
+		<option value="100">100</option>
+		<option value="108">108</option>
+		<option value="110">110</option>
+		<option value="117">117</option>
+		<option value="120">120</option>
+		<option value="121">121</option>
+		<option value="126">126</option>
+		<option value="130">130</option>
+		<option value="132">132</option>
+		<option value="135">135</option>
+		<option value="140">140</option>
+		<option value="143">143</option>
+		<option value="144">144</option>
+		<option value="150">150</option>
+		<option value="153">153</option>
+		<option value="154">154</option>
+		<option value="156">156</option>
+		<option value="160">160</option>
+		<option value="162">162</option>
+		<option value="165">165</option>
+		<option value="168">168</option>
+		<option value="170">170</option>
+		<option value="171">171</option>
+		<option value="176">176</option>
+		<option value="180">180</option>
+		<option value="187">187</option>
+		<option value="192">192</option>
+		<option value="198">198</option>
+		<option value="204">204</option>
+		<option value="216">216</option>	
+		<option value="240">240</option>
+		<option value="264">264</option>
+
+      </select>
+  </form>
+  <!--Steuerungsbuttons die für das Spiel relevant sind-->
+  
+  
+  <button id="showCards">Spiel beginnen</button>
+  <button id="confirmGameBtn" >Okay</button>
+  <button id="leftGameButton" >Okay</button>
+   <button id="Kartenaufnahme" >Okay</button>
+      <button id="Stock-ablegen" >Okay</button>
+
+  <!--Extra Bereich zum optimalen Anordnen der Game Buttons für die Spielweise-->
+  <div class="ReihenfolgeButtons">
+    <button class="Reihenfolge" id="karo"> Karo </button>
+    <button class="Reihenfolge" id="herz"> Herz </button>
+    <button class="Reihenfolge" id="pik"> Pik </button>
+    <button class="Reihenfolge" id="kreuz"> Kreuz </button>
+    <button class="Reihenfolge" id="grand"> Grand </button>
+    <button class="Reihenfolge" id="null"> Null </button>
+    <button class="Reihenfolge" id="nullover"> Nullover </button>
+  </div>
+  <div>
+	<button class="aufnahmeAuswahl" id="handBtn"  >Hand</button>
+	<button class="aufnahmeAuswahl" id="aufnehmenBtn" >Aufnehmen</button>
+	<button class="aufnahmeAuswah" id="Schneider"  >Schneider</button>
+	<button class="aufnahmeAuswah" id="Schwarz"  >Schwarz</button>
   </div>
 </div>
-<script src="script.js"></script>
+
+
+
+
+
+<div class="playerNames">
+    <input type="text" class="playerName" id="player1Name" placeholder="Spieler 1">
+    <select class="playerPoints" id="player1Points">
+        <option value="501">501</option>
+        <option value="701">701</option>
+        <option value="1001">1001</option>
+    </select>
+
+    <input type="text" class="playerName" id="player2Name" placeholder="Spieler 2">
+    <select class="playerPoints" id="player2Points">
+        <option value="501">501</option>
+        <option value="701">701</option>
+        <option value="1001">1001</option>
+    </select>
+
+    <input type="text" class="playerName" id="player3Name" placeholder="Spieler 3">
+    <select class="playerPoints" id="player3Points">
+        <option value="501">501</option>
+        <option value="701">701</option>
+        <option value="1001">1001</option>
+    </select>
+</div>
+
+<script  src="script.js"></script>
 </body>
 </html>
