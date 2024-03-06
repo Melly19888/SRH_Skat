@@ -754,20 +754,11 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
         hideReihenfolgeButtons(); // Blende die ReihenfolgeButtons aus
         displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
+		isHandGame = false;
     });
 });
 
-// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
-document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
-    button.addEventListener('click', function() {
-        clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
-        hideReihenfolgeButtons(); // Blende die ReihenfolgeButtons aus
-        displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
 
-        // Nachdem das Spiel angezeigt wurde, setze isHandGame zurück auf false
-        isHandGame = false;
-    });
-});
 
 
 // Event Listener für den Button "handBtn"
