@@ -798,6 +798,7 @@ document.getElementById("handBtn").addEventListener("click", function() {
 
     // Zeige die Elemente mit der Klasse ReihenfolgeButtons an
     document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
+		  clearMiddleCards();
         button.style.display = 'block';
     });
 });
