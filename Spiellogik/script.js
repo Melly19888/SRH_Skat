@@ -521,6 +521,52 @@ function clearMiddleCards() {
     ctxSpielfeld.clearRect(middleCardX2, middleCardY, cardWidth, cardHeight);
 }
 
+function displayPassedGame() {
+    const canvasSecondary = document.getElementById("canvasSecondary");
+    const ctxSecondary = canvasSecondary.getContext("2d");
+    ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
+    ctxSecondary.fillStyle = "red";
+    ctxSecondary.font = "bold 60px Arial";
+
+    // Berechne die Position für den Text
+    const textToShow = "Das Spiel wurde eingepasst";
+    const textWidth = ctxSecondary.measureText(textToShow).width;
+    const xPosition = (canvasSecondary.width - textWidth) / 2;
+    const yPosition = (canvasSecondary.height / 2) + 30; // Zentriere den Text vertikal
+
+    // Schreibe den Text auf das Canvas
+    ctxSecondary.fillText(textToShow, xPosition, yPosition);
+
+   
+}
+function displayPassedGame() {
+    const canvasSecondary = document.getElementById("canvasSecondary");
+    const ctxSecondary = canvasSecondary.getContext("2d");
+    ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
+    ctxSecondary.fillStyle = "red";
+    ctxSecondary.font = "bold 60px Arial";
+
+    // Berechne die Position für die erste Zeile
+    let textToShowFirstLine = "Das Spiel wurde";
+    let textWidthFirstLine = ctxSecondary.measureText(textToShowFirstLine).width;
+    let xPositionFirstLine = (canvasSecondary.width - textWidthFirstLine) / 2;
+    let yPositionFirstLine = (canvasSecondary.height / 2) + 100; // Etwas oberhalb der Mitte
+
+    // Berechne die Position für die zweite Zeile
+    let textToShowSecondLine = "eingepasst";
+    let textWidthSecondLine = ctxSecondary.measureText(textToShowSecondLine).width;
+    let xPositionSecondLine = (canvasSecondary.width - textWidthSecondLine) / 2;
+    let yPositionSecondLine = (canvasSecondary.height / 2)+200 ; // Etwas unterhalb der Mitte
+
+    // Schreibe den Text auf das Canvas
+    ctxSecondary.fillText(textToShowFirstLine, xPositionFirstLine, yPositionFirstLine);
+    ctxSecondary.fillText(textToShowSecondLine, xPositionSecondLine, yPositionSecondLine);
+	
+	 // Blende den leftGameButton aus und zeige nur den confirmGameBtn an
+    document.getElementById("leftGameButton").style.display = "none";
+    document.getElementById("confirmGameBtn").style.display = "block";
+
+}
 
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
@@ -620,11 +666,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
     // Verstecke den confirmGameBtn nach dem Laden der Karten
     document.getElementById("confirmGameBtn").style.display = "none";
 	
-	  
-		
-    
+  
 });
-
 
 // Event Listener für den Button "leftGameButton"
 document.getElementById("leftGameButton").addEventListener("click", function() {
@@ -633,7 +676,6 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
         alert("Bitte wählen Sie einen Reizwert aus.");
         return; // Frühzeitige Rückkehr, wenn kein Wert ausgewählt wurde
     }
-
     const selectedReizValue = parseInt(reizwerteSelect.value, 10);
 
      // Überprüfe, ob der Spieler gepasst hat (Reizwert von 0 ausgewählt)
@@ -643,7 +685,7 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
 			 loadCustomCard();
 			  document.getElementById("leftGameButton").style.display = "none";
 				document.getElementById("confirmGameBtn").style.display = "block";
-           // displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
+            displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
             return; // Beende die Funktion frühzeitig
         }
 
@@ -678,6 +720,15 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
     }
 });
 
+
+
+   
+
+
+
+
+
+
 document.addEventListener('click', function(event) {
     if (event.target.id === "showCards") {
         if (!rolesChosenFlag && (player1.name !== "" && player2.name !== "" && player3.name !== "")) {
@@ -697,7 +748,6 @@ document.addEventListener('click', function(event) {
     }
 });
 
-
 // Event Listener für alle Buttons mit der Klasse "Reihenfolge"
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
     button.addEventListener('click', function() {
@@ -713,9 +763,6 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
 		isHandGame = false;
     });
 });
-
-
-
 
 // Event Listener für den Button "handBtn"
 document.getElementById("handBtn").addEventListener("click", function() {
@@ -750,7 +797,6 @@ document.getElementById("handBtn").addEventListener("click", function() {
     });
 });
 
-
 // Event Listener für den Button "aufnehmenBtn"
 document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 	
@@ -772,12 +818,6 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 	 // Leere das Array skatcards und lösche die Karten aus der Mitte des Canvas
     skatcards = [];
   
-	
-	
-	
-	
-	
-
 
     // Optional: Verstecke den aufnehmenBtn nach dem Aufnehmen der Karten
     this.style.display = 'none';
@@ -825,13 +865,17 @@ confirmGameBtn.addEventListener("click", function() {
 
         // Führe hier die Aktionen aus, die beim Aufnehmen der Karten nötig sind
         // Zum Beispiel: Karten zum Spieler hinzufügen, Skat aufnehmen etc.
-    } 
+	}
+	
+	 document.getElementById("confirmGameBtn").style.display = "none";
+	 
 	// Zeige die Buttons mit der Klasse .ReihenfolgeButtons an
     document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
         button.style.display = 'block';
     });
-
+	
 });
+
 });
 
 // Event Listener für das Anklicken von Karten hinzufügen
