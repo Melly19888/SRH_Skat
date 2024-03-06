@@ -115,19 +115,16 @@ shuffle(cards);
 
 
 
-// Karten für jeden Spieler erstellen
-let player1Cards = cards.slice(0, 10);
-let player2Cards = cards.slice(10, 20);
-let player3Cards = cards.slice(20, 30);
-let player4Cards = cards.slice(30, 32);
 
+let skatcards = cards.slice(30, 32);
+let tablecard = [];
 
 
 
 // Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
-player1Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
-player2Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
-player3Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 
 
 // Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
@@ -164,7 +161,7 @@ function loadPlayerCards(playerCards) {
             let posY = startY;
 
             // Positionierung der Karten für Spieler 4 in der Mitte des Canvas
-            if (playerCards === player4Cards && (index === 0 || index === 1)) {
+            if (playerCards === skatcards && (index === 0 || index === 1)) {
                 posX = spielfeld.width / 2 - cardWidth / 2 + index * (cardWidth - 10);
                 posY = spielfeld.height / 2 - cardHeight / 2;
             }
@@ -181,7 +178,7 @@ function loadCustomCard() {
     }
 
     // Zwei Karten nebeneinander in der Mitte des Canvas laden
-	if (player4Cards.length > 0){
+	if (skatcards.length > 0){
 		drawCard(spielfeld.width / 2 - cardWidth / 2, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
 		drawCard(spielfeld.width / 2 + cardWidth / 2 - 10, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
 	}
@@ -300,34 +297,7 @@ function displayBidValueOnThirdCanvas(bidValue) {
     ctxThird.fillText(textToShow, xPosition, yPosition);
 }
 
-// Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
-function resetGame() {
-    shuffle(cards); // Mische die Karten neu
 
-    player1Cards = cards.slice(0, 10);
-    player2Cards = cards.slice(10, 20);
-    player3Cards = cards.slice(20, 30);
-
-    currentPlayer = "Vorhand"; // Beginne wieder bei Spieler 1
-    currentBidderIndex = 0;
-
-    highestBidder.name = "";
-    highestBidder.bid = 0;
-
-    passCount = 0; // Setze den Pass-Zähler zurück
-
-    rolesChosenFlag = false;
-
-    document.getElementById("player1Name").readOnly = false;
-    document.getElementById("player2Name").readOnly = false;
-    document.getElementById("player3Name").readOnly = false;
-
-    updateCanvasSecondaryText(""); // Leere Text im sekundären Canvas
-
-    loadCustomCard(); // Blende alle Karten aus mit card33.gif
-
-   
-}
 
 function updateCanvasSecondaryText(text) {
   ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
@@ -422,11 +392,11 @@ function showGameOptions() {
 function loadHighestBidderCards() {
     // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1.name) {
-        loadPlayerCards(player1Cards); // Lade die Karten von Spieler 1
+        loadPlayerCards(player1.cards); // Lade die Karten von Spieler 1
     } else if (highestBidder.name === player2.name) {
-        loadPlayerCards(player2Cards); // Lade die Karten von Spieler 2
+        loadPlayerCards(player2.cards); // Lade die Karten von Spieler 2
     } else if (highestBidder.name === player3.name) {
-        loadPlayerCards(player3Cards); // Lade die Karten von Spieler 3
+        loadPlayerCards(player3.cards); // Lade die Karten von Spieler 3
     }
 
     
@@ -465,15 +435,15 @@ function resetGame() {
         reizwerteElement.style.display = "none";
     }
 	
-    player1Cards = cards.slice(0, 10);
-    player2Cards = cards.slice(10, 20);
-    player3Cards = cards.slice(20, 30);
-    player4Cards = cards.slice(30, 32);
+   player1.cards = cards.slice(0, 10);
+    player2.cards = cards.slice(10, 20);
+    player3.cards = cards.slice(20, 30);
+    skatcards = cards.slice(30, 32);
 	
 	// Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
-player1Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
-player2Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
-player3Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 
     currentPlayer = "Vorhand"; // Beginne wieder bei Spieler 1
     currentBidderIndex = 0;
@@ -524,8 +494,6 @@ player3Cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
                 textElement.id = inputId ;
                 select.parentNode.replaceChild(textElement, select);
             });
-        } else if (rolesChosenFlag) {
-            showCardsAndChooseReiz();
         } 
     }
 	console.log("klickt");
@@ -560,10 +528,10 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         case "Vorhand":
 			
             textToShow = `${player1.name} du bist dran`;
-            loadPlayerCards(player1Cards);
+            loadPlayerCards(player1.cards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            loadPlayerCards(player1Cards); // Lade card33.gif über die Karten von Mittelhand
+            loadPlayerCards(player1.cards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player1.name} du bist dran`;
 			  currentPlayer = "Mittelhand";
             
@@ -572,10 +540,10 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         case "Mittelhand":
 			
             textToShow = `${player2.name} du bist dran`;
-            loadPlayerCards(player2Cards);
+            loadPlayerCards(player2.cards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            loadPlayerCards(player2Cards); // Lade card33.gif über die Karten von Mittelhand
+            loadPlayerCards(player2.cards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player2.name} du bist dran`;
 			 currentPlayer = "Hinterhand";
            
@@ -584,10 +552,10 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         case "Hinterhand":
 			
             textToShow = `${player3.name} du bist dran`;
-            loadPlayerCards(player3Cards);
+            loadPlayerCards(player3.cards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            loadPlayerCards(player3Cards); // Lade card33.gif über die Karten von Mittelhand
+            loadPlayerCards(player3.cards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player3.name} du bist dran`;
 			 currentPlayer = "Skat";			
             break;
@@ -636,13 +604,13 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
 
     // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1.name) {
-        loadPlayerCards(player1Cards); // Lade die Karten von Spieler 1
+        loadPlayerCards(player1.cards); // Lade die Karten von Spieler 1
 		
     } else if (highestBidder.name === player2.name) {
-        loadPlayerCards(player2Cards); // Lade die Karten von Spieler 2
+        loadPlayerCards(player2.cards); // Lade die Karten von Spieler 2
 		
     } else if (highestBidder.name === player3.name) {
-        loadPlayerCards(player3Cards); // Lade die Karten von Spieler 3
+        loadPlayerCards(player3.cards); // Lade die Karten von Spieler 3
 	
     }
 
@@ -692,7 +660,6 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
 
     // Überprüfe, ob alle Spieler gepasst haben
       if (passCount === 3) {
-        resetGame(); // Starte das Spiel neu
         return; // Beende die Funktion frühzeitig
     }
 
@@ -720,20 +687,9 @@ document.addEventListener('click', function(event) {
             document.getElementById("player2Name").readOnly = true;
             document.getElementById("player3Name").readOnly = true;
 
-            [player1Points, player2Points, player3Points].forEach((select, index) => {
-                const selectedValue = select.options[select.selectedIndex].text;
-                const playerName = [player1.name, player2.name, player3.name][index];
-                const textElement = document.createElement("input");
-                const inputId = `playerInput` + index++  ;
-                textElement.type = "text";
-                textElement.value = `${playerName}: ${selectedValue}`;
-                textElement.readOnly = true;
-                textElement.id = inputId ;
-                select.parentNode.replaceChild(textElement, select);
-            });
-        } else if (rolesChosenFlag) {
-            showCardsAndChooseReiz();
-        } else {
+            
+          
+        }  else {
             showCustomPopup("Bitte geben Sie die Namen aller drei Spieler ein.");
         }
     }
@@ -763,10 +719,10 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
 document.getElementById("handBtn").addEventListener("click", function() {
     // Setze isHandGame auf true, da Hand gespielt wird
     isHandGame = true;
-	highestBidder.stich.push(...player4Cards);
+	highestBidder.stich.push(...skatcards);
 	
 	
-	player4Cards = [];
+	skatcards = [];
 	
 	
     // Verstecke den handBtn
@@ -796,23 +752,23 @@ document.getElementById("handBtn").addEventListener("click", function() {
 // Event Listener für den Button "aufnehmenBtn"
 document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 	
-	// Zeige player4Cards an
-    loadPlayerCards(player4Cards);
+	// Zeige skatcards an
+    loadPlayerCards(skatcards);
 	
 
 	switch (highestBidder.id ) {
 		case 0:
-			player1Cards.push(...player4Cards);
+			player1.cards.push(...skatcards);
 			break
 		case 1:
-			player2Cards.push(...player4Cards);
+			player2.cards.push(...skatcards);
 			break
 		case 2:
-			player3Cards.push(...player4Cards);
+			player3.cards.push(...skatcards);
 			break
 	}
-	 // Leere das Array player4Cards und lösche die Karten aus der Mitte des Canvas
-    player4Cards = [];
+	 // Leere das Array skatcards und lösche die Karten aus der Mitte des Canvas
+    skatcards = [];
   
 	
 	
@@ -886,8 +842,8 @@ spielfeld.addEventListener('click', function(event) {
 		const cardNummber = Math.floor(0.9*(clickX)/(cardWidth));
 	}
   // Überprüfe jede Karte auf Trefferbereich
-  //player1Cards.forEach((card) => {
-   // const index = player1Cards.indexOf(card);
+  //player1.cards.forEach((card) => {
+   // const index =player1.cards.indexOf(card);
     //let posX = index * (cardWidth - 12) + 1;
     //let posY = startY;
 
@@ -910,3 +866,4 @@ console.log(0.9*(clickX)/(cardWidth));
 console.log(cardNummber);
 });
 
+resetGame();
