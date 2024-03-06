@@ -752,8 +752,14 @@ document.addEventListener('click', function(event) {
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
     button.addEventListener('click', function() {
         clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
-        hideReihenfolgeButtons(); // Blende die ReihenfolgeButtons aus
         displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
+		document.getElementById("karo").style.display = "none";
+		document.getElementById("herz").style.display = "none";
+		document.getElementById("pik").style.display = "none";
+		document.getElementById("kreuz").style.display = "none";
+		document.getElementById("grand").style.display = "none";
+		document.getElementById("null").style.display = "none";
+		document.getElementById("nullover").style.display = "none";
 		isHandGame = false;
     });
 });
