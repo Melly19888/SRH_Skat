@@ -26,9 +26,7 @@ let player2 = {name:"", cards:[], ausgewaehlt:[]};
 let player3 = {name:"", cards:[], ausgewaehlt:[]};
 let aktivPlayer = -1;
 
-let player1Name = "";
-let player2Name = "";
-let player3Name = "";
+
 const cardWidth = 170;
 const cardHeight = 200;
 
