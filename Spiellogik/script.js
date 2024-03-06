@@ -109,14 +109,7 @@ const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif
 ' img/card30.gif', ' img/card31.gif',' img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
 
 
-
-// Mische die sortierten Karten
-shuffle(cards);
-
-
-
-
-let skatcards = cards.slice(30, 32);
+let skatcards = [];
 let tablecard = [];
 
 
@@ -144,16 +137,20 @@ function shuffle(array) {
 
 
 // Funktion zum Zeichnen einer Karte auf dem Canvas
-function drawCard(x, y, card) {
+function drawCard(x, y, card, isSelected) {
     const img = new Image();
     img.src = card;
     img.onload = function() {
+		if (isSelected){
+			y =y-100;
+		}
         ctx.drawImage(img, x, y, cardWidth, cardHeight);
     };
 }
 
 // Funktion zum Laden der Karten für einen Spieler
-function loadPlayerCards(playerCards) {
+function loadPlayerCards(playerCards, selectcards) {
+	console.log(selectcards);
     // Überprüfe, ob playerCards ein Array ist und Elemente enthält
     if (Array.isArray(playerCards) && playerCards.length > 0) {
         playerCards.forEach((card, index) => {
@@ -165,9 +162,11 @@ function loadPlayerCards(playerCards) {
                 posX = spielfeld.width / 2 - cardWidth / 2 + index * (cardWidth - 10);
                 posY = spielfeld.height / 2 - cardHeight / 2;
             }
-
+	console.log(selectcards);
             // Karte zeichnen
-            drawCard(posX, posY, card);
+            drawCard(posX, posY, card, selectcards.includes(card));
+			
+			
         });
     } 
 }
@@ -392,11 +391,11 @@ function showGameOptions() {
 function loadHighestBidderCards() {
     // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1.name) {
-        loadPlayerCards(player1.cards); // Lade die Karten von Spieler 1
+        loadPlayerCards(player1.cards,player1.selectcards); // Lade die Karten von Spieler 1
     } else if (highestBidder.name === player2.name) {
-        loadPlayerCards(player2.cards); // Lade die Karten von Spieler 2
+        loadPlayerCards(player2.cards, player2.selectcards); // Lade die Karten von Spieler 2
     } else if (highestBidder.name === player3.name) {
-        loadPlayerCards(player3.cards); // Lade die Karten von Spieler 3
+        loadPlayerCards(player3.cards, player3.selectcards); // Lade die Karten von Spieler 3
     }
 
     
@@ -439,7 +438,10 @@ function resetGame() {
     player2.cards = cards.slice(10, 20);
     player3.cards = cards.slice(20, 30);
     skatcards = cards.slice(30, 32);
-	
+	tablecard =[];
+	player1.selectcards=[];
+	player2.selectcards=[];
+	player3.selectcards=[];
 	// Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
 player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
@@ -528,10 +530,10 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         case "Vorhand":
 			
             textToShow = `${player1.name} du bist dran`;
-            loadPlayerCards(player1.cards);
+            loadPlayerCards(player1.cards, player1.selectcards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            loadPlayerCards(player1.cards); // Lade card33.gif über die Karten von Mittelhand
+            loadPlayerCards(player1.cards, player1.selectcards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player1.name} du bist dran`;
 			  currentPlayer = "Mittelhand";
             
@@ -540,10 +542,10 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         case "Mittelhand":
 			
             textToShow = `${player2.name} du bist dran`;
-            loadPlayerCards(player2.cards);
+            loadPlayerCards(player2.cards, player2.selectcards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            loadPlayerCards(player2.cards); // Lade card33.gif über die Karten von Mittelhand
+            loadPlayerCards(player2.cards, player2.selectcards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player2.name} du bist dran`;
 			 currentPlayer = "Hinterhand";
            
@@ -552,10 +554,10 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         case "Hinterhand":
 			
             textToShow = `${player3.name} du bist dran`;
-            loadPlayerCards(player3.cards);
+            loadPlayerCards(player3.cards, player3.selectcards);
             document.getElementById("reizwerte").style.display = "block";
             document.getElementById("leftGameButton").style.display = "block";
-            loadPlayerCards(player3.cards); // Lade card33.gif über die Karten von Mittelhand
+            loadPlayerCards(player3.cards, player3.selectcards); // Lade card33.gif über die Karten von Mittelhand
 			 textToShow = `${player3.name} du bist dran`;
 			 currentPlayer = "Skat";			
             break;
@@ -604,13 +606,13 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
 
     // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1.name) {
-        loadPlayerCards(player1.cards); // Lade die Karten von Spieler 1
+        loadPlayerCards(player1.cards, player1.selectcards); // Lade die Karten von Spieler 1
 		
     } else if (highestBidder.name === player2.name) {
-        loadPlayerCards(player2.cards); // Lade die Karten von Spieler 2
+        loadPlayerCards(player2.cards, player2.selectcards); // Lade die Karten von Spieler 2
 		
     } else if (highestBidder.name === player3.name) {
-        loadPlayerCards(player3.cards); // Lade die Karten von Spieler 3
+        loadPlayerCards(player3.cards, player3.selectcards); // Lade die Karten von Spieler 3
 	
     }
 
@@ -753,7 +755,7 @@ document.getElementById("handBtn").addEventListener("click", function() {
 document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 	
 	// Zeige skatcards an
-    loadPlayerCards(skatcards);
+    loadPlayerCards(skatcards,[]);
 	
 
 	switch (highestBidder.id ) {
@@ -863,7 +865,7 @@ console.log(clickX);
 console.log(clickY);
 console.log(clickY-startY+ cardHeight*0.6);
 console.log(0.9*(clickX)/(cardWidth));
-console.log(cardNummber);
+//console.log(cardNummber);
 });
 
 resetGame();
