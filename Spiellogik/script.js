@@ -626,28 +626,6 @@ function displayHighestBidderAndHideCards() {
 }
 
 
-// Event Listener für den Button "confirmGameBtn"
-document.getElementById("confirmGameBtn").addEventListener("click", function() {
-    // Überprüfe, welcher Spieler der Höchstbietende ist
-    if (highestBidder.name === player1Name) {
-        loadPlayerCards(player1Cards); // Lade die Karten von Spieler 1
-		
-    } else if (highestBidder.name === player2Name) {
-        loadPlayerCards(player2Cards); // Lade die Karten von Spieler 2
-		
-    } else if (highestBidder.name === player3Name) {
-        loadPlayerCards(player3Cards); // Lade die Karten von Spieler 3
-	
-    }
-
-
-    // Verstecke den confirmGameBtn nach dem Laden der Karten
-    document.getElementById("confirmGameBtn").style.display = "none";
-	
-	  
-		
-    
-});
 
 
 function displayPassedGame() {
@@ -819,8 +797,27 @@ function showGameOptions() {
 
 
 
+
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
+	 // Überprüfe, welcher Spieler der Höchstbietende ist
+    if (highestBidder.name === player1Name) {
+        loadPlayerCards(player1Cards); // Lade die Karten von Spieler 1
+		
+    } else if (highestBidder.name === player2Name) {
+        loadPlayerCards(player2Cards); // Lade die Karten von Spieler 2
+		
+    } else if (highestBidder.name === player3Name) {
+        loadPlayerCards(player3Cards); // Lade die Karten von Spieler 3
+	
+    }
+
+
+    // Verstecke den confirmGameBtn nach dem Laden der Karten
+    document.getElementById("confirmGameBtn").style.display = "none";
+	
+	  
+	  
 	 loadHighestBidderCards();
     // Überprüfe, ob das Spiel eingepasst wurde
     if (passCount === 3) {
