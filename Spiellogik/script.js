@@ -607,6 +607,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
     if (currentPlayer !== "") {
         updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
         document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
+        document.getElementById("reizwerte").style.display = "block"; // Dropdown-Menü anzeigen für aktuellen Spieler
+        document.getElementById("leftGameButton").style.display = "block"; // Zeige leftGameButton an
     } else {
         // Alle Spieler haben gereizt, verstecke alle Buttons und zeige das Ergebnis an
         document.getElementById("reizwerte").style.display = "none";
@@ -615,16 +617,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
         updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
     }
 
-    if (currentPlayer !== "") {
-        updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
-
-        document.getElementById("reizwerte").style.display = "block"; // Dropdown-Menü anzeigen für aktuellen Spieler
-        document.getElementById("leftGameButton").style.display = "block"; // Zeige leftGameButton an
-
-        document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
-    } else {
-        updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
-    }
 
 	 loadHighestBidderCards();
     // Überprüfe, ob das Spiel eingepasst wurde
