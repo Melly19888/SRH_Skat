@@ -676,6 +676,37 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
     }
 });
 
+// Event Listener für den Button "confirmGameBtn"
+document.getElementById("confirmGameBtn").addEventListener("click", function() {
+	 loadHighestBidderCards();
+    // Überprüfe, ob das Spiel eingepasst wurde
+    if (passCount === 3) {
+		  // Ändere den Text des Buttons "showCards" zu "Nächstes Spiel"
+    updateShowCardsButtonText("Nächstes Spiel");
+        resetGame(); // Starte das Spiel neu
+    } 
+
+    // Überprüfe, welcher Spieler der Höchstbietende ist
+    if (highestBidder.name === player1Name) {
+        loadPlayerCards(player1Cards); // Lade die Karten von Spieler 1
+		
+    } else if (highestBidder.name === player2Name) {
+        loadPlayerCards(player2Cards); // Lade die Karten von Spieler 2
+		
+    } else if (highestBidder.name === player3Name) {
+        loadPlayerCards(player3Cards); // Lade die Karten von Spieler 3
+	
+    }
+
+
+    // Verstecke den confirmGameBtn nach dem Laden der Karten
+    document.getElementById("confirmGameBtn").style.display = "none";
+	
+	  
+		
+    
+});
+
 
 // Event Listener für den Button "leftGameButton"
 document.getElementById("leftGameButton").addEventListener("click", function() {
@@ -758,27 +789,14 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Event Listener für den Button "confirmGameBtn"
-document.getElementById("confirmGameBtn").addEventListener("click", function() {
-    // Überprüfe, welcher Spieler der Höchstbietende ist
-    if (highestBidder.name === player1Name) {
-        loadPlayerCards(player1Cards); // Lade die Karten von Spieler 1
-		
-    } else if (highestBidder.name === player2Name) {
-        loadPlayerCards(player2Cards); // Lade die Karten von Spieler 2
-		
-    } else if (highestBidder.name === player3Name) {
-        loadPlayerCards(player3Cards); // Lade die Karten von Spieler 3
-	
-    }
 
-
-    // Verstecke den confirmGameBtn nach dem Laden der Karten
-    document.getElementById("confirmGameBtn").style.display = "none";
-	
-	  
-		
-    
+// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
+document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
+    button.addEventListener('click', function() {
+        clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
+        hideReihenfolgeButtons(); // Blende die ReihenfolgeButtons aus
+        displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
+    });
 });
 
 // Event Listener für alle Buttons mit der Klasse "Reihenfolge"
@@ -787,6 +805,9 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
         hideReihenfolgeButtons(); // Blende die ReihenfolgeButtons aus
         displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
+
+        // Nachdem das Spiel angezeigt wurde, setze isHandGame zurück auf false
+        isHandGame = false;
     });
 });
 
@@ -816,30 +837,6 @@ document.getElementById("handBtn").addEventListener("click", function() {
     document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
         button.style.display = 'block';
     });
-});
-
-
-// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
-document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
-    button.addEventListener('click', function() {
-        clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
-        hideReihenfolgeButtons(); // Blende die ReihenfolgeButtons aus
-        displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
-
-        // Nachdem das Spiel angezeigt wurde, setze isHandGame zurück auf false
-        isHandGame = false;
-    });
-});
-
-// Event Listener für den Button "confirmGameBtn"
-document.getElementById("confirmGameBtn").addEventListener("click", function() {
-	 loadHighestBidderCards();
-    // Überprüfe, ob das Spiel eingepasst wurde
-    if (passCount === 3) {
-		  // Ändere den Text des Buttons "showCards" zu "Nächstes Spiel"
-    updateShowCardsButtonText("Nächstes Spiel");
-        resetGame(); // Starte das Spiel neu
-    } 
 });
 
 
