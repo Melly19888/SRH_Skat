@@ -135,7 +135,6 @@ function shuffle(array) {
     }
 }
 
-
 // Funktion zum Zeichnen einer Karte auf dem Canvas
 function drawCard(x, y, card, isSelected) {
     const img = new Image();
@@ -419,6 +418,7 @@ function updateShowCardsButtonText(text) {
 
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
+	console.log("resetGame");
 	
 	shuffle(cards); // Mische die Karten neu
 
@@ -498,8 +498,9 @@ player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
             });
         } 
     }
-	console.log("klickt");
+	
 });
+console.log("Spielstart");
 }    
 
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
@@ -550,6 +551,19 @@ function displayPassedGame() {
 
 }
 
+function getPlayer(id){
+	switch (highestBidder.id ) {
+		case 0:
+			return player1;
+		case 1:
+			return player2;	
+		case 2:
+			return player3;
+		default:
+			 return null;
+	}
+}
+	
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
@@ -629,7 +643,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
     if (passCount === 3) {
 		  // Ändere den Text des Buttons "showCards" zu "Nächstes Spiel"
     updateShowCardsButtonText("Nächstes Spiel");
-        resetGame(); // Starte das Spiel neu
+         // Starte das Spiel neu
     } 
 
     // Überprüfe, welcher Spieler der Höchstbietende ist
@@ -702,17 +716,9 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
     }
 });
 
-
-
-   
-
-
-
-
-
-
 document.addEventListener('click', function(event) {
     if (event.target.id === "showCards") {
+		
         if (!rolesChosenFlag && (player1.name !== "" && player2.name !== "" && player3.name !== "")) {
             showPlayerRoles();
             rolesChosenFlag = true;
@@ -867,7 +873,20 @@ spielfeld.addEventListener('click', function(event) {
 	const clickY = event.clientY - rect.top;
 	if( clickY-startY+ cardHeight*0.6 > 0){
 		
+		console.log("Anklicken der Spielkarte");
+		
 		const cardNummber = Math.floor(0.9*(clickX)/(cardWidth));
+		let player = getPlayer(highestBidder.id);
+		let card = player.cards[cardNummber];
+		
+		if(player.selectcards.includes(card)){
+			player.selectcards.splice (player.selectcards.indexOf(card),1);
+		}else{
+			player.selectcards.push(card);
+		}
+		console.log(player);
+		loadPlayerCards(player.cards, player.selectcards);
+	
 	}
   // Überprüfe jede Karte auf Trefferbereich
   //player1.cards.forEach((card) => {
@@ -894,4 +913,5 @@ console.log(0.9*(clickX)/(cardWidth));
 //console.log(cardNummber);
 });
 
+console.log("1234");
 resetGame();
