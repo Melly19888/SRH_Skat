@@ -1,9 +1,9 @@
 // Canvas und Kontexte definieren
-const Spielfeld = document.getElementById('Spielfeld');
+const spielfeld = document.getElementById('spielfeld');
 const canvasSecondary = document.getElementById('canvasSecondary');
 const thirdCanvas = document.getElementById('thirdCanvas');
 const innerCanvas = document.getElementById('innerCanvas');
-const ctx = Spielfeld.getContext('2d');
+const ctx = spielfeld.getContext('2d');
 const ctxSecondary = canvasSecondary.getContext('2d');
 const ctxthirdCanvas = thirdCanvas.getContext('2d');
 
@@ -55,7 +55,7 @@ let rolesChosenFlag = false; // Variable für die Bestätigung der Spielerrollen
 let passCount = 0; // Zähler für die Anzahl der Pässe
 
 // Startposition der Karten
-const startY = Spielfeld.height - cardHeight;
+const startY = spielfeld.height - cardHeight;
 
 // Spieler Namen aus dem Local Storage entfernen
 localStorage.removeItem('player1Name');
@@ -172,8 +172,8 @@ function loadPlayerCards(playerCards) {
 
             // Positionierung der Karten für Spieler 4 in der Mitte des Canvas
             if (playerCards === player4Cards && (index === 0 || index === 1)) {
-                posX = Spielfeld.width / 2 - cardWidth / 2 + index * (cardWidth - 10);
-                posY = Spielfeld.height / 2 - cardHeight / 2;
+                posX = spielfeld.width / 2 - cardWidth / 2 + index * (cardWidth - 10);
+                posY = spielfeld.height / 2 - cardHeight / 2;
             }
 
             // Karte zeichnen
@@ -191,8 +191,8 @@ function loadCustomCard() {
 
     // Zwei Karten nebeneinander in der Mitte des Canvas laden
 	if (player4Cards.length > 0){
-		drawCard(Spielfeld.width / 2 - cardWidth / 2, Spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
-		drawCard(Spielfeld.width / 2 + cardWidth / 2 - 10, Spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
+		drawCard(spielfeld.width / 2 - cardWidth / 2, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
+		drawCard(spielfeld.width / 2 + cardWidth / 2 - 10, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
 	}
 }
 
