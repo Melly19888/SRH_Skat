@@ -528,24 +528,6 @@ function displayPassedGame() {
     ctxSecondary.fillStyle = "red";
     ctxSecondary.font = "bold 60px Arial";
 
-    // Berechne die Position für den Text
-    const textToShow = "Das Spiel wurde eingepasst";
-    const textWidth = ctxSecondary.measureText(textToShow).width;
-    const xPosition = (canvasSecondary.width - textWidth) / 2;
-    const yPosition = (canvasSecondary.height / 2) + 30; // Zentriere den Text vertikal
-
-    // Schreibe den Text auf das Canvas
-    ctxSecondary.fillText(textToShow, xPosition, yPosition);
-
-   
-}
-function displayPassedGame() {
-    const canvasSecondary = document.getElementById("canvasSecondary");
-    const ctxSecondary = canvasSecondary.getContext("2d");
-    ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
-    ctxSecondary.fillStyle = "red";
-    ctxSecondary.font = "bold 60px Arial";
-
     // Berechne die Position für die erste Zeile
     let textToShowFirstLine = "Das Spiel wurde";
     let textWidthFirstLine = ctxSecondary.measureText(textToShowFirstLine).width;
