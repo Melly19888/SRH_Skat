@@ -785,8 +785,6 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function() {
     // Zeige player4Cards an
     loadPlayerCards(player4Cards);
 
-    // Blende card341.gif aus
-    clearMiddleCards(); // Diese Funktion sollte bereits definiert sein und die Karten in der Mitte des Canvas löschen
 
     // Optional: Verstecke den aufnehmenBtn nach dem Aufnehmen der Karten
     this.style.display = 'none';
