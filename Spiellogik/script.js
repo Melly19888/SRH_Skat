@@ -729,6 +729,73 @@ function showGameOptions() {
     document.getElementById("aufnehmenBtn").style.display = "block"; // Zeige den aufnehmenBtn wieder an
 }
 
+ 
+// Event Listener für den Button "confirmGameBtn"
+document.getElementById("confirmGameBtn").addEventListener("click", function() {
+    textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
+
+    switch(currentPlayer) {
+        case "Vorhand":
+            textToShow = `${player1Name} du bist dran`;
+            loadPlayerCards(player1Cards);
+            document.getElementById("reizwerte").style.display = "block";
+            document.getElementById("leftGameButton").style.display = "block";
+            currentPlayer = "Dummy"; // Wechsle zum nächsten Spieler
+            break;
+        case "Dummy":
+			  document.getElementById("reizwerte").style.display = "block";
+            document.getElementById("leftGameButton").style.display = "block";
+            currentPlayer = "Mittelhand"; // Wechsle zum nächsten Spieler ohne Aktion
+            break;
+        case "Mittelhand":
+            textToShow = `${player2Name} du bist dran`;
+            loadPlayerCards(player2Cards);
+            document.getElementById("reizwerte").style.display = "block";
+            document.getElementById("leftGameButton").style.display = "block";
+            currentPlayer = "Dumm"; // Wechsle zum nächsten Spieler
+            break;
+        case "Dumm":
+            currentPlayer = "Hinterhand"; // Wechsle zum nächsten Spieler ohne Aktion
+            break;
+        case "Hinterhand":
+            textToShow = `${player3Name} du bist dran`;
+            loadPlayerCards(player3Cards);
+            document.getElementById("reizwerte").style.display = "block";
+            document.getElementById("leftGameButton").style.display = "block";
+            currentPlayer = "Dum"; // Wechsle zum nächsten Spieler			
+            break;
+			case "Dum":
+           currentPlayer = "Skat";
+		case "Skat":
+           
+			currentPlayer = "Meist gereizt";
+			break;
+		case "Meist gereizt":
+			 
+			 // Zeige den höchsten Bieter an und blende alle Karten aus
+            displayHighestBidderAndHideCards(); 
+            document.getElementById("reizwerte").style.display = "none";
+            document.getElementById("leftGameButton").style.display = "none";
+            document.getElementById("confirmGameBtn").style.display = "none";
+            break;
+          
+            
+        default:
+            console.error('Unbekannter currentPlayer:', currentPlayer);
+            break;
+    }
+
+    if (currentPlayer !== "") {
+        updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
+        document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
+    } else {
+        // Alle Spieler haben gereizt, verstecke alle Buttons und zeige das Ergebnis an
+        document.getElementById("reizwerte").style.display = "none";
+        document.getElementById("leftGameButton").style.display = "none";
+        document.getElementById("confirmGameBtn").style.display = "none";
+        updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
+    }
+});
 
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
