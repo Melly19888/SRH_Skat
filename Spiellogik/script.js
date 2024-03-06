@@ -818,17 +818,13 @@ function showGameOptions() {
     document.getElementById("aufnehmenBtn").style.display = "block"; // Zeige den aufnehmenBtn wieder an
 }
 
-// Event Listener für den Button "confirmGameBtn"
-document.getElementById("confirmGameBtn").addEventListener("click", function() {
-    loadHighestBidderCards(); // Rufe die neue Funktion auf, um die Karten des Höchstbietenden zu laden und die Buttons anzuzeigen
-	
 
-});
 
 
 
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
+	 loadHighestBidderCards();
     // Überprüfe, ob das Spiel eingepasst wurde
     if (passCount === 3) {
 		  // Ändere den Text des Buttons "showCards" zu "Nächstes Spiel"
