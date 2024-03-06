@@ -835,10 +835,7 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function() {
     // Verstecke auch den Handbutton
     document.getElementById("handBtn").style.display = 'none';
 
-    // Zeige die Buttons mit der Klasse .ReihenfolgeButtons an
-    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
-        button.style.display = 'block';
-    });
+    
 	
 	// Einblenden des confirmGameBtn
     document.getElementById("confirmGameBtn").style.display = "block";
@@ -878,8 +875,11 @@ confirmGameBtn.addEventListener("click", function() {
 
         // Führe hier die Aktionen aus, die beim Aufnehmen der Karten nötig sind
         // Zum Beispiel: Karten zum Spieler hinzufügen, Skat aufnehmen etc.
-
     } 
+	// Zeige die Buttons mit der Klasse .ReihenfolgeButtons an
+    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
+        button.style.display = 'block';
+    });
 
 });
 });
