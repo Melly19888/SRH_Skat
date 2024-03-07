@@ -147,6 +147,19 @@ function drawCard(x, y, card, isSelected) {
         ctx.drawImage(img, x, y, cardWidth, cardHeight);
     };
 }
+function updateButtonDisplay(selectedCardsCount) {
+    if (selectedCardsCount === 2) {
+        document.getElementById('aufnehmen').style.display = 'block'; // Button anzeigen
+        document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
+            button.style.display = 'block'; // Zeige alle Buttons an
+        });
+    } else {
+        document.getElementById('aufnehmen').style.display = 'none'; // Button verstecken
+        document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
+            button.style.display = 'none'; // Verstecke alle Buttons
+        });
+    }
+}
 // Funktion zum Löschen des Bereichs, in dem die Karten gezeichnet werden
 function clearCardArea() {
     // Angenommen startY ist der Y-Startpunkt und spielfeld.height ist die Höhe des Canvas
@@ -868,44 +881,40 @@ confirmGameBtn.addEventListener("click", function() {
 });
 
 });
-
 // Event Listener für das Anklicken von Karten hinzufügen
 spielfeld.addEventListener('click', function(event) {
-	const rect = spielfeld.getBoundingClientRect();
-	const clickX = event.clientX - rect.left;
-	const clickY = event.clientY - rect.top;
-	if( clickY-startY+ cardHeight*0.6 > 0){
-		
-		console.log("Anklicken der Spielkarte");
-		
-		const cardNummber = Math.floor(0.9*(clickX)/(cardWidth));
-		let player = getPlayer(highestBidder.id);
-		
-            let card = player.cards[cardNummber];
-			
-	 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-	if (player.selectcards.includes(card)) {
-	player.selectcards.splice(player.selectcards.indexOf(card), 1);
-	} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
-	player.selectcards.push(card);
-	}
-		
-	// Überprüfe, ob zwei Karten ausgewählt wurden und nach oben verschoben sind
-	if(player.selectcards.length === 2 && clickY-startY+ cardHeight*0.6 > 0){
-		document.getElementById('aufnehmen').style.display = 'block'; // Button anzeigen
-		// Zeige die Buttons mit der Klasse .ReihenfolgeButtons an
-    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
-        button.style.display = 'block';
-    });
-	} else {
-		document.getElementById('aufnehmen').style.display = 'none'; // Button ausblenden
-	}
-		console.log(player);
+    const rect = spielfeld.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
 
-		 clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-		loadPlayerCards(player.cards, player.selectcards);
-	
-	}
+    // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
+    if (clickY - startY + cardHeight * 0.6 > 0) {
+        console.log("Anklicken der Spielkarte");
+
+        const cardNummber = Math.floor(0.9 * (clickX) / (cardWidth));
+        let player = getPlayer(highestBidder.id);
+
+        // Stelle sicher, dass die angeklickte Karte gültig ist
+        if (cardNummber >= 0 && cardNummber < player.cards.length) {
+            let card = player.cards[cardNummber];
+
+            // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+            if (player.selectcards.includes(card)) {
+                player.selectcards.splice(player.selectcards.indexOf(card), 1);
+            } else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+                player.selectcards.push(card);
+            }
+
+            // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
+            updateButtonDisplay(player.selectcards.length);
+
+            console.log(player);
+            clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+            loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+        }
+    }
+
+
   // Überprüfe jede Karte auf Trefferbereich
   //player1.cards.forEach((card) => {
    // const index =player1.cards.indexOf(card);
