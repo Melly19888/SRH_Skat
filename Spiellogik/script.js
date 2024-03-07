@@ -150,14 +150,12 @@ function drawCard(x, y, card, isSelected) {
 function updateButtonDisplay(selectedCardsCount) {
     if (selectedCardsCount === 2) {
         document.getElementById('aufnehmen').style.display = 'block'; // Button anzeigen
-        document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
-            button.style.display = 'block'; // Zeige alle Buttons an
-        });
+        
+       
     } else {
         document.getElementById('aufnehmen').style.display = 'none'; // Button verstecken
-        document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
-            button.style.display = 'none'; // Verstecke alle Buttons
-        });
+        
+       
     }
 }
 // Funktion zum Löschen des Bereichs, in dem die Karten gezeichnet werden
@@ -824,6 +822,9 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 			player3.cards.push(...skatcards);
 			break
 	}
+	player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+	player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+	player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 	 // Leere das Array skatcards und lösche die Karten aus der Mitte des Canvas
     skatcards = [];
   
@@ -853,6 +854,7 @@ const confirmGameBtn = document.getElementById("confirmGameBtn");
 
 
 confirmGameBtn.addEventListener("click", function() {
+	
 	
 	  clearMiddleCards();
 
@@ -885,15 +887,16 @@ confirmGameBtn.addEventListener("click", function() {
 });
 // Event Listener für das Anklicken von Karten hinzufügen
 spielfeld.addEventListener('click', function(event) {
+	
     const rect = spielfeld.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
 
     // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
-    if (clickY - startY + cardHeight * 0.6 > 0) {
+    if (clickY - startY + cardHeight * 1.5 > 0) {
         console.log("Anklicken der Spielkarte");
 
-        const cardNummber = Math.floor(0.9 * (clickX) / (cardWidth));
+        const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
         let player = getPlayer(highestBidder.id);
 
         // Stelle sicher, dass die angeklickte Karte gültig ist
@@ -937,9 +940,60 @@ spielfeld.addEventListener('click', function(event) {
 console.log(rect);
 console.log(clickX);
 console.log(clickY);
-console.log(clickY-startY+ cardHeight*0.6);
-console.log(0.9*(clickX)/(cardWidth));
+console.log(spielfeld.width)
+console.log(spielfeld.height)
+console.log(clickY-startY+ cardHeight*1.5);
+console.log(1.2*(clickX)/(cardWidth));
 //console.log(cardNummber);
 });
+
+
+
+
+
+
+// Event Listener für den Button "aufnehmen"
+document.getElementById("aufnehmen").addEventListener("click", function() {
+    // Verstecke den "aufnehmen" Button
+    this.style.display = "none";
+
+    // Zeige alle Buttons an
+    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
+        button.style.display = 'block';
+    });
+	
+	player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+	player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+	player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+
+    // Hole den aktuellen Spieler basierend auf der ID des höchsten Bieters
+    let player = getPlayer(highestBidder.id);
+
+    // Überprüfe, ob der Spieler existiert und ob ausgewählte Karten vorhanden sind
+    if (player && player.selectcards.length > 0) {
+        // Füge die ausgewählten Karten zum Stich des höchsten Bieters hinzu
+        highestBidder.stich.push(...player.selectcards);
+
+        // Entferne die ausgewählten Karten aus dem Array der Karten des Spielers
+        player.selectcards.forEach(selectedCard => {
+            const cardIndex = player.cards.indexOf(selectedCard);
+            if (cardIndex !== -1) {
+                player.cards.splice(cardIndex, 1);
+            }
+        });
+
+        // Leere das Array der ausgewählten Karten
+        player.selectcards = [];
+
+        // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
+        updateButtonDisplay(player.selectcards.length);
+
+        clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+        loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+
+        console.log('Aktualisierter Stich:', highestBidder.stich);
+    }
+});
+
 
 resetGame();
