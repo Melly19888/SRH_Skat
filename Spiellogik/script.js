@@ -71,6 +71,7 @@ localStorage.removeItem('gameStarted');
 	document.getElementById("reizwerte").style.display = "none";
 	document.getElementById("handBtn").style.display = "none";
 	document.getElementById("aufnehmenBtn").style.display = "none";
+	document.getElementById('aufnehmen').style.display = 'none'; 
 	
 	// Verstecke alle Buttons zu Beginn
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -141,15 +142,20 @@ function drawCard(x, y, card, isSelected) {
     img.src = card;
     img.onload = function() {
 		if (isSelected){
-			y =y-100;
+			y =y-150;
 		}
         ctx.drawImage(img, x, y, cardWidth, cardHeight);
     };
 }
-
+// Funktion zum Löschen des Bereichs, in dem die Karten gezeichnet werden
+function clearCardArea() {
+    // Angenommen startY ist der Y-Startpunkt und spielfeld.height ist die Höhe des Canvas
+    ctx.clearRect(0, startY, spielfeld.width, spielfeld.height - startY);
+}
 // Funktion zum Laden der Karten für einen Spieler
 function loadPlayerCards(playerCards, selectcards) {
 	console.log(selectcards);
+	
     // Überprüfe, ob playerCards ein Array ist und Elemente enthält
     if (Array.isArray(playerCards) && playerCards.length > 0) {
         playerCards.forEach((card, index) => {
@@ -857,10 +863,7 @@ confirmGameBtn.addEventListener("click", function() {
 	
 	 document.getElementById("confirmGameBtn").style.display = "none";
 	 
-	// Zeige die Buttons mit der Klasse .ReihenfolgeButtons an
-    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
-        button.style.display = 'block';
-    });
+	
 	
 });
 
@@ -877,14 +880,29 @@ spielfeld.addEventListener('click', function(event) {
 		
 		const cardNummber = Math.floor(0.9*(clickX)/(cardWidth));
 		let player = getPlayer(highestBidder.id);
-		let card = player.cards[cardNummber];
 		
-		if(player.selectcards.includes(card)){
-			player.selectcards.splice (player.selectcards.indexOf(card),1);
-		}else{
-			player.selectcards.push(card);
-		}
+            let card = player.cards[cardNummber];
+			
+	 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+	if (player.selectcards.includes(card)) {
+	player.selectcards.splice(player.selectcards.indexOf(card), 1);
+	} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+	player.selectcards.push(card);
+	}
+		
+	// Überprüfe, ob zwei Karten ausgewählt wurden und nach oben verschoben sind
+	if(player.selectcards.length === 2 && clickY-startY+ cardHeight*0.6 > 0){
+		document.getElementById('aufnehmen').style.display = 'block'; // Button anzeigen
+		// Zeige die Buttons mit der Klasse .ReihenfolgeButtons an
+    document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
+        button.style.display = 'block';
+    });
+	} else {
+		document.getElementById('aufnehmen').style.display = 'none'; // Button ausblenden
+	}
 		console.log(player);
+
+		 clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
 		loadPlayerCards(player.cards, player.selectcards);
 	
 	}
@@ -904,7 +922,7 @@ spielfeld.addEventListener('click', function(event) {
     //}
   //});
    //let posX = index * (cardWidth - 12) + 1;
-        //    let posY = startY;
+     //    let posY = startY;
 console.log(rect);
 console.log(clickX);
 console.log(clickY);
