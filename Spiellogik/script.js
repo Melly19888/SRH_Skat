@@ -164,6 +164,8 @@ function updateButtonDisplay(selectedCardsCount) {
 function clearCardArea() {
     // Angenommen startY ist der Y-Startpunkt und spielfeld.height ist die Höhe des Canvas
     ctx.clearRect(0, startY, spielfeld.width, spielfeld.height - startY);
+	 ctx.clearRect(0, 0, spielfeld.width, startY); // Lösche den Bereich oberhalb der Karten
+   
 }
 // Funktion zum Laden der Karten für einen Spieler
 function loadPlayerCards(playerCards, selectcards) {
@@ -940,5 +942,4 @@ console.log(0.9*(clickX)/(cardWidth));
 //console.log(cardNummber);
 });
 
-console.log("1234");
 resetGame();
