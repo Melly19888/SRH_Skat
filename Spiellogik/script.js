@@ -25,7 +25,7 @@ let player1 = {name:"", cards:[], ausgewaehlt:[]};
 let player2 = {name:"", cards:[], ausgewaehlt:[]};
 let player3 = {name:"", cards:[], ausgewaehlt:[]};
 let aktivPlayer = -1;
-
+let aktiverSpielwert = -1;
 
 const cardWidth = 170;
 const cardHeight = 200;
@@ -64,6 +64,18 @@ localStorage.removeItem('player2Name');
 localStorage.removeItem('player3Name');
 localStorage.removeItem('player4Name');
 localStorage.removeItem('gameStarted');
+
+const spielWerte = new Map([
+ [ 'karo', 9],
+  ['herz', 10],
+  ['pik', 11],
+  ['kreuz', 12],
+  ['null', 23],
+  ['nullHand', 35],
+  ['nullover', 46],
+  ['grand', 24],
+  ['nulloverHand', 59]
+]);
 
  document.getElementById("confirmGameBtn").style.display = "none";
     document.getElementById("leftGameButton").style.display = "none";
@@ -757,18 +769,30 @@ document.addEventListener('click', function(event) {
 
 // Event Listener für alle Buttons mit der Klasse "Reihenfolge"
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
-    button.addEventListener('click', function() {
-        clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
-        displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
-		document.getElementById("karo").style.display = "none";
-		document.getElementById("herz").style.display = "none";
-		document.getElementById("pik").style.display = "none";
-		document.getElementById("kreuz").style.display = "none";
-		document.getElementById("grand").style.display = "none";
-		document.getElementById("null").style.display = "none";
-		document.getElementById("nullover").style.display = "none";
-		isHandGame = false;
-    });
+  button.addEventListener('click', function() {
+    clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
+    displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
+
+    // Verstecke alle Trumpf-Elemente
+    document.getElementById("karo").style.display = "none";
+    document.getElementById("herz").style.display = "none";
+    document.getElementById("pik").style.display = "none";
+    document.getElementById("kreuz").style.display = "none";
+    document.getElementById("grand").style.display = "none";
+    document.getElementById("null").style.display = "none";
+    document.getElementById("nullover").style.display = "none";
+
+    isHandGame = false;
+
+    // Setze aktivTrumpf basierend auf dem ausgewählten Spiel
+    const spielName = this.textContent;
+    aktiverSpielwert = spielWerte.get(this.id) ; // Verwende null als Fallback-Wert
+	
+	console.log(spielWerte);
+	console.log(spielName);
+	
+    console.log(`Aktiver Spielwert: ${aktiverSpielwert}`); // Optional: Ausgabe in der Konsole
+  });
 });
 
 // Event Listener für den Button "handBtn"
@@ -800,7 +824,7 @@ document.getElementById("handBtn").addEventListener("click", function() {
     // Zeige die Elemente mit der Klasse ReihenfolgeButtons an
     document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
 		  clearMiddleCards();
-        button.style.display = 'block';
+        button.style.display = 'block';handBtn
     });
 });
 
