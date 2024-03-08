@@ -164,7 +164,7 @@
       overflow: hidden;
     }
 
-    #confirmGameBtn, #aufnehmen {
+    #confirmGameBtn, #aufnehmen, #nextPlayer, #playBegin {
       border: none;
       border-radius: 0.4em;
       display: block;

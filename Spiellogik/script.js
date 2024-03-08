@@ -76,8 +76,9 @@ const spielWerte = new Map([
   ['grand', 24],
   ['nulloverHand', 59]
 ]);
-
- document.getElementById("confirmGameBtn").style.display = "none";
+	document.getElementById("playBegin").style.display = "none";
+	document.getElementById("nextPlayer").style.display = "none";
+	document.getElementById("confirmGameBtn").style.display = "none";
     document.getElementById("leftGameButton").style.display = "none";
     document.getElementById("showCards").style.display = "block";
 	document.getElementById("reizwerte").style.display = "none";
@@ -326,8 +327,6 @@ function displayBidValueOnThirdCanvas(bidValue) {
     ctxThird.fillText(textToShow, xPosition, yPosition);
 }
 
-
-
 function updateCanvasSecondaryText(text) {
   ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
   ctxSecondary.fillStyle="red";
@@ -339,7 +338,6 @@ function updateCanvasSecondaryText(text) {
 
   ctxSecondary.fillText(text, xPosition, yPosition);
 }
-
 
 // Funktion zum Anzeigen des höchsten Bieters in der Konsole und auf dem Canvas
 function displayHighestBidder() {
@@ -594,6 +592,40 @@ function getPlayer(id){
 			 return null;
 	}
 }
+
+function playCard(){
+	const rect = spielfeld.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+
+    // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
+    if (clickY - startY + cardHeight * 1.5 > 0) {
+        console.log("Anklicken der Spielkarte");
+
+        const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
+        let player = getPlayer(highestBidder.id);
+
+        // Stelle sicher, dass die angeklickte Karte gültig ist
+        if (cardNummber >= 0 && cardNummber < player.cards.length) {
+            let card = player.cards[cardNummber];
+
+            // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+            if (player.selectcards.includes(card)) {
+                player.selectcards.splice(player.selectcards.indexOf(card), 1);
+            } else if (player.selectcards.length < 1) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+                player.selectcards.push(card);
+            }
+
+            // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
+            updateButtonDisplay(player.selectcards.length);
+
+            console.log(player);
+            clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+            loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+        }
+    }
+}
+
 	
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
@@ -771,7 +803,9 @@ document.addEventListener('click', function(event) {
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
   button.addEventListener('click', function() {
     clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
-    displaySelectedGame(this.textContent); // Zeige das ausgewählte Spiel an
+    displaySelectedGame("Wir spielen"+this.textContent); // Zeige das ausgewählte Spiel an
+	 // Berechne die Position für die zweite Zeile
+
 
     // Verstecke alle Trumpf-Elemente
     document.getElementById("karo").style.display = "none";
@@ -787,6 +821,8 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
     // Setze aktivTrumpf basierend auf dem ausgewählten Spiel
     const spielName = this.textContent;
     aktiverSpielwert = spielWerte.get(this.id) ; // Verwende null als Fallback-Wert
+	document.getElementById("playBegin").style.display = "block";
+	loadCustomCard()
 	
 	console.log(spielWerte);
 	console.log(spielName);
@@ -911,11 +947,11 @@ confirmGameBtn.addEventListener("click", function() {
 });
 // Event Listener für das Anklicken von Karten hinzufügen
 spielfeld.addEventListener('click', function(event) {
-	
-    const rect = spielfeld.getBoundingClientRect();
+	const rect = spielfeld.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
 
+	
     // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
     if (clickY - startY + cardHeight * 1.5 > 0) {
         console.log("Anklicken der Spielkarte");
@@ -972,10 +1008,6 @@ console.log(1.2*(clickX)/(cardWidth));
 });
 
 
-
-
-
-
 // Event Listener für den Button "aufnehmen"
 document.getElementById("aufnehmen").addEventListener("click", function() {
     // Verstecke den "aufnehmen" Button
@@ -1018,6 +1050,32 @@ document.getElementById("aufnehmen").addEventListener("click", function() {
         console.log('Aktualisierter Stich:', highestBidder.stich);
     }
 });
+
+// Event Listener für den Button "handBtn"
+document.getElementById("playBegin").addEventListener("click", function() {
+  document.getElementById("nextPlayer").style.display = "block";
+  document.getElementById("playBegin").style.display = "none";
+});
+
+document.getElementById("nextPlayer").addEventListener("click", function() {
+	textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
+  
+	
+	
+	
+			
+            textToShow = `${player1.name} du bist dran`;
+            loadPlayerCards(player1.cards, player1.selectcards); 
+			 textToShow = `${player1.name} du bist dran`;
+			  currentPlayer = "Mittelhand";
+            
+          
+   console.log(player1.name);
+	
+});
+
+
+
 
 
 resetGame();
