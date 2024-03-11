@@ -629,54 +629,101 @@ function playCard(){
         }
     }
 }
+function clearTextFromCanvas() {
+    const textHeight = 60; // Angenommene Höhe des Textes basierend auf der Schriftgröße
+    const padding = 10; // Ein wenig zusätzlicher Platz um den Text herum
 
+    // Berechne die Y-Position für das Löschen basierend auf der Position, wo der Text gezeichnet wird
+    const yPositionToClear = (canvasSecondary.height / 2) + 200 - textHeight - padding;
+    const heightToClear = textHeight + (2 * padding);
+
+    // Lösche den Bereich, wo der Text gezeichnet wird
+    ctxSecondary.clearRect(0, yPositionToClear, canvasSecondary.width, heightToClear);
+}
+
+function displayTextOnCanvas(text) {
+    clearTextFromCanvas(); // Lösche nur den Bereich des alten Textes
+
+    ctxSecondary.fillStyle = "red"; // Setze die Farbe auf Rot
+    ctxSecondary.font = "bold 60px Arial"; // Wähle die Schriftgröße und -art
+
+    const textWidth = ctxSecondary.measureText(text).width;
+    const xPosition = (canvasSecondary.width - textWidth) / 2;
+
+    // Die Y-Position ist bereits in der Funktion clearTextFromCanvas definiert
+    const yPosition = (canvasSecondary.height / 2) + 200;
+
+    ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
+}
 // Globale Variable für den Index des aktuellen Spielers
 let currentPlayerIndex = 0;
 
-// Funktion zum Laden der Karten des nächsten Spielers
+// Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
-    // Bestimme den nächsten Spieler basierend auf dem aktuellen Index
+	let currentPlayer;
     let nextPlayer;
+    let textToShow;
+
     switch (currentPlayerIndex) {
         case 0:
             nextPlayer = player1;
+            textToShow = `${player1.name} du bist dran`;
             break;
-        case 1:
-            nextPlayer = player2;
+		case 1:
+            nextPlayer = player1;
+            textToShow = `${player2.name} du bist dran`;
             break;
         case 2:
+            nextPlayer = player2;
+            textToShow = `${player2.name} du bist dran`;
+            break;
+		case 3:
+            nextPlayer = player2;
+            textToShow = `${player3.name} du bist dran`;
+            break;
+        case 4:
             nextPlayer = player3;
+            textToShow = `${player3.name} du bist dran`;
+            break;
+		case 5:
+            nextPlayer = player3;
+            textToShow = `${player1.name} du bist dran`;
+			currentPlayerIndex = -1; // Zurücksetzen für den nächsten Durchlauf
             break;
         default:
-            nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
-            currentPlayerIndex = -1; // Setze zurück für nächsten Durchlauf
-            break;
+            
     }
 
-    // Lade die Karten des nächsten Spielers
-    loadPlayerCards(nextPlayer.cards, nextPlayer.ausgewaehlt);
+     if (nextPlayer) {
+        loadPlayerCards(nextPlayer.cards, nextPlayer.ausgewaehlt);
+        displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
+        currentPlayerIndex++; // Gehe zum nächsten Spieler über
 
-    // Aktualisiere den Index für den nächsten Spieler
-    currentPlayerIndex++;
+        if (currentPlayerIndex > 5) {
+			nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
+            
+        }
+    }
 }
+
 	
 // Funktion zum Anzeigen der Karten des nächsten Spielers oder card33.gif
 function showNextPlayerOrCustomCard() {
   // Bestimme den aktuellen Spieler basierend auf dem Index
-  let currentPlayer;
+  
   switch (gameState.currentPlayerIndex) {
-    case 0:
+	
+    case 1:
       currentPlayer = player1;
       break;
-    case 1:
+    case 2:
       currentPlayer = player2;
       break;
-    case 2:
+    case 3:
       currentPlayer = player3;
       break;
     default:
-      currentPlayer = null; // Kein Spieler (Zeige card33.gif)
-      break;
+
   }
 
   // Entscheide, ob die Karten des Spielers oder card33.gif angezeigt werden sollen
@@ -865,36 +912,38 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
+/// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
-  button.addEventListener('click', function() {
-    clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
-    displaySelectedGame("Wir spielen"+this.textContent); // Zeige das ausgewählte Spiel an
-	 // Berechne die Position für die zweite Zeile
+    button.addEventListener('click', function() {
+        clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
+        displaySelectedGame("Wir spielen " + this.textContent); // Zeige das ausgewählte Spiel an
 
+        // Verstecke alle Trumpf-Elemente
+        document.getElementById("karo").style.display = "none";
+        document.getElementById("herz").style.display = "none";
+        document.getElementById("pik").style.display = "none";
+        document.getElementById("kreuz").style.display = "none";
+        document.getElementById("grand").style.display = "none";
+        document.getElementById("null").style.display = "none";
+        document.getElementById("nullover").style.display = "none";
 
-    // Verstecke alle Trumpf-Elemente
-    document.getElementById("karo").style.display = "none";
-    document.getElementById("herz").style.display = "none";
-    document.getElementById("pik").style.display = "none";
-    document.getElementById("kreuz").style.display = "none";
-    document.getElementById("grand").style.display = "none";
-    document.getElementById("null").style.display = "none";
-    document.getElementById("nullover").style.display = "none";
+        isHandGame = false;
 
-    isHandGame = false;
+        // Setze aktivTrumpf basierend auf dem ausgewählten Spiel
+        const spielName = this.textContent;
+        aktiverSpielwert = spielWerte.get(this.id); // Verwende null als Fallback-Wert
 
-    // Setze aktivTrumpf basierend auf dem ausgewählten Spiel
-    const spielName = this.textContent;
-    aktiverSpielwert = spielWerte.get(this.id) ; // Verwende null als Fallback-Wert
-	document.getElementById("playBegin").style.display = "block";
-	
-	
-	console.log(spielWerte);
-	console.log(spielName);
-	
-    console.log(`Aktiver Spielwert: ${aktiverSpielwert}`); // Optional: Ausgabe in der Konsole
-  });
+        console.log(spielWerte);
+        console.log(spielName);
+        console.log(`Aktiver Spielwert: ${aktiverSpielwert}`); // Optional: Ausgabe in der Konsole
+
+        // Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
+        const playerNameText = `${player1.name} du bist dran`;
+
+        displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
+
+        document.getElementById("playBegin").style.display = "block";
+    });
 });
 
 // Event Listener für den Button "handBtn"
@@ -1119,7 +1168,7 @@ document.getElementById("aufnehmen").addEventListener("click", function() {
 
 // Event Listener für den Button "handBtn"
 document.getElementById("playBegin").addEventListener("click", function() {
-	loadCustomCard(); 
+	loadCustomCard();
   document.getElementById("nextPlayer").style.display = "block";
   document.getElementById("playBegin").style.display = "none";
   // Zeige das ausgewählte Spiel und den aktuellen Spieler an
@@ -1127,7 +1176,6 @@ document.getElementById("playBegin").addEventListener("click", function() {
 });
 
 document.getElementById("nextPlayer").addEventListener("click", function() {
-	textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
 	 loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
 	showNextPlayerOrCustomCard();
 
