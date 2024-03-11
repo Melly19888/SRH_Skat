@@ -7,6 +7,7 @@ const ctx = spielfeld.getContext('2d');
 const ctxSecondary = canvasSecondary.getContext('2d');
 const ctxthirdCanvas = thirdCanvas.getContext('2d');
 
+
 let gameState = {
   currentPlayerIndex: 0,
   showCustomCard: false
@@ -24,11 +25,14 @@ let hasPickedUpSkat = false;
 // Globale Variable für den Hand-Spielzustand
 let isHandGame = false;
 
+let skatcards = [];
+let tablecards = [];
+
 // Spieler Namen und Kartenmaße
 let player1 = {name:"", cards:[], ausgewaehlt:[]};
 let player2 = {name:"", cards:[], ausgewaehlt:[]};
 let player3 = {name:"", cards:[], ausgewaehlt:[]};
-let aktivPlayer = -1;
+let istdranSpieler = -1;
 let aktiverSpielwert = -1;
 
 const cardWidth = 170;
@@ -127,8 +131,6 @@ const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif
 ' img/card30.gif', ' img/card31.gif',' img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
 
 
-let skatcards = [];
-let tablecard = [];
 
 
 
@@ -137,7 +139,7 @@ player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 
-
+player1
 // Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
 function extractCardNumber(card) {
     return parseInt(card.match(/\d+/)[0]);
@@ -184,7 +186,7 @@ function clearCardArea() {
 }
 // Funktion zum Laden der Karten für einen Spieler
 function loadPlayerCards(playerCards, selectcards) {
-	console.log(selectcards);
+	
 	
     // Überprüfe, ob playerCards ein Array ist und Elemente enthält
     if (Array.isArray(playerCards) && playerCards.length > 0) {
@@ -197,7 +199,11 @@ function loadPlayerCards(playerCards, selectcards) {
                 posX = spielfeld.width / 2 - cardWidth / 2 + index * (cardWidth - 10);
                 posY = spielfeld.height / 2 - cardHeight / 2;
             }
-	console.log(selectcards);
+			if ((playerCards === tablecard) &&( tablecard.length >0)) {
+                posX = spielfeld.width / 2 - 2*(cardWidth / 2) + index * (cardWidth - 10);
+                posY = spielfeld.height / 2 - cardHeight / 2;
+            }
+	
             // Karte zeichnen
             drawCard(posX, posY, card, selectcards.includes(card));
 			
@@ -348,7 +354,7 @@ function displayHighestBidder() {
   if (highestBidder.name !== "") {
       const textToShow = `${highestBidder.name} : ${highestBidder.bid}`;
 
-      console.log(textToShow);
+     
       updateCanvasSecondaryText(textToShow);
   }
 }
@@ -372,7 +378,7 @@ function showCustomPopup(message) {
 // Funktion zum Anzeigen des höchsten Bieters in der Konsole
 function displayHighestBidderInConsole() {
     if (highestBidder.name !== "") {
-        console.log(`${highestBidder.name} : ${highestBidder.bid}`);
+       
 		
     } 
 }
@@ -451,7 +457,7 @@ function updateShowCardsButtonText(text) {
 
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
-	console.log("resetGame");
+	
 	
 	shuffle(cards); // Mische die Karten neu
 
@@ -533,7 +539,7 @@ player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
     }
 	
 });
-console.log("Spielstart");
+
 }    
 
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
@@ -597,38 +603,7 @@ function getPlayer(id){
 	}
 }
 
-function playCard(){
-	const rect = spielfeld.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
 
-    // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
-    if (clickY - startY + cardHeight * 1.5 > 0) {
-        console.log("Anklicken der Spielkarte");
-
-        const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
-        let player = getPlayer(highestBidder.id);
-
-        // Stelle sicher, dass die angeklickte Karte gültig ist
-        if (cardNummber >= 0 && cardNummber < player.cards.length) {
-            let card = player.cards[cardNummber];
-
-            // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-            if (player.selectcards.includes(card)) {
-                player.selectcards.splice(player.selectcards.indexOf(card), 1);
-            } else if (player.selectcards.length < 1) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
-                player.selectcards.push(card);
-            }
-
-            // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
-            updateButtonDisplay(player.selectcards.length);
-
-            console.log(player);
-            clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-            loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
-        }
-    }
-}
 function clearTextFromCanvas() {
     const textHeight = 60; // Angenommene Höhe des Textes basierend auf der Schriftgröße
     const padding = 10; // Ein wenig zusätzlicher Platz um den Text herum
@@ -656,7 +631,7 @@ function displayTextOnCanvas(text) {
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
 // Globale Variable für den Index des aktuellen Spielers
-let currentPlayerIndex = 0;
+let currentState = 0;
 
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
@@ -664,46 +639,62 @@ function loadNextPlayerCards() {
     let nextPlayer;
     let textToShow;
 
-    switch (currentPlayerIndex) {
+    switch (currentState) {
         case 0:
             nextPlayer = player1;
             textToShow = `${player1.name} du bist dran`;
+			
             break;
 		case 1:
-            nextPlayer = player1;
+            nextPlayer = player2;
             textToShow = `${player2.name} du bist dran`;
             break;
         case 2:
             nextPlayer = player2;
             textToShow = `${player2.name} du bist dran`;
+			
             break;
 		case 3:
-            nextPlayer = player2;
+            nextPlayer = player3;
             textToShow = `${player3.name} du bist dran`;
             break;
         case 4:
             nextPlayer = player3;
             textToShow = `${player3.name} du bist dran`;
+			
             break;
 		case 5:
-            nextPlayer = player3;
+            nextPlayer = player1;
             textToShow = `${player1.name} du bist dran`;
-			currentPlayerIndex = -1; // Zurücksetzen für den nächsten Durchlauf
+			currentState = -1; // Zurücksetzen für den nächsten Durchlauf
             break;
         default:
             
     }
 
-     if (nextPlayer) {
-        loadPlayerCards(nextPlayer.cards, nextPlayer.ausgewaehlt);
-        displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
-        currentPlayerIndex++; // Gehe zum nächsten Spieler über
+		tablecards.push(...nextPlayer.selectcards);
 
-        if (currentPlayerIndex > 5) {
+        console.log(tablecards);
+		console.log(nextPlayer);
+		console.log(nextPlayer.selectcards);
+		
+		nextPlayer.selectcards.forEach(selectedCard => {
+			const cardIndex = nextPlayer.cards.indexOf(selectedCard);
+			if (cardIndex !== -1) {
+				nextPlayer.cards.splice(cardIndex,1);
+			}
+		});
+        loadPlayerCards(nextPlayer.cards, []);
+		loadPlayerCards(tablecards,[]);
+        displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
+        currentState++; // Gehe zum nächsten Spieler über
+		
+		
+        if (currentState > 5) {
 			nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
             
         }
-    }
+   
 }
 
 	
@@ -711,7 +702,7 @@ function loadNextPlayerCards() {
 function showNextPlayerOrCustomCard() {
   // Bestimme den aktuellen Spieler basierend auf dem Index
   
-  switch (gameState.currentPlayerIndex) {
+  switch (gameState.currentState) {
 	
     case 1:
       currentPlayer = player1;
@@ -737,7 +728,7 @@ function showNextPlayerOrCustomCard() {
 
   // Gehe zum nächsten Spieler über oder zurück zu Vorhand, wenn alle durch sind
   if (!gameState.showCustomCard) {
-    gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % 3;
+    gameState.currentState = (gameState.currentState + 1) % 3;
   }
 }
 // Event Listener für den Button "confirmGameBtn"
@@ -933,9 +924,7 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         const spielName = this.textContent;
         aktiverSpielwert = spielWerte.get(this.id); // Verwende null als Fallback-Wert
 
-        console.log(spielWerte);
-        console.log(spielName);
-        console.log(`Aktiver Spielwert: ${aktiverSpielwert}`); // Optional: Ausgabe in der Konsole
+        
 
         
         document.getElementById("playBegin").style.display = "block";
@@ -1057,6 +1046,8 @@ confirmGameBtn.addEventListener("click", function() {
 
 });
 // Event Listener für das Anklicken von Karten hinzufügen
+
+
 spielfeld.addEventListener('click', function(event) {
 	const rect = spielfeld.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
@@ -1065,7 +1056,7 @@ spielfeld.addEventListener('click', function(event) {
 	
     // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
     if (clickY - startY + cardHeight * 1.5 > 0) {
-        console.log("Anklicken der Spielkarte");
+      
 
         const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
         let player = getPlayer(highestBidder.id);
@@ -1084,7 +1075,7 @@ spielfeld.addEventListener('click', function(event) {
             // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
             updateButtonDisplay(player.selectcards.length);
 
-            console.log(player);
+           
             clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
             loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
         }
@@ -1108,14 +1099,7 @@ spielfeld.addEventListener('click', function(event) {
   //});
    //let posX = index * (cardWidth - 12) + 1;
      //    let posY = startY;
-console.log(rect);
-console.log(clickX);
-console.log(clickY);
-console.log(spielfeld.width)
-console.log(spielfeld.height)
-console.log(clickY-startY+ cardHeight*1.5);
-console.log(1.2*(clickX)/(cardWidth));
-//console.log(cardNummber);
+
 });
 
 
@@ -1158,7 +1142,7 @@ document.getElementById("aufnehmen").addEventListener("click", function() {
         clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
         loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
 
-        console.log('Aktualisierter Stich:', highestBidder.stich);
+       
     }
 });
 
@@ -1182,7 +1166,7 @@ document.getElementById("nextPlayer").addEventListener("click", function() {
 
             
           
-   console.log(player1.name);
+ 
 	
 });
 
