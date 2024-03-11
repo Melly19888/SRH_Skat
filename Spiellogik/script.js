@@ -937,11 +937,7 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         console.log(spielName);
         console.log(`Aktiver Spielwert: ${aktiverSpielwert}`); // Optional: Ausgabe in der Konsole
 
-        // Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
-        const playerNameText = `${player1.name} du bist dran`;
-
-        displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
-
+        
         document.getElementById("playBegin").style.display = "block";
     });
 });
@@ -1168,6 +1164,11 @@ document.getElementById("aufnehmen").addEventListener("click", function() {
 
 // Event Listener für den Button "handBtn"
 document.getElementById("playBegin").addEventListener("click", function() {
+	// Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
+        const playerNameText = `${player1.name} du bist dran`;
+
+        displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
+
 	loadCustomCard();
   document.getElementById("nextPlayer").style.display = "block";
   document.getElementById("playBegin").style.display = "none";
