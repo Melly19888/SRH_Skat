@@ -1,3 +1,4 @@
+"use strict";
 // Canvas und Kontexte definieren
 const spielfeld = document.getElementById('spielfeld');
 const canvasSecondary = document.getElementById('canvasSecondary');
@@ -199,7 +200,7 @@ function loadPlayerCards(playerCards, selectcards) {
                 posX = spielfeld.width / 2 - cardWidth / 2 + index * (cardWidth - 10);
                 posY = spielfeld.height / 2 - cardHeight / 2;
             }
-			if ((playerCards === tablecard) &&( tablecard.length >0)) {
+			if ((playerCards === tablecards) &&( tablecards.length >0)) {
                 posX = spielfeld.width / 2 - 2*(cardWidth / 2) + index * (cardWidth - 10);
                 posY = spielfeld.height / 2 - cardHeight / 2;
             }
@@ -477,7 +478,7 @@ function resetGame() {
     player2.cards = cards.slice(10, 20);
     player3.cards = cards.slice(20, 30);
     skatcards = cards.slice(30, 32);
-	tablecard =[];
+	tablecards =[];
 	player1.selectcards=[];
 	player2.selectcards=[];
 	player3.selectcards=[];
@@ -671,19 +672,8 @@ function loadNextPlayerCards() {
         default:
             
     }
-
-		tablecards.push(...nextPlayer.selectcards);
-
-        console.log(tablecards);
-		console.log(nextPlayer);
-		console.log(nextPlayer.selectcards);
+		gameState.currentPlayerIndex=nextPlayer;
 		
-		nextPlayer.selectcards.forEach(selectedCard => {
-			const cardIndex = nextPlayer.cards.indexOf(selectedCard);
-			if (cardIndex !== -1) {
-				nextPlayer.cards.splice(cardIndex,1);
-			}
-		});
         loadPlayerCards(nextPlayer.cards, []);
 		loadPlayerCards(tablecards,[]);
         displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
@@ -1065,20 +1055,37 @@ spielfeld.addEventListener('click', function(event) {
         if (cardNummber >= 0 && cardNummber < player.cards.length) {
             let card = player.cards[cardNummber];
 
-            // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-            if (player.selectcards.includes(card)) {
-                player.selectcards.splice(player.selectcards.indexOf(card), 1);
-            } else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
-                player.selectcards.push(card);
-            }
+			// Drücken nach dem reizen
+			if (gameState.currentPlayerIndex === 0){
+				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+				if (player.selectcards.includes(card)) {
+					player.selectcards.splice(player.selectcards.indexOf(card), 1);
+				} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+					player.selectcards.push(card);
+				}
 
-            // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
-            updateButtonDisplay(player.selectcards.length);
+				// Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
+				updateButtonDisplay(player.selectcards.length);
 
-           
-            clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-            loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
-        }
+			   
+				clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+				loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+			// Spielen
+			}else {
+				tablecards.push(card);
+
+        console.log(tablecards);
+		console.log(player);
+		console.log(player.selectcards);
+		
+		
+				const cardIndex = player.cards.indexOf(card);
+				if (cardIndex !== -1) {
+					player.cards.splice(cardIndex,1);
+				}
+			}
+		}
+
     }
 
 
