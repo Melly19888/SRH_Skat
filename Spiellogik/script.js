@@ -180,7 +180,6 @@ function clearCardArea() {
 }
 // Funktion zum Laden der Karten für einen Spieler
 function loadPlayerCards(playerCards, selectcards) {
-	 
 	console.log(selectcards);
 	
     // Überprüfe, ob playerCards ein Array ist und Elemente enthält
@@ -725,41 +724,6 @@ function togglePlayerCards() {
     gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % 3;
   }
 }
-
-// Funktion zum Anzeigen der Karten des nächsten Spielers oder card33.gif
-function showNextPlayerOrCustomCard() {
-  // Bestimme den aktuellen Spieler basierend auf dem Index
-  let currentPlayer;
-  switch (gameState.currentPlayerIndex) {
-    case 0:
-      currentPlayer = player1;
-      break;
-    case 1:
-      currentPlayer = player2;
-      break;
-    case 2:
-      currentPlayer = player3;
-      break;
-    default:
-      currentPlayer = null; // Kein Spieler (Zeige card33.gif)
-      break;
-  }
-
-  // Entscheide, ob die Karten des Spielers oder card33.gif angezeigt werden sollen
-  if (gameState.showCustomCard || !currentPlayer) {
-    loadCustomCard(); // Zeige card33.gif an
-    gameState.showCustomCard = false; // Setze zurück für nächsten Durchlauf
-  } else {
-    loadPlayerCards(currentPlayer.cards, currentPlayer.ausgewaehlt); // Lade die Karten des aktuellen Spielers
-    gameState.showCustomCard = true; // Nächstes Mal card33.gif anzeigen
-  }
-
-  // Gehe zum nächsten Spieler über oder zurück zu Vorhand, wenn alle durch sind
-  if (!gameState.showCustomCard) {
-    gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % 3;
-  }
-}
-
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
 
@@ -937,13 +901,7 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
     clearMiddleCards(); // Rufe die Funktion auf, um die Karten zu löschen
 
     // Verstecke alle Trumpf-Elemente
-    document.getElementById("karo").style.display = "none"; 
-	document.getElementById("herz").style.display = "none"; 
-	document.getElementById("pik").style.display = "none"; 
-	document.getElementById("kreuz").style.display = "none"; 
-	document.getElementById("null").style.display = "none"; 
-	document.getElementById("nullover").style.display = "none"; 
-	document.getElementById("grand").style.display = "none"; 
+    document.querySelectorAll('.trumpf').forEach(element => element.style.display = "none");
 
     isHandGame = false; // Setze isHandGame zurück
 
@@ -1199,8 +1157,9 @@ document.getElementById("nextPlayer").addEventListener("click", function() {
 
 // Event Listener für den Button "nextPlayer"
 document.getElementById("nextPlayer").addEventListener("click", function() {
-  showNextPlayerOrCustomCard(); // Wechsle zwischen Spielerkarten und card33.gif beim Klicken
+    loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
 });
+
 
 
 resetGame();
