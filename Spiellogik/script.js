@@ -7,7 +7,37 @@ const innerCanvas = document.getElementById('innerCanvas');
 const ctx = spielfeld.getContext('2d');
 const ctxSecondary = canvasSecondary.getContext('2d');
 const ctxthirdCanvas = thirdCanvas.getContext('2d');
+const showCardsBtn = document.getElementById('showCards');
 
+const cardWidth = 170;
+const cardHeight = 200;
+const player1Points = document.getElementById('player1Points');
+const player2Points = document.getElementById('player2Points');
+const player3Points = document.getElementById('player3Points');
+
+// Startposition der Karten
+const startY = spielfeld.height - cardHeight;
+
+const spielWerte = new Map([
+ [ 'karo', 9],
+  ['herz', 10],
+  ['pik', 11],
+  ['kreuz', 12],
+  ['null', 23],
+  ['nullHand', 35],
+  ['nullover', 46],
+  ['grand', 24],
+  ['nulloverHand', 59]
+]);
+
+// Array mit Kartennamen erstellen und mischen
+const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif',
+ 'img/card5.gif', 'img/card6.gif', 'img/card7.gif', 'img/card8.gif', 'img/card9.gif',
+ 'img/card10.gif', 'img/card11.gif', 'img/card12.gif', 'img/card13.gif', 'img/card14.gif',
+ 'img/card15.gif', 'img/card16.gif', 'img/card17.gif', 'img/card18.gif', 'img/card19.gif',
+ 'img/card20.gif', 'img/card21.gif', 'img/card22.gif', 'img/card23.gif', 'img/card24.gif',
+ 'img/card25.gif', 'img/card26.gif', 'img/card27.gif',' img/card28.gif',' img/card29.gif',
+' img/card30.gif', ' img/card31.gif',' img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
 
 let gameState = {
   currentPlayerIndex: 0,
@@ -19,7 +49,6 @@ let currentBidderIndex = 0;
 let highestBidder = { id: -1, name: "", bid: 0, stich: []};
 let gegenspieler ={stich:[]};
 // Button zum Anzeigen der Karten
-const showCardsBtn = document.getElementById('showCards');
 
 let hasPickedUpSkat = false;
 
@@ -36,12 +65,14 @@ let player3 = {name:"", cards:[], ausgewaehlt:[]};
 let istdranSpieler = -1;
 let aktiverSpielwert = -1;
 
-const cardWidth = 170;
-const cardHeight = 200;
+// Aktueller Spieler und Flagge für Spielerrollenwahl
+let currentPlayer = "Vorhand";
+let rolesChosenFlag = false; // Variable für die Bestätigung der Spielerrollen
 
- const player1Points = document.getElementById('player1Points');
-    const player2Points = document.getElementById('player2Points');
-    const player3Points = document.getElementById('player3Points');
+let passCount = 0; // Zähler für die Anzahl der Pässe
+
+// Globale Variable für den Index des aktuellen Spielers
+let currentState = 0;
 
     player1Points.addEventListener('change', function() {
         player2Points.value = this.value;
@@ -58,15 +89,6 @@ const cardHeight = 200;
         player2Points.value = this.value;
     });
 
-// Aktueller Spieler und Flagge für Spielerrollenwahl
-let currentPlayer = "Vorhand";
-let rolesChosenFlag = false; // Variable für die Bestätigung der Spielerrollen
-
-let passCount = 0; // Zähler für die Anzahl der Pässe
-
-// Startposition der Karten
-const startY = spielfeld.height - cardHeight;
-
 // Spieler Namen aus dem Local Storage entfernen
 localStorage.removeItem('player1Name');
 localStorage.removeItem('player2Name');
@@ -74,17 +96,6 @@ localStorage.removeItem('player3Name');
 localStorage.removeItem('player4Name');
 localStorage.removeItem('gameStarted');
 
-const spielWerte = new Map([
- [ 'karo', 9],
-  ['herz', 10],
-  ['pik', 11],
-  ['kreuz', 12],
-  ['null', 23],
-  ['nullHand', 35],
-  ['nullover', 46],
-  ['grand', 24],
-  ['nulloverHand', 59]
-]);
 	document.getElementById("playBegin").style.display = "none";
 	document.getElementById("nextPlayer").style.display = "none";
 	document.getElementById("confirmGameBtn").style.display = "none";
@@ -99,22 +110,16 @@ const spielWerte = new Map([
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
     button.style.display = 'none';
 });
-
 // Event Listener für Eingabe der Spieler Namen
 document.getElementById("player1Name").addEventListener("change", function() {
     player1.name = this.value;
 });
-
 document.getElementById("player2Name").addEventListener("change", function() {
     player2.name = this.value;
 });
-
 document.getElementById("player3Name").addEventListener("change", function() {
     player3.name = this.value;
 });
-
-
-
 // Beim Laden der Seite werden die Eingabefelder geleert
 window.onload = function() {
     document.getElementById("player1Name").value = "";
@@ -122,32 +127,15 @@ window.onload = function() {
     document.getElementById("player3Name").value = "";
 };
 
-// Array mit Kartennamen erstellen und mischen
-const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif',
- 'img/card5.gif', 'img/card6.gif', 'img/card7.gif', 'img/card8.gif', 'img/card9.gif',
- 'img/card10.gif', 'img/card11.gif', 'img/card12.gif', 'img/card13.gif', 'img/card14.gif',
- 'img/card15.gif', 'img/card16.gif', 'img/card17.gif', 'img/card18.gif', 'img/card19.gif',
- 'img/card20.gif', 'img/card21.gif', 'img/card22.gif', 'img/card23.gif', 'img/card24.gif',
- 'img/card25.gif', 'img/card26.gif', 'img/card27.gif',' img/card28.gif',' img/card29.gif',
-' img/card30.gif', ' img/card31.gif',' img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
-
-
-
-
-
 // Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
 player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 
-player1
 // Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
 function extractCardNumber(card) {
     return parseInt(card.match(/\d+/)[0]);
 }
-
-// Spielername-Änderungsereignisse abfangen und Werte speichern
-
 // Funktion zum Mischen des Arrays
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -155,7 +143,6 @@ function shuffle(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
-
 // Funktion zum Zeichnen einer Karte auf dem Canvas
 function drawCard(x, y, card, isSelected) {
     const img = new Image();
@@ -224,7 +211,6 @@ function loadCustomCard() {
 		drawCard(spielfeld.width / 2 + cardWidth / 2 - 10, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
 	}
 }
-
 // Spielerrollen anzeigen
 function showPlayerRoles() {
     let rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
@@ -287,7 +273,6 @@ function showPlayerRoles() {
 
    ctxSecondary.fillText(textToShow, xPosition, yPosition);
 }
-
 function getPlayerName(index) {
    switch(index) {
        case 0:
@@ -300,14 +285,11 @@ function getPlayerName(index) {
            return "";
    }
 }
-
-
 function displayHighestBidder() {
   const textToShow = `${highestBidder.name}: ${highestBidder.bid}`;
   displayText(textToShow);
   
 }
-
 function displayText(textToShow) {
   const canvasSecondary = document.getElementById("canvasSecondary");
   const ctxSecondary = canvasSecondary.getContext("2d");
@@ -321,7 +303,6 @@ function displayText(textToShow) {
 
   ctxSecondary.fillText(textToShow, xPosition, yPosition);
 }
-
 // Funktion zum Anzeigen des Reizwerts auf dem dritten Canvas
 function displayBidValueOnThirdCanvas(bidValue) {
     const thirdCanvas = document.getElementById("thirdCanvas");
@@ -337,7 +318,6 @@ function displayBidValueOnThirdCanvas(bidValue) {
 
     ctxThird.fillText(textToShow, xPosition, yPosition);
 }
-
 function updateCanvasSecondaryText(text) {
   ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
   ctxSecondary.fillStyle="red";
@@ -349,7 +329,6 @@ function updateCanvasSecondaryText(text) {
 
   ctxSecondary.fillText(text, xPosition, yPosition);
 }
-
 // Funktion zum Anzeigen des höchsten Bieters in der Konsole und auf dem Canvas
 function displayHighestBidder() {
   if (highestBidder.name !== "") {
@@ -359,7 +338,6 @@ function displayHighestBidder() {
       updateCanvasSecondaryText(textToShow);
   }
 }
-
 function showCustomPopup(message) {
   const popup = document.createElement("div");
   popup.classList.add("custom-popup");
@@ -375,7 +353,6 @@ function showCustomPopup(message) {
     document.body.removeChild(popup);
   }, 2000); // Schließe das Popup nach 2 Sekunden automatisch
 }
-
 // Funktion zum Anzeigen des höchsten Bieters in der Konsole
 function displayHighestBidderInConsole() {
     if (highestBidder.name !== "") {
@@ -383,7 +360,6 @@ function displayHighestBidderInConsole() {
 		
     } 
 }
-
 function displayHighestBidderAndHideCards() {
     if (highestBidder.name !== "") {
         const textToShow = `${highestBidder.name} : ${highestBidder.bid}`;
@@ -401,7 +377,6 @@ function displayHighestBidderAndHideCards() {
 
     }
 }
-
 // Funktion zum Anzeigen des ausgewählten Spiels auf dem canvasSecondary
 function displaySelectedGame(gameName) {
     const ctxInner = canvasSecondary.getContext("2d");
@@ -418,7 +393,6 @@ function displaySelectedGame(gameName) {
 
     ctxInner.fillText(textToShow, xPosition, yPosition);
 }
-
 function showGameOptions() {
     // Zeige den handBtn wieder an
     document.getElementById("handBtn").style.display = "block";
@@ -426,7 +400,6 @@ function showGameOptions() {
     // Zeige den aufnehmenBtn wieder an
     document.getElementById("aufnehmenBtn").style.display = "block";
 }
-
 function loadHighestBidderCards() {
     // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1.name) {
@@ -442,20 +415,17 @@ function loadHighestBidderCards() {
     // Verstecke den confirmGameBtn nach dem Laden der Karten und Anzeigen der Optionen
     document.getElementById("confirmGameBtn").style.display = "none";
 }
-
 // Hilfsfunktion zum Anzeigen der Spieloptionen-Buttons
 function showGameOptions() {
     document.getElementById("handBtn").style.display = "block"; // Zeige den handBtn wieder an
     document.getElementById("aufnehmenBtn").style.display = "block"; // Zeige den aufnehmenBtn wieder an
 }
-
 function updateShowCardsButtonText(text) {
     const showCardsButton = document.getElementById("showCards");
     if (showCardsButton) {
         showCardsButton.textContent = text;
     }
 }
-
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
 	
@@ -542,7 +512,6 @@ player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 });
 
 }    
-
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
 	   
@@ -561,7 +530,6 @@ function clearMiddleCards() {
     // Lösche den Bereich für die zweite Karte (wenn vorhanden)
     ctxSpielfeld.clearRect(middleCardX2, middleCardY, cardWidth, cardHeight);
 }
-
 function displayPassedGame() {
     const canvasSecondary = document.getElementById("canvasSecondary");
     const ctxSecondary = canvasSecondary.getContext("2d");
@@ -590,7 +558,6 @@ function displayPassedGame() {
     document.getElementById("confirmGameBtn").style.display = "block";
 
 }
-
 function getPlayer(id){
 	switch (highestBidder.id ) {
 		case 0:
@@ -603,8 +570,6 @@ function getPlayer(id){
 			 return null;
 	}
 }
-
-
 function clearTextFromCanvas() {
     const textHeight = 60; // Angenommene Höhe des Textes basierend auf der Schriftgröße
     const padding = 10; // Ein wenig zusätzlicher Platz um den Text herum
@@ -616,7 +581,6 @@ function clearTextFromCanvas() {
     // Lösche den Bereich, wo der Text gezeichnet wird
     ctxSecondary.clearRect(0, yPositionToClear, canvasSecondary.width, heightToClear);
 }
-
 function displayTextOnCanvas(text) {
     clearTextFromCanvas(); // Lösche nur den Bereich des alten Textes
 
@@ -631,9 +595,6 @@ function displayTextOnCanvas(text) {
 
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
-// Globale Variable für den Index des aktuellen Spielers
-let currentState = 0;
-
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
 	let currentPlayer;
@@ -686,8 +647,6 @@ function loadNextPlayerCards() {
         }
    
 }
-
-	
 // Funktion zum Anzeigen der Karten des nächsten Spielers oder card33.gif
 function showNextPlayerOrCustomCard() {
   // Bestimme den aktuellen Spieler basierend auf dem Index
@@ -721,6 +680,8 @@ function showNextPlayerOrCustomCard() {
     gameState.currentState = (gameState.currentState + 1) % 3;
   }
 }
+
+
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
@@ -821,7 +782,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function() {
 	
   
 });
-
 // Event Listener für den Button "leftGameButton"
 document.getElementById("leftGameButton").addEventListener("click", function() {
     const reizwerteSelect = document.getElementById("reizwerte");
@@ -872,7 +832,6 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
         document.getElementById("reizwerte").style.display = "none";
     }
 });
-
 document.addEventListener('click', function(event) {
     if (event.target.id === "showCards") {
 		
@@ -892,7 +851,6 @@ document.addEventListener('click', function(event) {
         }
     }
 });
-
 /// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
     button.addEventListener('click', function() {
@@ -920,7 +878,6 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         document.getElementById("playBegin").style.display = "block";
     });
 });
-
 // Event Listener für den Button "handBtn"
 document.getElementById("handBtn").addEventListener("click", function() {
     // Setze isHandGame auf true, da Hand gespielt wird
@@ -953,7 +910,6 @@ document.getElementById("handBtn").addEventListener("click", function() {
         button.style.display = 'block';handBtn
     });
 });
-
 // Event Listener für den Button "aufnehmenBtn"
 document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 	
@@ -1036,8 +992,6 @@ confirmGameBtn.addEventListener("click", function() {
 
 });
 // Event Listener für das Anklicken von Karten hinzufügen
-
-
 spielfeld.addEventListener('click', function(event) {
 	const rect = spielfeld.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
@@ -1089,27 +1043,7 @@ spielfeld.addEventListener('click', function(event) {
     }
 
 
-  // Überprüfe jede Karte auf Trefferbereich
-  //player1.cards.forEach((card) => {
-   // const index =player1.cards.indexOf(card);
-    //let posX = index * (cardWidth - 12) + 1;
-    //let posY = startY;
-
-    //if (
-    //  clickX >= posX &&
-      //clickX <= posX + cardWidth &&
-      //clickY >= posY &&
-      //clickY <= posY + cardHeight
-    //) {
-     // toggleCardSelection(card); // Umschalten der Auswahl für diese Karte
-    //}
-  //});
-   //let posX = index * (cardWidth - 12) + 1;
-     //    let posY = startY;
-
 });
-
-
 // Event Listener für den Button "aufnehmen"
 document.getElementById("aufnehmen").addEventListener("click", function() {
     // Verstecke den "aufnehmen" Button
@@ -1152,7 +1086,6 @@ document.getElementById("aufnehmen").addEventListener("click", function() {
        
     }
 });
-
 // Event Listener für den Button "handBtn"
 document.getElementById("playBegin").addEventListener("click", function() {
 	// Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
@@ -1166,7 +1099,6 @@ document.getElementById("playBegin").addEventListener("click", function() {
   // Zeige das ausgewählte Spiel und den aktuellen Spieler an
    
 });
-
 document.getElementById("nextPlayer").addEventListener("click", function() {
 	 loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
 	showNextPlayerOrCustomCard();
@@ -1176,8 +1108,5 @@ document.getElementById("nextPlayer").addEventListener("click", function() {
  
 	
 });
-
-
-
 
 resetGame();
