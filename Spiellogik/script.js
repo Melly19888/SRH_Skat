@@ -1000,6 +1000,7 @@ spielfeld.addEventListener('click', function(event) {
         let player = getPlayer(gameState.currentPlayerIndex);
 	console.log(player);
 	console.log(gameState.currentPlayerIndex);
+    
 	
         // Stelle sicher, dass die angeklickte Karte gültig ist
         if (cardNummber >= 0 && cardNummber < player.cards.length) {
@@ -1007,10 +1008,13 @@ spielfeld.addEventListener('click', function(event) {
 
 			// Drücken nach dem reizen
 			if (aktiverSpielwert < 0){
+				console.log("reizen");
+				
 				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
 				if (player.selectcards.includes(card)) {
 					player.selectcards.splice(player.selectcards.indexOf(card), 1);
 				} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+				
 					player.selectcards.push(card);
 				}
 
@@ -1022,6 +1026,7 @@ spielfeld.addEventListener('click', function(event) {
 				loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
 			// Spielen
 			}else {
+			console.log("spielen");
 				tablecards.push(card);
 
         
