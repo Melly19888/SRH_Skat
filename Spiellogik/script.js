@@ -62,7 +62,6 @@ let tablecards = [];
 let player1 = {name:"", cards:[], ausgewaehlt:[]};
 let player2 = {name:"", cards:[], ausgewaehlt:[]};
 let player3 = {name:"", cards:[], ausgewaehlt:[]};
-let istdranSpieler = -1;
 let aktiverSpielwert = -1;
 
 // Aktueller Spieler und Flagge für Spielerrollenwahl
@@ -284,11 +283,6 @@ function getPlayerName(index) {
        default:
            return "";
    }
-}
-function displayHighestBidder() {
-  const textToShow = `${highestBidder.name}: ${highestBidder.bid}`;
-  displayText(textToShow);
-  
 }
 function displayText(textToShow) {
   const canvasSecondary = document.getElementById("canvasSecondary");
@@ -597,7 +591,7 @@ function displayTextOnCanvas(text) {
 }
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
-	let currentPlayer;
+	
     let nextPlayer;
     let textToShow;
 
@@ -651,7 +645,7 @@ function loadNextPlayerCards() {
 function showNextPlayerOrCustomCard() {
   // Bestimme den aktuellen Spieler basierend auf dem Index
   
-  switch (gameState.currentState) {
+  switch (gameState.currentPlayerIndex) {
 	
     case 1:
       currentPlayer = player1;
@@ -680,8 +674,6 @@ function showNextPlayerOrCustomCard() {
     gameState.currentState = (gameState.currentState + 1) % 3;
   }
 }
-
-
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function() {
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
@@ -806,6 +798,7 @@ document.getElementById("leftGameButton").addEventListener("click", function() {
         highestBidder.bid = selectedReizValue;
         highestBidder.name = getPlayerName(currentBidderIndex);
 		highestBidder.id = currentBidderIndex;
+		gameState.currentPlayerIndex = currentBidderIndex;
 		
         displayBidValueOnThirdCanvas(selectedReizValue);
         passCount = 0; // Setze den Pass-Zähler zurück, da ein gültiges Gebot abgegeben wurde
@@ -920,17 +913,18 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function() {
 	switch (highestBidder.id ) {
 		case 0:
 			player1.cards.push(...skatcards);
+			player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 			break
 		case 1:
 			player2.cards.push(...skatcards);
+			player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 			break
 		case 2:
 			player3.cards.push(...skatcards);
+			player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
 			break
 	}
-	player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
-	player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
-	player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b)); 
+
 	 // Leere das Array skatcards und lösche die Karten aus der Mitte des Canvas
     skatcards = [];
   
@@ -1003,14 +997,16 @@ spielfeld.addEventListener('click', function(event) {
       
 
         const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
-        let player = getPlayer(highestBidder.id);
-
+        let player = getPlayer(gameState.currentPlayerIndex);
+	console.log(player);
+	console.log(gameState.currentPlayerIndex);
+	
         // Stelle sicher, dass die angeklickte Karte gültig ist
         if (cardNummber >= 0 && cardNummber < player.cards.length) {
             let card = player.cards[cardNummber];
 
 			// Drücken nach dem reizen
-			if (gameState.currentPlayerIndex === 0){
+			if (aktiverSpielwert < 0){
 				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
 				if (player.selectcards.includes(card)) {
 					player.selectcards.splice(player.selectcards.indexOf(card), 1);
@@ -1028,9 +1024,7 @@ spielfeld.addEventListener('click', function(event) {
 			}else {
 				tablecards.push(card);
 
-        console.log(tablecards);
-		console.log(player);
-		console.log(player.selectcards);
+        
 		
 		
 				const cardIndex = player.cards.indexOf(card);
