@@ -992,6 +992,7 @@ spielfeld.addEventListener('click', function(event) {
     const clickY = event.clientY - rect.top;
 
 	
+if (aktiverSpielwert < 0){
     // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
     if (clickY - startY + cardHeight * 1.5 > 0) {
       
@@ -1007,25 +1008,64 @@ spielfeld.addEventListener('click', function(event) {
             let card = player.cards[cardNummber];
 
 			// Drücken nach dem reizen
-			if (aktiverSpielwert < 0){
+			
 				console.log("reizen");
 				
 				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-				if (player.selectcards.includes(card)) {
-					player.selectcards.splice(player.selectcards.indexOf(card), 1);
-				} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+			if (player.selectcards.includes(card)) {
+				player.selectcards.splice(player.selectcards.indexOf(card), 1);
+			} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+			
+				player.selectcards.push(card);
+			}
+
+			// Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
+			updateButtonDisplay(player.selectcards.length);
+
+		   
+			clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+			loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+		// Spielen
+		}
+	}
+}	
+		
+else {
+		  if (clickY - startY + cardHeight * 1.5 > 0) {
+      
+
+        const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
+        let player = getPlayer(gameState.currentPlayerIndex);
+	
+    
+	
+        // Stelle sicher, dass die angeklickte Karte gültig ist
+        if (cardNummber >= 0 && cardNummber < player.cards.length) {
+            let card = player.cards[cardNummber];
+
+			
+			
+				console.log("reizen");
 				
-					player.selectcards.push(card);
-				}
+				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+			if (player.selectcards.includes(card)) {
+				player.selectcards.splice(player.selectcards.indexOf(card), 1);
+			} else if (player.selectcards.length < 10) { 
+				player.selectcards.push(card);
+			
+			}
+			
 
-				// Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
-				updateButtonDisplay(player.selectcards.length);
-
-			   
-				clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-				loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
-			// Spielen
-			}else {
+		   
+			clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+			loadPlayerCards(player.cards, player.selectcards);
+	
+			
+	
+	
+	
+	
+	
 			console.log("spielen");
 				tablecards.push(card);
 
@@ -1036,10 +1076,10 @@ spielfeld.addEventListener('click', function(event) {
 				if (cardIndex !== -1) {
 					player.cards.splice(cardIndex,1);
 				}
-			}
 		}
+	}
 
-    }
+}
 
 
 });
@@ -1099,6 +1139,7 @@ document.getElementById("playBegin").addEventListener("click", function() {
    
 });
 document.getElementById("nextPlayer").addEventListener("click", function() {
+	clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
 	 loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
 	showNextPlayerOrCustomCard();
 
