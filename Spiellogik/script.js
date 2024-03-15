@@ -218,9 +218,11 @@ function drawCards(cards, selectcards) {
         });
     }
 }
-// Funktion zum Laden der benutzerdefinierten Karten
-function drawCustomCard() {
-    for (let i = 0; i < 10; i++) {
+
+// Funktion zum Anzeigen der Karten-Deckblätter
+function drawCustomCard(anzahl) {
+	console.log("drawCustomCard " + anzahl);
+    for (let i = 0; i < anzahl; i++) {
         drawCard(i * (cardWidth - 10) + 1, startY, 'img/card33.gif');
     }
 
@@ -230,6 +232,7 @@ function drawCustomCard() {
         drawCard(spielfeld.width / 2 + cardWidth / 2 - 10, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
     }
 }
+
 // Spielerrollen anzeigen
 function showPlayerRoles() {
     let rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
@@ -382,8 +385,7 @@ function displayHighestBidderAndHideCards() {
         const textToShow = `${highestBidder.name} : ${highestBidder.bid}`;
         updateCanvasSecondaryText(textToShow); // Zeige den Namen des höchsten Bieters an
 
-
-        drawCustomCard(); // Blende alle Karten aus mit card33.gif
+        drawCustomCard(getPlayer(highestBidder.id).cards.length); // Blende alle Karten aus mit card33.gif
 
         // Verstecke den leftGameButton
         document.getElementById("leftGameButton").style.display = "none";
@@ -493,7 +495,7 @@ function resetGame() {
 
     updateCanvasSecondaryText(""); // Leere Text im sekundären Canvas
 
-    drawCustomCard(); // Blende alle Karten aus mit card33.gif
+    drawCustomCard(10); // Blende alle Karten aus mit card33.gif
 
 
     // Stelle sicher, dass der startGameBtn-Button sichtbar ist und andere Buttons versteckt sind
@@ -696,13 +698,13 @@ function showNextPlayerOrCustomCard() {
     // Bestimme den aktuellen Spieler basierend auf dem Index
     switch (gameState.currentPlayerIndex) {
 
-    case 1:
+    case 0:
         currentPlayer = player1;
         break;
-    case 2:
+    case 1:
         currentPlayer = player2;
         break;
-    case 3:
+    case 2:
         currentPlayer = player3;
         break;
     default:
@@ -711,7 +713,7 @@ function showNextPlayerOrCustomCard() {
 
     // Entscheide, ob die Karten des Spielers oder card33.gif angezeigt werden sollen
     if (gameState.showCustomCard || !currentPlayer) {
-        drawCustomCard(); // Zeige card33.gif an
+        drawCustomCard(currentPlayer.cards.length); // Zeige card33.gif an
         gameState.showCustomCard = false; // Setze zurück für nächsten Durchlauf
     } else {
         drawCards(currentPlayer.cards, currentPlayer.ausgewaehlt); // Lade die Karten des aktuellen Spielers
@@ -768,7 +770,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     case "Skat":
 
         currentPlayer = "Meist gereizt";
-        drawCustomCard();
+        drawCustomCard(10);
         // Zeige die Buttons "Hand" und "Aufnehmen" an
         showGameOptions();
         break;
@@ -836,7 +838,7 @@ document.getElementById("leftGameButton").addEventListener("click", function () 
     if (selectedReizValue === 0) {
         passCount++; // Erhöhe den Pass-Zähler
         if (passCount === 3) {
-            drawCustomCard();
+            drawCustomCard(10);
             document.getElementById("leftGameButton").style.display = "none";
             document.getElementById("confirmGameBtn").style.display = "block";
             displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
@@ -855,7 +857,7 @@ document.getElementById("leftGameButton").addEventListener("click", function () 
 
     currentBidderIndex++;
 
-    drawCustomCard(); // Blende die Karten mit card33.gif aus
+    drawCustomCard(10); // Blende die Karten mit card33.gif aus
 
     // Überprüfe, ob alle Spieler gepasst haben
     if (passCount === 3) {
@@ -1170,7 +1172,7 @@ document.getElementById("playBegin").addEventListener("click", function () {
 
     displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
 
-    drawCustomCard();
+    drawCustomCard(10);
     document.getElementById("nextPlayer").style.display = "block";
     document.getElementById("playBegin").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
