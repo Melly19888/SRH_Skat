@@ -595,6 +595,12 @@ function displayTextOnCanvas(text) {
 
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
+function werteStichAus(cards, spielwert, isActivePlayerHasStarted) {
+	alert("Sie müssen jetzt bewerten:");
+	alert(cards[0] + " " + cards[1] + " " + cards[2] + " Spielwert " + spielwert);
+	return confirm("erhält der aktive Spieler den Stich?");
+}
+
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
 
@@ -643,7 +649,12 @@ function loadNextPlayerCards() {
 
     if (currentState > 5) {
         nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
-
+		if (werteStichAus(tablecards, aktiverSpielwert, true) === currentPlayer){
+			currentPlayer.stich = [..., tablecards];
+		} else {
+			gegenspieler.stich = [..., tablecards];
+		}
+		tablecards = [];
     }
 
 }
