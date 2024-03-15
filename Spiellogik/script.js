@@ -977,154 +977,136 @@ spielfeld.addEventListener('click', function (event) {
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
 
-<<<<<<< HEAD
-=======
-	
-if (aktiverSpielwert < 0){
->>>>>>> e731cde2820b7db81f7f5152a2168a99c71680f0
-    // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
-    if (clickY - startY + cardHeight * 1.5 > 0) {
+     <<  <<  <<  < HEAD
+     ===  ===  =
 
-        const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
-        let player = getPlayer(gameState.currentPlayerIndex);
-<<<<<<< HEAD
-        console.log(player);
-        console.log(gameState.currentPlayerIndex);
+        if (aktiverSpielwert < 0) {
+             >>>  >>>  > e731cde2820b7db81f7f5152a2168a99c71680f0
+            // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
+            if (clickY - startY + cardHeight * 1.5 > 0) {
 
-=======
-	console.log(player);
-	console.log(gameState.currentPlayerIndex);
-	
->>>>>>> parent of f7459fd (Playercards)
-        // Stelle sicher, dass die angeklickte Karte gültig ist
-        if (cardNummber >= 0 && cardNummber < player.cards.length) {
-            let card = player.cards[cardNummber];
+                const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
+                let player = getPlayer(gameState.currentPlayerIndex);
+                 <<  <<  <<  < HEAD
+                console.log(player);
+                console.log(gameState.currentPlayerIndex);
 
-<<<<<<< HEAD
-            if (aktiverSpielwert < 0) {
-                // Drücken nach dem reizen
-                console.log("reizen");
-=======
-			// Drücken nach dem reizen
-<<<<<<< HEAD
-			if (aktiverSpielwert < 0){
-				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-				if (player.selectcards.includes(card)) {
-					player.selectcards.splice(player.selectcards.indexOf(card), 1);
-				} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
-					player.selectcards.push(card);
-				}
->>>>>>> parent of f7459fd (Playercards)
+                 ===  ===  =
+                    console.log(player);
+                console.log(gameState.currentPlayerIndex);
 
-                // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-                if (player.selectcards.includes(card)) {
-                    player.selectcards.splice(player.selectcards.indexOf(card), 1);
-                } else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+                 >>>  >>>  > parent of f7459fd(Playercards)
+                // Stelle sicher, dass die angeklickte Karte gültig ist
+                if (cardNummber >= 0 && cardNummber < player.cards.length) {
+                    let card = player.cards[cardNummber];
 
-<<<<<<< HEAD
-                    player.selectcards.push(card);
-                }
-=======
-			   
-				clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-				loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
-			// Spielen
-			}else {
-=======
-			
-				console.log("reizen");
-				
-				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-			if (player.selectcards.includes(card)) {
-				player.selectcards.splice(player.selectcards.indexOf(card), 1);
-			} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
-			
-				player.selectcards.push(card);
-			}
+                     <<  <<  <<  < HEAD
+                    if (aktiverSpielwert < 0) {
+                        // Drücken nach dem reizen
+                        console.log("reizen");
+                         ===  ===  =
+                            // Drücken nach dem reizen
+                             <<  <<  <<  < HEAD
+                            if (aktiverSpielwert < 0) {
+                                // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+                                if (player.selectcards.includes(card)) {
+                                    player.selectcards.splice(player.selectcards.indexOf(card), 1);
+                                } else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+                                    player.selectcards.push(card);
+                                }
+                                 >>>  >>>  > parent of f7459fd(Playercards)
 
-			// Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
-			updateButtonDisplay(player.selectcards.length);
+                                // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+                                if (player.selectcards.includes(card)) {
+                                    player.selectcards.splice(player.selectcards.indexOf(card), 1);
+                                } else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
 
-		   
-			clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-			loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
-		// Spielen
-		}
-	}
-}	
-		
-else {
-		  if (clickY - startY + cardHeight * 1.5 > 0) {
-      
+                                     <<  <<  <<  < HEAD
+                                    player.selectcards.push(card);
+                                }
+                                 ===  ===  =
 
-        const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
-        let player = getPlayer(gameState.currentPlayerIndex);
-	
-    
-	
-        // Stelle sicher, dass die angeklickte Karte gültig ist
-        if (cardNummber >= 0 && cardNummber < player.cards.length) {
-            let card = player.cards[cardNummber];
+                                    clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+                                loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+                                // Spielen
+                            } else {
+                                 ===  ===  =
 
-			
-			
-				console.log("reizen");
-				
-				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
-			if (player.selectcards.includes(card)) {
-				player.selectcards.splice(player.selectcards.indexOf(card), 1);
-			} else if (player.selectcards.length < 10) { 
-				player.selectcards.push(card);
-			
-			}
-			
+                                    console.log("reizen");
 
-		   
-			clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-			loadPlayerCards(player.cards, player.selectcards);
-	
-			
-	
-	
-	
-	
-	
-			console.log("spielen");
->>>>>>> e731cde2820b7db81f7f5152a2168a99c71680f0
-				tablecards.push(card);
->>>>>>> parent of f7459fd (Playercards)
+                                // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+                                if (player.selectcards.includes(card)) {
+                                    player.selectcards.splice(player.selectcards.indexOf(card), 1);
+                                } else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
 
-<<<<<<< HEAD
-                // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
-                updateButtonDisplay(player.selectcards.length);
+                                    player.selectcards.push(card);
+                                }
 
-                clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-                loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+                                // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
+                                updateButtonDisplay(player.selectcards.length);
 
-            } else {
-                // Spielen
-                console.log("spielen");
-                tablecards.push(card);
+                                clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+                                loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+                                // Spielen
+                            }
+                    }
+                } else {
+                    if (clickY - startY + cardHeight * 1.5 > 0) {
 
-                const cardIndex = player.cards.indexOf(card);
-                if (cardIndex !== -1) {
-                    player.cards.splice(cardIndex, 1);
+                        const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
+                        let player = getPlayer(gameState.currentPlayerIndex);
+
+                        // Stelle sicher, dass die angeklickte Karte gültig ist
+                        if (cardNummber >= 0 && cardNummber < player.cards.length) {
+                            let card = player.cards[cardNummber];
+
+                            console.log("reizen");
+
+                            // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+                            if (player.selectcards.includes(card)) {
+                                player.selectcards.splice(player.selectcards.indexOf(card), 1);
+                            } else if (player.selectcards.length < 10) {
+                                player.selectcards.push(card);
+
+                            }
+
+                            clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+                            loadPlayerCards(player.cards, player.selectcards);
+
+                            console.log("spielen");
+                             >>>  >>>  > e731cde2820b7db81f7f5152a2168a99c71680f0
+                            tablecards.push(card);
+                             >>>  >>>  > parent of f7459fd(Playercards)
+
+                             <<  <<  <<  < HEAD
+                            // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
+                            updateButtonDisplay(player.selectcards.length);
+
+                            clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+                            loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+
+                        } else {
+                            // Spielen
+                            console.log("spielen");
+                            tablecards.push(card);
+
+                            const cardIndex = player.cards.indexOf(card);
+                            if (cardIndex !== -1) {
+                                player.cards.splice(cardIndex, 1);
+                            }
+                        }
+                    }
+                     ===  ===  =
+
+                        const cardIndex = player.cards.indexOf(card);
+                    if (cardIndex !== -1) {
+                        player.cards.splice(cardIndex, 1);
+                    }
                 }
             }
-        }
-=======
-        
-		
-		
-				const cardIndex = player.cards.indexOf(card);
-				if (cardIndex !== -1) {
-					player.cards.splice(cardIndex,1);
-				}
-		}
-	}
->>>>>>> e731cde2820b7db81f7f5152a2168a99c71680f0
+             >>>  >>>  > e731cde2820b7db81f7f5152a2168a99c71680f0
 
-}
+        }
 
 });
 // Event Listener für den Button "aufnehmen"
@@ -1182,17 +1164,17 @@ document.getElementById("playBegin").addEventListener("click", function () {
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
 
 });
-<<<<<<< HEAD
+ <<  <<  <<  < HEAD
 document.getElementById("nextPlayer").addEventListener("click", function () {
     loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
     showNextPlayerOrCustomCard();
-=======
-document.getElementById("nextPlayer").addEventListener("click", function() {
-	clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-	 loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
-	showNextPlayerOrCustomCard();
->>>>>>> e731cde2820b7db81f7f5152a2168a99c71680f0
+     ===  ===  =
+        document.getElementById("nextPlayer").addEventListener("click", function () {
+            clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+            loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
+            showNextPlayerOrCustomCard();
+             >>>  >>>  > e731cde2820b7db81f7f5152a2168a99c71680f0
 
-});
+        });
 
-resetGame();
+    resetGame();
