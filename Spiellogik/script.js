@@ -1007,10 +1007,10 @@ spielfeld.addEventListener('click', function (event) {
 
                 clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
                 loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
-                // Spielen
             }
         }
     } else {
+        // Spielen
         if (clickY - startY + cardHeight * 1.5 > 0) {
 
             const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
@@ -1020,7 +1020,7 @@ spielfeld.addEventListener('click', function (event) {
             if (cardNummber >= 0 && cardNummber < player.cards.length) {
                 let card = player.cards[cardNummber];
 
-                console.log("reizen");
+                console.log("spielen");
 
                 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
                 if (player.selectcards.includes(card)) {
