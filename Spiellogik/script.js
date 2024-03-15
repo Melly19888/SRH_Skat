@@ -527,7 +527,7 @@ function resetGame() {
 
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
-	console.log("clearMiddleCards" + id);
+	console.log("clearMiddleCards");
     const ctxSpielfeld = spielfeld.getContext('2d');
 
     // Angenommen, die Karten von Player4 befinden sich in der Mitte des Canvas,
@@ -544,7 +544,7 @@ function clearMiddleCards() {
 }
 
 function displayPassedGame() {
-	console.log("displayPassedGame" + id);
+	console.log("displayPassedGame");
     const canvasSecondary = document.getElementById("canvasSecondary");
     const ctxSecondary = canvasSecondary.getContext("2d");
     ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
