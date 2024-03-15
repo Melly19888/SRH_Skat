@@ -216,7 +216,7 @@ function drawCards(cards, selectcards) {
     }
 }
 // Funktion zum Laden der benutzerdefinierten Karten
-function loadCustomCard() {
+function drawCustomCard() {
     for (let i = 0; i < 10; i++) {
         drawCard(i * (cardWidth - 10) + 1, startY, 'img/card33.gif');
     }
@@ -343,6 +343,7 @@ function updateCanvasSecondaryText(text) {
 
     ctxSecondary.fillText(text, xPosition, yPosition);
 }
+
 // Funktion zum Anzeigen des höchsten Bieters in der Konsole und auf dem Canvas
 function displayHighestBidder() {
     if (highestBidder.name !== "") {
@@ -351,6 +352,7 @@ function displayHighestBidder() {
         updateCanvasSecondaryText(textToShow);
     }
 }
+
 function showCustomPopup(message) {
     const popup = document.createElement("div");
     popup.classList.add("custom-popup");
@@ -366,17 +368,19 @@ function showCustomPopup(message) {
         document.body.removeChild(popup);
     }, 2000); // Schließe das Popup nach 2 Sekunden automatisch
 }
+
 // Funktion zum Anzeigen des höchsten Bieters in der Konsole
 function displayHighestBidderInConsole() {
     if (highestBidder.name !== "") {}
 }
+
 function displayHighestBidderAndHideCards() {
     if (highestBidder.name !== "") {
         const textToShow = `${highestBidder.name} : ${highestBidder.bid}`;
         updateCanvasSecondaryText(textToShow); // Zeige den Namen des höchsten Bieters an
 
 
-        loadCustomCard(); // Blende alle Karten aus mit card33.gif
+        drawCustomCard(); // Blende alle Karten aus mit card33.gif
 
         // Verstecke den leftGameButton
         document.getElementById("leftGameButton").style.display = "none";
@@ -386,6 +390,7 @@ function displayHighestBidderAndHideCards() {
 
     }
 }
+
 // Funktion zum Anzeigen des ausgewählten Spiels auf dem canvasSecondary
 function displaySelectedGame(gameName) {
     const ctxInner = canvasSecondary.getContext("2d");
@@ -402,6 +407,7 @@ function displaySelectedGame(gameName) {
 
     ctxInner.fillText(textToShow, xPosition, yPosition);
 }
+
 function showGameOptions() {
     // Zeige den handBtn wieder an
     document.getElementById("handBtn").style.display = "block";
@@ -409,6 +415,7 @@ function showGameOptions() {
     // Zeige den aufnehmenBtn wieder an
     document.getElementById("aufnehmenBtn").style.display = "block";
 }
+
 function loadHighestBidderCards() {
     // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1.name) {
@@ -422,19 +429,23 @@ function loadHighestBidderCards() {
     // Verstecke den confirmGameBtn nach dem Laden der Karten und Anzeigen der Optionen
     document.getElementById("confirmGameBtn").style.display = "none";
 }
+
 // Hilfsfunktion zum Anzeigen der Spieloptionen-Buttons
 function showGameOptions() {
     document.getElementById("handBtn").style.display = "block"; // Zeige den handBtn wieder an
     document.getElementById("aufnehmenBtn").style.display = "block"; // Zeige den aufnehmenBtn wieder an
 }
+
 function updateShowCardsButtonText(text) {
     const showCardsButton = document.getElementById("showCards");
     if (showCardsButton) {
         showCardsButton.textContent = text;
     }
 }
+
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
+	console.log("resetGame");
 
     shuffle(cards); // Mische die Karten neu
 
@@ -479,7 +490,7 @@ function resetGame() {
 
     updateCanvasSecondaryText(""); // Leere Text im sekundären Canvas
 
-    loadCustomCard(); // Blende alle Karten aus mit card33.gif
+    drawCustomCard(); // Blende alle Karten aus mit card33.gif
 
 
     // Stelle sicher, dass der showCards-Button sichtbar ist und andere Buttons versteckt sind
@@ -513,9 +524,10 @@ function resetGame() {
     });
 
 }
+
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
-
+	console.log("clearMiddleCards" + id);
     const ctxSpielfeld = spielfeld.getContext('2d');
 
     // Angenommen, die Karten von Player4 befinden sich in der Mitte des Canvas,
@@ -530,7 +542,9 @@ function clearMiddleCards() {
     // Lösche den Bereich für die zweite Karte (wenn vorhanden)
     ctxSpielfeld.clearRect(middleCardX2, middleCardY, cardWidth, cardHeight);
 }
+
 function displayPassedGame() {
+	console.log("displayPassedGame" + id);
     const canvasSecondary = document.getElementById("canvasSecondary");
     const ctxSecondary = canvasSecondary.getContext("2d");
     ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
@@ -558,7 +572,9 @@ function displayPassedGame() {
     document.getElementById("confirmGameBtn").style.display = "block";
 
 }
+
 function getPlayer(id) {
+	console.log("getPlayer" + id);
     switch (highestBidder.id) {
     case 0:
         return player1;
@@ -570,6 +586,7 @@ function getPlayer(id) {
         return null;
     }
 }
+
 function clearTextFromCanvas() {
     const textHeight = 60; // Angenommene Höhe des Textes basierend auf der Schriftgröße
     const padding = 10; // Ein wenig zusätzlicher Platz um den Text herum
@@ -581,7 +598,9 @@ function clearTextFromCanvas() {
     // Lösche den Bereich, wo der Text gezeichnet wird
     ctxSecondary.clearRect(0, yPositionToClear, canvasSecondary.width, heightToClear);
 }
+
 function displayTextOnCanvas(text) {
+	console.log("displayTextOnCanvas");
     clearTextFromCanvas(); // Lösche nur den Bereich des alten Textes
 
     ctxSecondary.fillStyle = "red"; // Setze die Farbe auf Rot
@@ -595,7 +614,9 @@ function displayTextOnCanvas(text) {
 
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
+
 function werteStichAus(cards, spielwert, isActivePlayerHasStarted) {
+	console.log("werteStichAus");
 	alert("Sie müssen jetzt bewerten:");
 	alert(cards[0] + " " + cards[1] + " " + cards[2] + " Spielwert " + spielwert);
 	return confirm("erhält der aktive Spieler den Stich?");
@@ -682,7 +703,7 @@ function showNextPlayerOrCustomCard() {
 
     // Entscheide, ob die Karten des Spielers oder card33.gif angezeigt werden sollen
     if (gameState.showCustomCard || !currentPlayer) {
-        loadCustomCard(); // Zeige card33.gif an
+        drawCustomCard(); // Zeige card33.gif an
         gameState.showCustomCard = false; // Setze zurück für nächsten Durchlauf
     } else {
         drawCards(currentPlayer.cards, currentPlayer.ausgewaehlt); // Lade die Karten des aktuellen Spielers
@@ -739,7 +760,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     case "Skat":
 
         currentPlayer = "Meist gereizt";
-        loadCustomCard();
+        drawCustomCard();
         // Zeige die Buttons "Hand" und "Aufnehmen" an
         showGameOptions();
         break;
@@ -807,7 +828,7 @@ document.getElementById("leftGameButton").addEventListener("click", function () 
     if (selectedReizValue === 0) {
         passCount++; // Erhöhe den Pass-Zähler
         if (passCount === 3) {
-            loadCustomCard();
+            drawCustomCard();
             document.getElementById("leftGameButton").style.display = "none";
             document.getElementById("confirmGameBtn").style.display = "block";
             displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
@@ -826,7 +847,7 @@ document.getElementById("leftGameButton").addEventListener("click", function () 
 
     currentBidderIndex++;
 
-    loadCustomCard(); // Blende die Karten mit card33.gif aus
+    drawCustomCard(); // Blende die Karten mit card33.gif aus
 
     // Überprüfe, ob alle Spieler gepasst haben
     if (passCount === 3) {
@@ -1140,7 +1161,7 @@ document.getElementById("playBegin").addEventListener("click", function () {
 
     displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
 
-    loadCustomCard();
+    drawCustomCard();
     document.getElementById("nextPlayer").style.display = "block";
     document.getElementById("playBegin").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
