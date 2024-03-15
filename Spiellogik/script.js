@@ -650,9 +650,9 @@ function loadNextPlayerCards() {
     if (currentState > 5) {
         nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
 		if (werteStichAus(tablecards, aktiverSpielwert, true) === currentPlayer){
-			currentPlayer.stich = [..., tablecards];
+			highestBidder.stich.push(... tablecards);
 		} else {
-			gegenspieler.stich = [..., tablecards];
+			gegenspieler.stich.push(... tablecards);
 		}
 		tablecards = [];
 		currentState = 0;
