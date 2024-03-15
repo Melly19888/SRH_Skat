@@ -7,7 +7,7 @@ const innerCanvas = document.getElementById('innerCanvas');
 const ctx = spielfeld.getContext('2d');
 const ctxSecondary = canvasSecondary.getContext('2d');
 const ctxthirdCanvas = thirdCanvas.getContext('2d');
-const showCardsBtn = document.getElementById('showCards');
+const startGameBtn = document.getElementById('startGameBtn');
 
 const cardWidth = 170;
 const cardHeight = 200;
@@ -118,7 +118,7 @@ document.getElementById("playBegin").style.display = "none";
 document.getElementById("nextPlayer").style.display = "none";
 document.getElementById("confirmGameBtn").style.display = "none";
 document.getElementById("leftGameButton").style.display = "none";
-document.getElementById("showCards").style.display = "block";
+document.getElementById("startGameBtn").style.display = "block";
 document.getElementById("reizwerte").style.display = "none";
 document.getElementById("handBtn").style.display = "none";
 document.getElementById("aufnehmenBtn").style.display = "none";
@@ -260,7 +260,7 @@ function showPlayerRoles() {
     // Zeige den Bestätigen-Button an und verstecke den Karten-Anzeigen-Button
     document.getElementById("confirmGameBtn").style.display = "block";
     document.getElementById("leftGameButton").style.display = "none";
-    document.getElementById("showCards").style.display = "none";
+    document.getElementById("startGameBtn").style.display = "none";
 
     // Ändern des Textes im Sekundär-Canvas
     let textToShow = "";
@@ -436,10 +436,10 @@ function showGameOptions() {
     document.getElementById("aufnehmenBtn").style.display = "block"; // Zeige den aufnehmenBtn wieder an
 }
 
-function updateShowCardsButtonText(text) {
-    const showCardsButton = document.getElementById("showCards");
-    if (showCardsButton) {
-        showCardsButton.textContent = text;
+function updatestartGameBtnButtonText(text) {
+    const startGameBtn = document.getElementById("startGameBtn");
+    if (startGameBtn) {
+        startGameBtn.textContent = text;
     }
 }
 
@@ -493,8 +493,8 @@ function resetGame() {
     drawCustomCard(); // Blende alle Karten aus mit card33.gif
 
 
-    // Stelle sicher, dass der showCards-Button sichtbar ist und andere Buttons versteckt sind
-    document.getElementById("showCards").style.display = "block";
+    // Stelle sicher, dass der startGameBtn-Button sichtbar ist und andere Buttons versteckt sind
+    document.getElementById("startGameBtn").style.display = "block";
 
     // Verstecke die Buttons "Hand" und "Aufnehmen"
 
@@ -502,7 +502,7 @@ function resetGame() {
     document.getElementById("aufnehmenBtn").style.display = "none";
 
     document.addEventListener('click', function (event) {
-        if (event.target.id === "showCards") {
+        if (event.target.id === "startGameBtn") {
             if (!rolesChosenFlag && (player1.name !== "" && player2.name !== "" && player3.name !== "")) {
                 showPlayerRoles();
                 rolesChosenFlag = true;
@@ -629,6 +629,8 @@ function loadNextPlayerCards() {
 
     let nextPlayer;
     let textToShow;
+	
+	console.log("currentState " + currentState);
 
     switch (currentState) {
     case 0:
@@ -662,7 +664,9 @@ function loadNextPlayerCards() {
     default:
 
     }
-    gameState.currentPlayerIndex = nextPlayer;
+    gameState.currentPlayerIndex = nextPlayer.id;
+	console.log("nextPlayer");
+	console.log(nextPlayer);
 
     drawCards(nextPlayer.cards, []);
     drawCards(tablecards, []);
@@ -682,6 +686,7 @@ function loadNextPlayerCards() {
     }
 
 }
+
 // Funktion zum Anzeigen der Karten des nächsten Spielers oder card33.gif
 function showNextPlayerOrCustomCard() {
 	console.log("showNextPlayerOrCustomCard");
@@ -793,8 +798,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     loadHighestBidderCards();
     // Überprüfe, ob das Spiel eingepasst wurde
     if (passCount === 3) {
-        // Ändere den Text des Buttons "showCards" zu "Nächstes Spiel"
-        updateShowCardsButtonText("Nächstes Spiel");
+        // Ändere den Text des Buttons "startGameBtn" zu "Nächstes Spiel"
+        updatestartGameBtnText("Nächstes Spiel");
         // Starte das Spiel neu
     }
 
@@ -869,7 +874,7 @@ document.getElementById("leftGameButton").addEventListener("click", function () 
 
 document.addEventListener('click', function (event) {
 	console.log("Event document");
-    if (event.target.id === "showCards") {
+    if (event.target.id === "startGameBtn") {
 
         if (!rolesChosenFlag && (player1.name !== "" && player2.name !== "" && player3.name !== "")) {
             showPlayerRoles();
@@ -1082,7 +1087,7 @@ spielfeld.addEventListener('click', function (event) {
                 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
                 if (player.selectcards.includes(card)) {
                     player.selectcards.splice(player.selectcards.indexOf(card), 1);
-                } else if (player.selectcards.length < 10) {
+                } else if (player.selectcards.length < 1) {
                     player.selectcards.push(card);
                 }
 				console.log("player " + player);
@@ -1098,6 +1103,7 @@ spielfeld.addEventListener('click', function (event) {
                 const cardIndex = player.cards.indexOf(card);
                 if (cardIndex !== -1) {
                     player.cards.splice(cardIndex, 1);
+					player.selectcards = [];
 					console.log("cardIndex " + cardIndex);
 					console.log("player " + player);
 					console.log(player);

@@ -152,7 +152,7 @@
   }
 
   /* Buttons auf der Gameseite */
-    #showCards {
+    #startGameBtn {
       border: none;
       border-radius: 0.4em;
       position: absolute ;
