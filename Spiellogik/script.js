@@ -655,6 +655,7 @@ function loadNextPlayerCards() {
 			gegenspieler.stich = [..., tablecards];
 		}
 		tablecards = [];
+		currentState = 0;
     }
 
 }
