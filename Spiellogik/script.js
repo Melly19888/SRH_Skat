@@ -67,16 +67,19 @@ let tablecards = [];
 
 // Spieler Namen und Kartenmaße
 let player1 = {
+	id: 0,
     name: "",
     cards: [],
     ausgewaehlt: []
 };
 let player2 = {
+	id: 1,
     name: "",
     cards: [],
     ausgewaehlt: []
 };
 let player3 = {
+	id: 2,
     name: "",
     cards: [],
     ausgewaehlt: []
@@ -574,8 +577,8 @@ function displayPassedGame() {
 }
 
 function getPlayer(id) {
-	console.log("getPlayer" + id);
-    switch (highestBidder.id) {
+	console.log("getPlayer " + id);
+    switch (id) {
     case 0:
         return player1;
     case 1:
