@@ -604,7 +604,7 @@ function werteStichAus(cards, spielwert, isActivePlayerHasStarted) {
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
 	
-	console.log("loadNextPlayerCards);
+	console.log("loadNextPlayerCards");
 
     let nextPlayer;
     let textToShow;
@@ -1022,7 +1022,7 @@ spielfeld.addEventListener('click', function (event) {
 
                 // Drücken nach dem reizen
 
-                console.log("reizen");
+                console.log("reizen in Event Karten anklicken");
 
                 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
                 if (player.selectcards.includes(card)) {
@@ -1050,25 +1050,36 @@ spielfeld.addEventListener('click', function (event) {
             if (cardNummber >= 0 && cardNummber < player.cards.length) {
                 let card = player.cards[cardNummber];
 
-                console.log("spielen");
+                console.log("spielen in Event Karten anklicken");
+				
+				console.log("gameState " + gameState);
+				console.log(gameState);
+				console.log("player " + player);
+				console.log(player);
+				console.log("card " + card);
 
                 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
                 if (player.selectcards.includes(card)) {
                     player.selectcards.splice(player.selectcards.indexOf(card), 1);
                 } else if (player.selectcards.length < 10) {
                     player.selectcards.push(card);
-
                 }
+				console.log("player " + player);
+				console.log(player);
 
                 clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
                 drawCards(player.cards, player.selectcards);
 
-                console.log("spielen");
                 tablecards.push(card);
+                console.log("tablecards " + tablecards);
+				console.log(tablecards);
 
                 const cardIndex = player.cards.indexOf(card);
                 if (cardIndex !== -1) {
                     player.cards.splice(cardIndex, 1);
+					console.log("cardIndex " + cardIndex);
+					console.log("player " + player);
+					console.log(player);
                 }
             }
         }
