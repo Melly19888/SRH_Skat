@@ -982,24 +982,50 @@ spielfeld.addEventListener('click', function (event) {
 
         const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
         let player = getPlayer(gameState.currentPlayerIndex);
+<<<<<<< HEAD
         console.log(player);
         console.log(gameState.currentPlayerIndex);
 
+=======
+	console.log(player);
+	console.log(gameState.currentPlayerIndex);
+	
+>>>>>>> parent of f7459fd (Playercards)
         // Stelle sicher, dass die angeklickte Karte gültig ist
         if (cardNummber >= 0 && cardNummber < player.cards.length) {
             let card = player.cards[cardNummber];
 
+<<<<<<< HEAD
             if (aktiverSpielwert < 0) {
                 // Drücken nach dem reizen
                 console.log("reizen");
+=======
+			// Drücken nach dem reizen
+			if (aktiverSpielwert < 0){
+				// Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
+				if (player.selectcards.includes(card)) {
+					player.selectcards.splice(player.selectcards.indexOf(card), 1);
+				} else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
+					player.selectcards.push(card);
+				}
+>>>>>>> parent of f7459fd (Playercards)
 
                 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
                 if (player.selectcards.includes(card)) {
                     player.selectcards.splice(player.selectcards.indexOf(card), 1);
                 } else if (player.selectcards.length < 2) { // Füge die Karte hinzu, wenn weniger als 2 ausgewählt sind
 
+<<<<<<< HEAD
                     player.selectcards.push(card);
                 }
+=======
+			   
+				clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+				loadPlayerCards(player.cards, player.selectcards); // Zeichne die Spielerkarten neu
+			// Spielen
+			}else {
+				tablecards.push(card);
+>>>>>>> parent of f7459fd (Playercards)
 
                 // Aktualisiere die Anzeige der Buttons basierend auf der Anzahl der ausgewählten Karten
                 updateButtonDisplay(player.selectcards.length);
