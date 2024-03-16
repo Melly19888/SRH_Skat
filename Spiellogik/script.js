@@ -70,19 +70,22 @@ let player1 = {
 	id: 0,
     name: "",
     cards: [],
-    ausgewaehlt: []
+    ausgewaehlt: [],
+    stich: []
 };
 let player2 = {
 	id: 1,
     name: "",
     cards: [],
-    ausgewaehlt: []
+    ausgewaehlt: [],
+    stich: []
 };
 let player3 = {
 	id: 2,
     name: "",
     cards: [],
-    ausgewaehlt: []
+    ausgewaehlt: [],
+    stich: []
 };
 let aktiverSpielwert = -1;
 
@@ -620,11 +623,12 @@ function displayTextOnCanvas(text) {
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
 
-function werteStichAus(cards, spielwert, isActivePlayerHasStarted) {
+function werteStichAus(cards, spielwert, playerHasStarted) {
 	console.log("werteStichAus");
 	alert("Sie müssen jetzt bewerten:");
 	alert(cards[0] + " " + cards[1] + " " + cards[2] + " Spielwert " + spielwert);
-	return confirm("erhält der aktive Spieler den Stich?");
+	confirm("welcher Spieler erhält den Stich?");
+	return player1; // vorerst fix auf den ersten Spieler gesetzt.
 }
 
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
@@ -640,34 +644,30 @@ function loadNextPlayerCards() {
     switch (currentState) {
     case 0:
         nextPlayer = player1;
-        textToShow = `${player1.name} du bist dran`;
-
+        textToShow = `${nextPlayer.name} du bist dran`;
         break;
     case 1:
         nextPlayer = player2;
-        textToShow = `${player2.name} du bist dran`;
+        textToShow = `${nextPlayer.name} du bist dran`;
         break;
     case 2:
         nextPlayer = player2;
-        textToShow = `${player2.name} du bist dran`;
-
+        textToShow = `${nextPlayer.name} du bist dran`;
         break;
     case 3:
         nextPlayer = player3;
-        textToShow = `${player3.name} du bist dran`;
+        textToShow = `${nextPlayer.name} du bist dran`;
         break;
     case 4:
         nextPlayer = player3;
-        textToShow = `${player3.name} du bist dran`;
-
+        textToShow = `${nextPlayer.name} du bist dran`;
         break;
     case 5:
         nextPlayer = player1;
-        textToShow = `${player1.name} du bist dran`;
+        textToShow = `${nextPlayer.name} du bist dran`;
         currentState = -1; // Zurücksetzen für den nächsten Durchlauf
         break;
     default:
-
     }
     gameState.currentPlayerIndex = nextPlayer.id;
 	console.log("nextPlayer");
@@ -678,14 +678,10 @@ function loadNextPlayerCards() {
     displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
     currentState++; // Gehe zum nächsten Spieler über
 
-
     if (currentState > 5) {
-        nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
-		if (werteStichAus(tablecards, aktiverSpielwert, true) === highestBidder){
-			highestBidder.stich.push(... tablecards);
-		} else {
-			gegenspieler.stich.push(... tablecards);
-		}
+        //nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
+		nextPlayer = werteStichAus(tablecards, aktiverSpielwert, player1);
+		nextPlayer.stich.push(... tablecards);
 		tablecards = [];
 		currentState = 0;
     }
@@ -697,18 +693,16 @@ function showNextPlayerOrCustomCard() {
 	console.log("showNextPlayerOrCustomCard");
     // Bestimme den aktuellen Spieler basierend auf dem Index
     switch (gameState.currentPlayerIndex) {
-
-    case 0:
-        currentPlayer = player1;
-        break;
-    case 1:
-        currentPlayer = player2;
-        break;
-    case 2:
-        currentPlayer = player3;
-        break;
-    default:
-
+	case 0:
+		currentPlayer = player1;
+		break;
+	case 1:
+		currentPlayer = player2;
+		break;
+	case 2:
+		currentPlayer = player3;
+		break;
+	default:
     }
 
     // Entscheide, ob die Karten des Spielers oder card33.gif angezeigt werden sollen
@@ -1031,7 +1025,7 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function () {
 });
 
 // Event Listener für das Anklicken von Karten hinzufügen
-spielfeld.addEventListener('click', function (event) {
+spielfeld.addEventListener('click', function spielfeldClick (event) {
 	console.log("Event Karten anklicken");
     const rect = spielfeld.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
