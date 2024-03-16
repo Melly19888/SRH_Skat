@@ -1,4 +1,64 @@
 /* Allgemeines Design aller Seiten */
+ #player2{
+	 border: none;
+      border-radius: 0.4em;
+      position: absolute ;
+      top: 15%;
+      left: 45%;
+      width: 10%;
+      height: 5%;
+      font-size: 100%;
+      overflow: hidden;
+	  }
+#player1{
+border: none;
+      border-radius: 0.4em;
+      position: absolute ;
+      top: 15%;
+      left: 30%;
+      width: 10%;
+      height: 5%;
+      font-size: 100%;
+      overflow: hidden;
+	  }
+#player3{
+	  border: none;
+      border-radius: 0.4em;
+      position: absolute ;
+      top: 15%;
+      left: 60%;
+      width: 10%;
+      height: 5%;
+      font-size: 100%;
+      overflow: hidden;
+	  }
+
+#openCards{
+	border: none;
+      border-radius: 0.4em;
+      position: absolute ;
+      top: 50%;
+      left: 77%;
+      width: 10%;
+      height: 5%;
+      font-size: 100%;
+      overflow: hidden;
+}
+
+#playCard{
+	border: none;
+      border-radius: 0.4em;
+      position: absolute ;
+      top: 58%;
+      left: 77%;
+      width: 10%;
+      height: 5%;
+      font-size: 100%;
+      overflow: hidden;
+}
+
+
+
   body {
     background-image: url(Backgrounds/backG1.jpg);
     background-size: cover;
