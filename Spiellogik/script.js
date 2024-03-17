@@ -97,6 +97,7 @@ let passCount = 0; // Zähler für die Anzahl der Pässe
 
 // Globale Variable für den Index des aktuellen Spielers
 let currentState = 0;
+let NamePlay = "Vorhand";
 
 player1Points.addEventListener('change', function () {
     player2Points.value = this.value;
@@ -644,15 +645,15 @@ function loadNextPlayerCards() {
     switch (currentState) {
     case 0:
         nextPlayer = player1;
-        textToShow = `${nextPlayer.name} du bist dran`;
+      
         break;
     case 1:
         nextPlayer = player2;
-        textToShow = `${nextPlayer.name} du bist dran`;
+        
         break;
 	case 2:
         nextPlayer = player3;
-        textToShow = `${nextPlayer.name} du bist dran`;
+        
       
         currentState = -1; // Zurücksetzen für den nächsten Durchlauf
         break;
@@ -664,13 +665,11 @@ function loadNextPlayerCards() {
 
     drawCards(nextPlayer.cards, []);
     drawCards(tablecards, []);
-    displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
+    
     currentState++; // Gehe zum nächsten Spieler über
 
     if (currentState > 3 ) {
         //nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
-		nextPlayer = werteStichAus(tablecards, aktiverSpielwert, player1);
-		nextPlayer.stich.push(... tablecards);
 		tablecards = [];
 		currentState = 0;
     }
@@ -710,7 +709,7 @@ function showNextPlayerOrCustomCard() {
     }
 }
 
-
+  
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	console.log("Event confirmGameBtn");
@@ -1175,6 +1174,42 @@ document.getElementById("openCardsBtn").addEventListener("click", function openC
 
 document.getElementById("playCardBtn").addEventListener("click", function playCardBtn() {
 	
+	let Playe;
+    let textToShow;
+	
+	console.log("NamePlay " + NamePlay);
+	console.log("displayTextOnCanvas");
+
+    switch (NamePlay) {
+    case "Vorhand":
+        Playe = player1;
+        textToShow = `${player2.name} du bist dran`;
+		NamePlay = "Mittelhand";
+        break;
+    case "Mittelhand":
+        Playe = player2;
+        textToShow = `${player3.name} du bist dran`;
+		NamePlay = "Hinterhand";
+        break;
+	case "Hinterhand":
+        Playe = player3;
+        textToShow = `${player1.name} du bist dran`;
+        NamePlay = "Vorhand"; // Zurücksetzen für den nächsten Durchlauf
+        break;
+    default:
+    }
+	 if (NamePlay !== "") {
+        updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
+	  if (NamePlay > 3 ) {
+        //nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
+		nextPlayer = werteStichAus(tablecards, aktiverSpielwert, player1);
+		nextPlayer.stich.push(... tablecards);
+		tablecards = [];
+		NamePlay = 0;
+	  }
+    }
+
+	
 	clearCardArea();
 
 	let player = getPlayer(gameState.currentPlayerIndex);
@@ -1182,6 +1217,8 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
 		return;
 	}
 	let card = player.selectcards[0];
+	
+	
 	
 	
 	tablecards.push(card);
@@ -1197,6 +1234,12 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
 		console.log("player " + player);
 		console.log(player);
 	}
+	
+	console.log("Event Text");
+
+
+	
+	
 	drawCustomCard(player.cards.length);
 	document.getElementById("nextPlayerBtn").style.display = "block";
 	document.getElementById("playCardBtn").style.display = "none";
