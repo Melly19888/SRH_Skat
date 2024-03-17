@@ -650,18 +650,10 @@ function loadNextPlayerCards() {
         textToShow = `${nextPlayer.name} du bist dran`;
         break;
     case 2:
-        nextPlayer = player2;
-        textToShow = `${nextPlayer.name} du bist dran`;
-        break;
-    case 3:
         nextPlayer = player3;
         textToShow = `${nextPlayer.name} du bist dran`;
         break;
-    case 4:
-        nextPlayer = player3;
-        textToShow = `${nextPlayer.name} du bist dran`;
-        break;
-    case 5:
+      case 3:
         nextPlayer = player1;
         textToShow = `${nextPlayer.name} du bist dran`;
         currentState = -1; // Zurücksetzen für den nächsten Durchlauf
@@ -677,7 +669,7 @@ function loadNextPlayerCards() {
     displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
     currentState++; // Gehe zum nächsten Spieler über
 
-    if (currentState > 5) {
+    if (currentState > 3) {
         //nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
 		nextPlayer = werteStichAus(tablecards, aktiverSpielwert, player1);
 		nextPlayer.stich.push(... tablecards);
@@ -711,6 +703,7 @@ function showNextPlayerOrCustomCard() {
     } else {
         drawCards(currentPlayer.cards, currentPlayer.ausgewaehlt); // Lade die Karten des aktuellen Spielers
         gameState.showCustomCard = true; // Nächstes Mal card33.gif anzeigen
+		document.getElementById("playCardBtn").style.display = "block";
     }
 
     // Gehe zum nächsten Spieler über oder zurück zu Vorhand, wenn alle durch sind
@@ -913,7 +906,7 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         aktiverSpielwert = spielWerte.get(this.id); // Verwende null als Fallback-Wert
 
 
-        document.getElementById("playBegin").style.display = "block";
+        document.getElementById("playBeginBtn").style.display = "block";
     });
 });
 
@@ -1085,8 +1078,10 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
                 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
                 if (player.selectcards.includes(card)) {
                     player.selectcards.splice(player.selectcards.indexOf(card), 1);
+					document.getElementById("playCardBtn").style.display = "none";
                 } else if (player.selectcards.length < 1) {
                     player.selectcards.push(card);
+					document.getElementById("playCardBtn").style.display = "block";
                 }
 				console.log("player " + player);
 				console.log(player);
@@ -1094,18 +1089,6 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
                 clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
                 drawCards(player.cards, player.selectcards);
 
-                tablecards.push(card);
-                console.log("tablecards " + tablecards);
-				console.log(tablecards);
-
-                const cardIndex = player.cards.indexOf(card);
-                if (cardIndex !== -1) {
-                    player.cards.splice(cardIndex, 1);
-					player.selectcards = [];
-					console.log("cardIndex " + cardIndex);
-					console.log("player " + player);
-					console.log(player);
-                }
             }
         }
 
@@ -1176,7 +1159,41 @@ document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	console.log("Event nextPlayer");
     clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
     loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
-    showNextPlayerOrCustomCard();
+   
+	document.getElementById("nextPlayerBtn").style.display = "none";
+    document.getElementById("playCardBtn").style.display = "block";
+});
+
+document.getElementById("openCardsBtn").addEventListener("click", function openCardsBtn() {
+	console.log("Event openCardsBtn");
+});
+
+document.getElementById("playCardBtn").addEventListener("click", function playCardBtn() {
+	console.log("Event playCardBtn");
+	clearCardArea();
+
+	let player = getPlayer(gameState.currentPlayerIndex);
+	if (player.selectcards.length !== 1) {
+		return;
+	}
+	let card = player.selectcards[0];
+	
+	tablecards.push(card);
+	console.log("tablecards " + tablecards);
+	console.log(tablecards);
+
+	const cardIndex = player.cards.indexOf(card);
+	if (cardIndex !== -1) {
+		player.cards.splice(cardIndex, 1);
+		player.selectcards = [];
+		console.log("cardIndex " + cardIndex);
+		console.log("player " + player);
+		console.log(player);
+	}
+	drawCustomCard(10);
+	document.getElementById("nextPlayerBtn").style.display = "block";
+	document.getElementById("playCardBtn").style.display = "none";
+
 });
 
 resetGame();
