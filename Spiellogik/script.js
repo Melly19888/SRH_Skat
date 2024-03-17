@@ -772,8 +772,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     if (currentPlayer !== "") {
         updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
         document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
-        document.getElementById("reizwerteMnu").style.display = "block"; // Dropdown-Menü anzeigen für aktuellen Spieler
-        document.getElementById("leftGameBtn").style.display = "block"; // Zeige leftGameBtn an
+        
     } else {
         // Alle Spieler haben gereizt, verstecke alle Buttons und zeige das Ergebnis an
         document.getElementById("reizwerteMnu").style.display = "none";
@@ -828,6 +827,8 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
         }
 
     } else if (selectedReizValue > highestBidder.bid) {
+		document.getElementById("leftGameBtn").style.display = "none";
+		document.getElementById("reizwerteMnu").style.display = "none";
         highestBidder.bid = selectedReizValue;
         highestBidder.name = getPlayerName(currentBidderIndex);
         highestBidder.id = currentBidderIndex;
@@ -928,7 +929,7 @@ document.getElementById("handBtn").addEventListener("click", function () {
     document.getElementById("leftGameBtn").style.display = "none";
 
     // Einblenden den confirmGameBtn
-    document.getElementById("confirmGameBtn").style.display = "block";
+    document.getElementById("confirmGameBtn").style.display = "none";
 
     // Zeige die Elemente mit der Klasse ReihenfolgeButtons an
     document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -1018,6 +1019,7 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
     const rect = spielfeld.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
+	
 
 	console.log("aktiverSpielwert " + aktiverSpielwert);
     if (aktiverSpielwert < 0) {
@@ -1054,6 +1056,7 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
         }
     } else {
         // Spielen
+		
         if (clickY - startY + cardHeight * 1.5 > 0) {
 
             const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
@@ -1062,6 +1065,7 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
             // Stelle sicher, dass die angeklickte Karte gültig ist
             if (cardNummber >= 0 && cardNummber < player.cards.length) {
                 let card = player.cards[cardNummber];
+				
 
                 console.log("spielen in Event Karten anklicken");
 				
@@ -1070,7 +1074,7 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
 				console.log("player " + player);
 				console.log(player);
 				console.log("card " + card);
-
+				
                 // Wenn die Karte bereits ausgewählt ist, entferne sie aus den ausgewählten Karten
                 if (player.selectcards.includes(card)) {
                     player.selectcards.splice(player.selectcards.indexOf(card), 1);
@@ -1083,7 +1087,10 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
 				console.log(player);
 
                 clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+				drawCards(tablecards, []);
                 drawCards(player.cards, player.selectcards);
+				
+				
 
             }
         }
@@ -1175,6 +1182,7 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
 		return;
 	}
 	let card = player.selectcards[0];
+	
 	
 	tablecards.push(card);
 	drawCards(tablecards, []);
