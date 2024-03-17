@@ -1196,13 +1196,18 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
         break;
 	case "Hinterhand":
         Playe = player3;
+        textToShow = `Wer bekommt den Stich`;
+        NamePlay = "WerBekommtStich"; // Zurücksetzen für den nächsten Durchlauf
+        break;
+		case "WerBekommtStich":
+        Playe = player3;
         textToShow = `${player1.name} du bist dran`;
         NamePlay = "Vorhand"; // Zurücksetzen für den nächsten Durchlauf
         break;
     default:
     }
 	 if (NamePlay !== "") {
-        updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
+        displayTextOnCanvas(textToShow); // Aktualisiere Text im sekundären Canvas
 	  
     }
 
