@@ -223,7 +223,7 @@ function drawCards(cards, selectcards) {
 
 // Funktion zum Anzeigen der Karten-Deckblätter
 function drawCustomCard(anzahl) {
-	console.log("drawCustomCard " + anzahl);
+	
     for (let i = 0; i < anzahl; i++) {
         drawCard(i * (cardWidth - 10) + 1, startY, 'img/card33.gif');
     }
@@ -452,7 +452,7 @@ function updatestartGameBtnButtonText(text) {
 
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
-	console.log("resetGame");
+	
 
     shuffle(cards); // Mische die Karten neu
 
@@ -534,7 +534,7 @@ function resetGame() {
 
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
-	console.log("clearMiddleCards");
+	
     const ctxSpielfeld = spielfeld.getContext('2d');
 
     // Angenommen, die Karten von Player4 befinden sich in der Mitte des Canvas,
@@ -551,7 +551,7 @@ function clearMiddleCards() {
 }
 
 function displayPassedGame() {
-	console.log("displayPassedGame");
+	
     const canvasSecondary = document.getElementById("canvasSecondary");
     const ctxSecondary = canvasSecondary.getContext("2d");
     ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
@@ -634,6 +634,7 @@ function werteStichAus(cards, spielwert, playerHasStarted) {
 function loadNextPlayerCards() {
 	
 	console.log("loadNextPlayerCards");
+	
 
     let nextPlayer;
     let textToShow;
@@ -649,13 +650,10 @@ function loadNextPlayerCards() {
         nextPlayer = player2;
         textToShow = `${nextPlayer.name} du bist dran`;
         break;
-    case 2:
+	case 2:
         nextPlayer = player3;
         textToShow = `${nextPlayer.name} du bist dran`;
-        break;
-      case 3:
-        nextPlayer = player1;
-        textToShow = `${nextPlayer.name} du bist dran`;
+      
         currentState = -1; // Zurücksetzen für den nächsten Durchlauf
         break;
     default:
@@ -669,7 +667,7 @@ function loadNextPlayerCards() {
     displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
     currentState++; // Gehe zum nächsten Spieler über
 
-    if (currentState > 3) {
+    if (currentState > 3 ) {
         //nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
 		nextPlayer = werteStichAus(tablecards, aktiverSpielwert, player1);
 		nextPlayer.stich.push(... tablecards);
@@ -759,8 +757,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
         drawCustomCard(10);
         // Zeige die Buttons "Hand" und "Aufnehmen" an
         showGameOptions();
-        break;
-
         // Zeige den höchsten Bieter an und blende alle Karten aus
         displayHighestBidderAndHideCards();
         document.getElementById("reizwerteMnu").style.display = "none";
@@ -1156,7 +1152,8 @@ document.getElementById("playBeginBtn").addEventListener("click", function () {
 });
 
 document.getElementById("nextPlayerBtn").addEventListener("click", function () {
-	console.log("Event nextPlayer");
+	
+	drawCards(tablecards, []);
     clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
     loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
 	
@@ -1166,11 +1163,11 @@ document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 });
 
 document.getElementById("openCardsBtn").addEventListener("click", function openCardsBtn() {
-	console.log("Event openCardsBtn");
+	
 });
 
 document.getElementById("playCardBtn").addEventListener("click", function playCardBtn() {
-	console.log("Event playCardBtn");
+	
 	clearCardArea();
 
 	let player = getPlayer(gameState.currentPlayerIndex);
