@@ -120,15 +120,18 @@ localStorage.removeItem('player3Name');
 localStorage.removeItem('player4Name');
 localStorage.removeItem('gameStarted');
 
-document.getElementById("playBegin").style.display = "none";
-document.getElementById("nextPlayer").style.display = "none";
+document.getElementById("playBeginBtn").style.display = "none";
+document.getElementById("nextPlayerBtn").style.display = "none";
 document.getElementById("confirmGameBtn").style.display = "none";
-document.getElementById("leftGameButton").style.display = "none";
+document.getElementById("leftGameBtn").style.display = "none";
 document.getElementById("startGameBtn").style.display = "block";
-document.getElementById("reizwerte").style.display = "none";
+document.getElementById("reizwerteMnu").style.display = "none";
 document.getElementById("handBtn").style.display = "none";
-document.getElementById("aufnehmenBtn").style.display = "none";
-document.getElementById('aufnehmen').style.display = 'none';
+document.getElementById("stockDrueckenBtn").style.display = "none";
+document.getElementById("skatAufnehmenBtn").style.display = 'none';
+document.getElementById("stockDrueckenBtn").style.display = 'none';
+document.getElementById("playCardBtn").style.display = 'none';
+document.getElementById("openCardsBtn").style.display = 'none';
 
 // Verstecke alle Buttons zu Beginn
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -180,13 +183,9 @@ function drawCard(x, y, card, isSelected) {
 }
 function updateButtonDisplay(selectedCardsCount) {
     if (selectedCardsCount === 2) {
-        document.getElementById('aufnehmen').style.display = 'block'; // Button anzeigen
-
-
+        document.getElementById('stockDrueckenBtn').style.display = 'block'; // Button anzeigen
     } else {
-        document.getElementById('aufnehmen').style.display = 'none'; // Button verstecken
-
-
+        document.getElementById('stockDrueckenBtn').style.display = 'none'; // Button verstecken
     }
 }
 // Funktion zum Löschen des Bereichs, in dem die Karten gezeichnet werden
@@ -268,7 +267,7 @@ function showPlayerRoles() {
 
     // Zeige den Bestätigen-Button an und verstecke den Karten-Anzeigen-Button
     document.getElementById("confirmGameBtn").style.display = "block";
-    document.getElementById("leftGameButton").style.display = "none";
+    document.getElementById("leftGameBtn").style.display = "none";
     document.getElementById("startGameBtn").style.display = "none";
 
     // Ändern des Textes im Sekundär-Canvas
@@ -390,8 +389,8 @@ function displayHighestBidderAndHideCards() {
 
         drawCustomCard(getPlayer(highestBidder.id).cards.length); // Blende alle Karten aus mit card33.gif
 
-        // Verstecke den leftGameButton
-        document.getElementById("leftGameButton").style.display = "none";
+        // Verstecke den leftGameBtn
+        document.getElementById("leftGameBtn").style.display = "none";
 
         // Zeige den confirmGameBtn wieder an
         document.getElementById("confirmGameBtn").style.display = "block";
@@ -420,8 +419,8 @@ function showGameOptions() {
     // Zeige den handBtn wieder an
     document.getElementById("handBtn").style.display = "block";
 
-    // Zeige den aufnehmenBtn wieder an
-    document.getElementById("aufnehmenBtn").style.display = "block";
+    // Zeige den skatAufnehmenBtn wieder an
+    document.getElementById("skatAufnehmenBtn").style.display = "block";
 }
 
 function loadHighestBidderCards() {
@@ -441,7 +440,7 @@ function loadHighestBidderCards() {
 // Hilfsfunktion zum Anzeigen der Spieloptionen-Buttons
 function showGameOptions() {
     document.getElementById("handBtn").style.display = "block"; // Zeige den handBtn wieder an
-    document.getElementById("aufnehmenBtn").style.display = "block"; // Zeige den aufnehmenBtn wieder an
+    document.getElementById("skatAufnehmenBtn").style.display = "block"; // Zeige den skatAufnehmenBtn wieder an
 }
 
 function updatestartGameBtnButtonText(text) {
@@ -457,14 +456,14 @@ function resetGame() {
 
     shuffle(cards); // Mische die Karten neu
 
-    // Ausblenden des leftGameButton
-    const leftGameButton = document.getElementById("leftGameButton");
-    if (leftGameButton) {
-        leftGameButton.style.display = "none";
+    // Ausblenden des leftGameBtn
+    const leftGameBtn = document.getElementById("leftGameBtn");
+    if (leftGameBtn) {
+        leftGameBtn.style.display = "none";
     }
 
     // Ausblenden des reizwerte Elements
-    const reizwerteElement = document.getElementById("reizwerte");
+    const reizwerteElement = document.getElementById("reizwerteMnu");
     if (reizwerteElement) {
         reizwerteElement.style.display = "none";
     }
@@ -507,7 +506,7 @@ function resetGame() {
     // Verstecke die Buttons "Hand" und "Aufnehmen"
 
     document.getElementById("handBtn").style.display = "none";
-    document.getElementById("aufnehmenBtn").style.display = "none";
+    document.getElementById("skatAufnehmenBtn").style.display = "none";
 
     document.addEventListener('click', function (event) {
         if (event.target.id === "startGameBtn") {
@@ -575,8 +574,8 @@ function displayPassedGame() {
     ctxSecondary.fillText(textToShowFirstLine, xPositionFirstLine, yPositionFirstLine);
     ctxSecondary.fillText(textToShowSecondLine, xPositionSecondLine, yPositionSecondLine);
 
-    // Blende den leftGameButton aus und zeige nur den confirmGameBtn an
-    document.getElementById("leftGameButton").style.display = "none";
+    // Blende den leftGameBtn aus und zeige nur den confirmGameBtn an
+    document.getElementById("leftGameBtn").style.display = "none";
     document.getElementById("confirmGameBtn").style.display = "block";
 
 }
@@ -731,8 +730,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
         textToShow = `${player1.name} du bist dran`;
         drawCards(player1.cards, player1.selectcards);
-        document.getElementById("reizwerte").style.display = "block";
-        document.getElementById("leftGameButton").style.display = "block";
+        document.getElementById("reizwerteMnu").style.display = "block";
+        document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player1.cards, player1.selectcards); // Lade card33.gif über die Karten von Mittelhand
         textToShow = `${player1.name} du bist dran`;
         currentPlayer = "Mittelhand";
@@ -743,8 +742,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
         textToShow = `${player2.name} du bist dran`;
         drawCards(player2.cards, player2.selectcards);
-        document.getElementById("reizwerte").style.display = "block";
-        document.getElementById("leftGameButton").style.display = "block";
+        document.getElementById("reizwerteMnu").style.display = "block";
+        document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player2.cards, player2.selectcards); // Lade card33.gif über die Karten von Mittelhand
         textToShow = `${player2.name} du bist dran`;
         currentPlayer = "Hinterhand";
@@ -755,8 +754,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
         textToShow = `${player3.name} du bist dran`;
         drawCards(player3.cards, player3.selectcards);
-        document.getElementById("reizwerte").style.display = "block";
-        document.getElementById("leftGameButton").style.display = "block";
+        document.getElementById("reizwerteMnu").style.display = "block";
+        document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player3.cards, player3.selectcards); // Lade card33.gif über die Karten von Mittelhand
         textToShow = `${player3.name} du bist dran`;
         currentPlayer = "Skat";
@@ -771,8 +770,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
         // Zeige den höchsten Bieter an und blende alle Karten aus
         displayHighestBidderAndHideCards();
-        document.getElementById("reizwerte").style.display = "none";
-        document.getElementById("leftGameButton").style.display = "none";
+        document.getElementById("reizwerteMnu").style.display = "none";
+        document.getElementById("leftGameBtn").style.display = "none";
         document.getElementById("confirmGameBtn").style.display = "none";
         break;
 
@@ -784,12 +783,12 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     if (currentPlayer !== "") {
         updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
         document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
-        document.getElementById("reizwerte").style.display = "block"; // Dropdown-Menü anzeigen für aktuellen Spieler
-        document.getElementById("leftGameButton").style.display = "block"; // Zeige leftGameButton an
+        document.getElementById("reizwerteMnu").style.display = "block"; // Dropdown-Menü anzeigen für aktuellen Spieler
+        document.getElementById("leftGameBtn").style.display = "block"; // Zeige leftGameBtn an
     } else {
         // Alle Spieler haben gereizt, verstecke alle Buttons und zeige das Ergebnis an
-        document.getElementById("reizwerte").style.display = "none";
-        document.getElementById("leftGameButton").style.display = "none";
+        document.getElementById("reizwerteMnu").style.display = "none";
+        document.getElementById("leftGameBtn").style.display = "none";
         document.getElementById("confirmGameBtn").style.display = "none";
         updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
     }
@@ -818,10 +817,10 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     document.getElementById("confirmGameBtn").style.display = "none";
 
 });
-// Event Listener für den Button "leftGameButton"
-document.getElementById("leftGameButton").addEventListener("click", function () {
-	console.log("Event leftGameButton");
-    const reizwerteSelect = document.getElementById("reizwerte");
+// Event Listener für den Button "leftGameBtn"
+document.getElementById("leftGameBtn").addEventListener("click", function () {
+	console.log("Event leftGameBtn");
+    const reizwerteSelect = document.getElementById("reizwerteMnu");
     if (!reizwerteSelect.value) {
         alert("Bitte wählen Sie einen Reizwert aus.");
         return; // Frühzeitige Rückkehr, wenn kein Wert ausgewählt wurde
@@ -833,7 +832,7 @@ document.getElementById("leftGameButton").addEventListener("click", function () 
         passCount++; // Erhöhe den Pass-Zähler
         if (passCount === 3) {
             drawCustomCard(10);
-            document.getElementById("leftGameButton").style.display = "none";
+            document.getElementById("leftGameBtn").style.display = "none";
             document.getElementById("confirmGameBtn").style.display = "block";
             displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
             return; // Beende die Funktion frühzeitig
@@ -866,8 +865,8 @@ document.getElementById("leftGameButton").addEventListener("click", function () 
         updateCanvasSecondaryText(`${nextPlayerName} du bist dran`);
 
         document.getElementById("confirmGameBtn").style.display = "block";
-        document.getElementById("leftGameButton").style.display = "none";
-        document.getElementById("reizwerte").style.display = "none";
+        document.getElementById("leftGameBtn").style.display = "none";
+        document.getElementById("reizwerteMnu").style.display = "none";
     }
 });
 
@@ -930,14 +929,14 @@ document.getElementById("handBtn").addEventListener("click", function () {
     // Verstecke den handBtn
     this.style.display = 'none';
 
-    // Verstecke den aufnehmenBtn
-    document.getElementById("aufnehmenBtn").style.display = 'none';
+    // Verstecke den skatAufnehmenBtn
+    document.getElementById("skatAufnehmenBtn").style.display = 'none';
 
     // Verstecke das reizwerte Element
-    document.getElementById("reizwerte").style.display = "none";
+    document.getElementById("reizwerteMnu").style.display = "none";
 
-    // Verstecke den leftGameButton
-    document.getElementById("leftGameButton").style.display = "none";
+    // Verstecke den leftGameBtn
+    document.getElementById("leftGameBtn").style.display = "none";
 
     // Einblenden den confirmGameBtn
     document.getElementById("confirmGameBtn").style.display = "block";
@@ -950,9 +949,9 @@ document.getElementById("handBtn").addEventListener("click", function () {
     });
 });
 
-// Event Listener für den Button "aufnehmenBtn"
-document.getElementById("aufnehmenBtn").addEventListener("click", function () {
-	console.log("Event aufnehmenBtn");
+// Event Listener für den Button "skatAufnehmenBtn"
+document.getElementById("skatAufnehmenBtn").addEventListener("click", function skatAufnehmenBtn () {
+	console.log("Event skatAufnehmenBtn");
 
     // Zeige skatcards an
     drawCards(skatcards, []);
@@ -975,7 +974,7 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function () {
     // Leere das Array skatcards und lösche die Karten aus der Mitte des Canvas
     skatcards = [];
 
-    // Optional: Verstecke den aufnehmenBtn nach dem Aufnehmen der Karten
+    // Optional: Verstecke den skatAufnehmenBtn nach dem Aufnehmen der Karten
     this.style.display = 'none';
 
     // Verstecke auch den Handbutton
@@ -985,10 +984,10 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function () {
     document.getElementById("confirmGameBtn").style.display = "block";
 
     // Ausblenden des reizwerte Elements
-    document.getElementById("reizwerte").style.display = "none";
+    document.getElementById("reizwerteMnu").style.display = "none";
 
-    // Ausblenden des leftGameButton
-    document.getElementById("leftGameButton").style.display = "none";
+    // Ausblenden des leftGameBtn
+    document.getElementById("leftGameBtn").style.display = "none";
 
     // Event Listener für den Button "confirmGameBtn"
     const confirmGameBtn = document.getElementById("confirmGameBtn");
@@ -999,12 +998,12 @@ document.getElementById("aufnehmenBtn").addEventListener("click", function () {
         clearMiddleCards();
 
         // Ausblenden des reizwerte Elements
-        document.getElementById("reizwerte").style.display = "none";
+        document.getElementById("reizwerteMnu").style.display = "none";
 
-        // Ausblenden des leftGameButton
-        document.getElementById("leftGameButton").style.display = "none";
-        // Optional: Verstecke den aufnehmenBtn nach dem Aufnehmen der Karten
-        document.getElementById("aufnehmenBtn").style.display = 'none';
+        // Ausblenden des leftGameBtn
+        document.getElementById("leftGameBtn").style.display = "none";
+        // Optional: Verstecke den skatAufnehmenBtn nach dem Aufnehmen der Karten
+        document.getElementById("skatAufnehmenBtn").style.display = 'none';
         // Verstecke auch den Handbutton
         document.getElementById("handBtn").style.display = 'none';
         document.getElementById("confirmGameBtn").style.display = 'block';
@@ -1114,10 +1113,10 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
 
 });
 
-// Event Listener für den Button "aufnehmen"
-document.getElementById("aufnehmen").addEventListener("click", function () {
-	console.log("Event aufnehmen");
-    // Verstecke den "aufnehmen" Button
+// Event Listener für den Button "stockDrueckenBtn"
+document.getElementById("stockDrueckenBtn").addEventListener("click", function stockDrueckenBtnClick () {
+	console.log("Event stockDruecken");
+    // Verstecke den "stockDrueckenBtn" Button
     this.style.display = "none";
 
     // Zeige alle Buttons an
@@ -1159,7 +1158,7 @@ document.getElementById("aufnehmen").addEventListener("click", function () {
 });
 
 // Event Listener für den Button "handBtn"
-document.getElementById("playBegin").addEventListener("click", function () {
+document.getElementById("playBeginBtn").addEventListener("click", function () {
 	console.log("Event playBegin");
     // Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
     const playerNameText = `${player1.name} du bist dran`;
@@ -1167,13 +1166,13 @@ document.getElementById("playBegin").addEventListener("click", function () {
     displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
 
     drawCustomCard(10);
-    document.getElementById("nextPlayer").style.display = "block";
-    document.getElementById("playBegin").style.display = "none";
+    document.getElementById("nextPlayerBtn").style.display = "block";
+    document.getElementById("playBeginBtn").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
 
 });
 
-document.getElementById("nextPlayer").addEventListener("click", function () {
+document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	console.log("Event nextPlayer");
     clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
     loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken

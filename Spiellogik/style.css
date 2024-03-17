@@ -1,5 +1,5 @@
 /* Allgemeines Design aller Seiten */
- #player2{
+#player2Btn{
 	 border: none;
       border-radius: 0.4em;
       position: absolute ;
@@ -10,7 +10,7 @@
       font-size: 100%;
       overflow: hidden;
 	  }
-#player1{
+#player1Btn{
 border: none;
       border-radius: 0.4em;
       position: absolute ;
@@ -21,7 +21,7 @@ border: none;
       font-size: 100%;
       overflow: hidden;
 	  }
-#player3{
+#player3Btn{
 	  border: none;
       border-radius: 0.4em;
       position: absolute ;
@@ -32,30 +32,6 @@ border: none;
       font-size: 100%;
       overflow: hidden;
 	  }
-
-#openCards{
-	border: none;
-      border-radius: 0.4em;
-      position: absolute ;
-      top: 50%;
-      left: 77%;
-      width: 10%;
-      height: 5%;
-      font-size: 100%;
-      overflow: hidden;
-}
-
-#playCard{
-	border: none;
-      border-radius: 0.4em;
-      position: absolute ;
-      top: 58%;
-      left: 77%;
-      width: 10%;
-      height: 5%;
-      font-size: 100%;
-      overflow: hidden;
-}
 
 
 
@@ -199,7 +175,7 @@ border: none;
     font-size: 1.1em;
   }
 
-  #reizwerte {
+  #reizwerteMnu {
     border: none;
     border-radius: 0.4em;
     display: block;
@@ -224,7 +200,7 @@ border: none;
       overflow: hidden;
     }
 
-    #confirmGameBtn, #aufnehmen, #nextPlayer, #playBegin {
+    #confirmGameBtn, #skatAufnehmenBtn, #nextPlayerBtn, #playBeginBtn, #openCardsBtn, #playCardBtn, #stockDrueckenBtn {
       border: none;
       border-radius: 0.4em;
       display: block;
@@ -238,7 +214,7 @@ border: none;
 
 	
 
-    #leftGameButton {
+    #leftGameBtn {
       border: none;
       border-radius: 0.4em;
       display: block;
@@ -342,7 +318,7 @@ border: none;
     border-radius: 6px;
   }
 
-  #aufnehmenBtn {
+  #skatAufnehmenBtn {
     top: 23%;
     left: 32.5%;
     z-index: 110;
