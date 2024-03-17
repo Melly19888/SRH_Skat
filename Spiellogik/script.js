@@ -133,6 +133,9 @@ document.getElementById("skatAufnehmenBtn").style.display = 'none';
 document.getElementById("stockDrueckenBtn").style.display = 'none';
 document.getElementById("playCardBtn").style.display = 'none';
 document.getElementById("openCardsBtn").style.display = 'none';
+document.getElementById("player1Btn").style.display = "none";
+document.getElementById("player2Btn").style.display = "none";
+document.getElementById("player3Btn").style.display = "none";
 
 // Verstecke alle Buttons zu Beginn
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -708,7 +711,19 @@ function showNextPlayerOrCustomCard() {
         gameState.currentState = (gameState.currentState + 1) % 3;
     }
 }
-
+function updatePlayerButtonsBasedOnTableCards() {
+    if (tablecards.length === 3) {
+        // Wenn drei Karten auf dem Tisch liegen, zeige die Buttons an
+        document.getElementById("player1Btn").style.display = "block";
+        document.getElementById("player2Btn").style.display = "block";
+        document.getElementById("player3Btn").style.display = "block";
+    } else {
+        // Andernfalls verstecke sie
+        document.getElementById("player1Btn").style.display = "none";
+        document.getElementById("player2Btn").style.display = "none";
+        document.getElementById("player3Btn").style.display = "none";
+    }
+}
   
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
@@ -1200,13 +1215,7 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
     }
 	 if (NamePlay !== "") {
         updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
-	  if (NamePlay > 3 ) {
-        //nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
-		nextPlayer = werteStichAus(tablecards, aktiverSpielwert, player1);
-		nextPlayer.stich.push(... tablecards);
-		tablecards = [];
-		NamePlay = 0;
-	  }
+	  
     }
 
 	
@@ -1234,7 +1243,8 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
 		console.log("player " + player);
 		console.log(player);
 	}
-	
+	 // Nachdem tablecards aktualisiert wurde, überprüfe, ob wir die Spielerbuttons anzeigen/verstecken müssen
+    updatePlayerButtonsBasedOnTableCards();
 	console.log("Event Text");
 
 
