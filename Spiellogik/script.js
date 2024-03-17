@@ -1159,9 +1159,10 @@ document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	console.log("Event nextPlayer");
     clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
     loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
-   
+	
+	 
 	document.getElementById("nextPlayerBtn").style.display = "none";
-    document.getElementById("playCardBtn").style.display = "block";
+    document.getElementById("playCardBtn").style.display = "none";
 });
 
 document.getElementById("openCardsBtn").addEventListener("click", function openCardsBtn() {
@@ -1173,12 +1174,13 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
 	clearCardArea();
 
 	let player = getPlayer(gameState.currentPlayerIndex);
-	if (player.selectcards.length !== 1) {
+	if (player.selectcards.length !== 1) {  // Wächter, ob die Funktion wirklich arbeiten darf
 		return;
 	}
 	let card = player.selectcards[0];
 	
 	tablecards.push(card);
+	drawCards(tablecards, []);
 	console.log("tablecards " + tablecards);
 	console.log(tablecards);
 
@@ -1190,10 +1192,10 @@ document.getElementById("playCardBtn").addEventListener("click", function playCa
 		console.log("player " + player);
 		console.log(player);
 	}
-	drawCustomCard(10);
+	drawCustomCard(player.cards.length);
 	document.getElementById("nextPlayerBtn").style.display = "block";
 	document.getElementById("playCardBtn").style.display = "none";
-
+	
 });
 
 resetGame();
