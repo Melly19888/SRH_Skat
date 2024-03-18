@@ -36,8 +36,43 @@ const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif
     'img/card10.gif', 'img/card11.gif', 'img/card12.gif', 'img/card13.gif', 'img/card14.gif',
     'img/card15.gif', 'img/card16.gif', 'img/card17.gif', 'img/card18.gif', 'img/card19.gif',
     'img/card20.gif', 'img/card21.gif', 'img/card22.gif', 'img/card23.gif', 'img/card24.gif',
-    'img/card25.gif', 'img/card26.gif', 'img/card27.gif', ' img/card28.gif', ' img/card29.gif',
-    ' img/card30.gif', ' img/card31.gif', ' img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
+    'img/card25.gif', 'img/card26.gif', 'img/card27.gif', 'img/card28.gif', ' img/card29.gif',
+    'img/card30.gif', 'img/card31.gif', 'img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
+
+const cardWerte = new Map([
+            ['img/card1.gif', 2],
+            ['img/card2.gif', 2],
+            ['img/card3.gif', 2],
+            ['img/card4.gif', 2],
+            ['img/card5.gif', 11],
+            ['img/card6.gif', 10],
+            ['img/card7.gif', 4],
+            ['img/card8.gif', 3],
+            ['img/card9.gif', 0],
+            ['img/card10.gif', 0],
+            ['img/card11.gif', 0],
+            ['img/card12.gif', 11],
+            ['img/card13.gif', 10],
+            ['img/card14.gif', 4],
+            ['img/card15.gif', 3],
+            ['img/card16.gif', 0],
+            ['img/card17.gif', 0],
+            ['img/card18.gif', 0],
+            ['img/card19.gif', 11],
+            ['img/card20.gif', 10],
+            ['img/card21.gif', 4],
+            ['img/card22.gif', 3],
+            ['img/card23.gif', 0],
+            ['img/card24.gif', 0],
+            ['img/card25.gif', 0],
+            ['img/card26.gif', 11],
+            ['img/card27.gif', 10],
+            ['img/card28.gif', 4],
+            ['img/card29.gif', 3],
+            ['img/card30.gif', 0],
+            ['img/card31.gif', 0],
+            ['img/card32.gif', 0]
+        ]);
 
 let gameState = {
     currentPlayerIndex: 0,
