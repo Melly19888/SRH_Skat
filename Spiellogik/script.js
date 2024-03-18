@@ -36,7 +36,7 @@ const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif
     'img/card10.gif', 'img/card11.gif', 'img/card12.gif', 'img/card13.gif', 'img/card14.gif',
     'img/card15.gif', 'img/card16.gif', 'img/card17.gif', 'img/card18.gif', 'img/card19.gif',
     'img/card20.gif', 'img/card21.gif', 'img/card22.gif', 'img/card23.gif', 'img/card24.gif',
-    'img/card25.gif', 'img/card26.gif', 'img/card27.gif', 'img/card28.gif', ' img/card29.gif',
+    'img/card25.gif', 'img/card26.gif', 'img/card27.gif', 'img/card28.gif', 'img/card29.gif',
     'img/card30.gif', 'img/card31.gif', 'img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
 
 const cardWerte = new Map([
@@ -1296,9 +1296,9 @@ function werteSpielAus() {
 	console.log(highestBidder);
 	console.log(highestBidder.id);
 	console.log(getPlayer(highestBidder.id));
-	console.log(getPlayer(highestBidder.id).cards);
+	console.log(getPlayer(highestBidder.id).stich);
 	// Hat Spieler oder haben die Gegner gewonnen?
-	let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).cards);
+	let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).stich);
 	console.log("ergebnisReizGewinner" + ergebnisReizGewinner);
 	// Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
 	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
