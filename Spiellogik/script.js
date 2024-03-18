@@ -49,11 +49,7 @@ let currentBidderIndex = 0;
 let highestBidder = {
     id: -1,
     name: "",
-    bid: 0,
-    stich: []
-};
-let gegenspieler = {
-    stich: []
+    bid: 0
 };
 // Button zum Anzeigen der Karten
 
@@ -133,9 +129,8 @@ document.getElementById("skatAufnehmenBtn").style.display = 'none';
 document.getElementById("stockDrueckenBtn").style.display = 'none';
 document.getElementById("playCardBtn").style.display = 'none';
 document.getElementById("openCardsBtn").style.display = 'none';
-document.getElementById("player1Btn").style.display = "none";
-document.getElementById("player2Btn").style.display = "none";
-document.getElementById("player3Btn").style.display = "none";
+document.getElementById("stich").style.display = 'none';
+
 
 // Verstecke alle Buttons zu Beginn
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -315,6 +310,14 @@ function getPlayerName(index) {
     default:
         return "";
     }
+}
+function getNextPlayer(player){
+	if (player === player1)
+		return player2;
+	if (player === player2)
+		return player3;
+	if (player === player3)
+		return player1;
 }
 function displayText(textToShow) {
     const canvasSecondary = document.getElementById("canvasSecondary");
@@ -626,14 +629,24 @@ function displayTextOnCanvas(text) {
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
 
-function werteStichAus(cards, spielwert, playerHasStarted) {
-	console.log("werteStichAus");
-	alert("Sie müssen jetzt bewerten:");
-	alert(cards[0] + " " + cards[1] + " " + cards[2] + " Spielwert " + spielwert);
-	confirm("welcher Spieler erhält den Stich?");
-	return player1; // vorerst fix auf den ersten Spieler gesetzt.
-}
+function werteStichAus(cards, spielwert) {
+    console.log("werteStichAus");
+    displayTextOnCanvas(textToShow);
 
+    return new Promise((resolve, reject) => {
+        document.getElementById("player1Btn").addEventListener('click', () => {
+            resolve(player1);
+        });
+
+        document.getElementById("player2Btn").addEventListener('click', () => {
+            resolve(player2);
+        });
+
+        document.getElementById("player3Btn").addEventListener('click', () => {
+            resolve(player3);
+        });
+    });
+}
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
 	
@@ -679,38 +692,6 @@ function loadNextPlayerCards() {
 
 }
 
-// Funktion zum Anzeigen der Karten des nächsten Spielers oder card33.gif
-function showNextPlayerOrCustomCard() {
-	console.log("showNextPlayerOrCustomCard");
-    // Bestimme den aktuellen Spieler basierend auf dem Index
-    switch (gameState.currentPlayerIndex) {
-	case 0:
-		currentPlayer = player1;
-		break;
-	case 1:
-		currentPlayer = player2;
-		break;
-	case 2:
-		currentPlayer = player3;
-		break;
-	default:
-    }
-
-    // Entscheide, ob die Karten des Spielers oder card33.gif angezeigt werden sollen
-    if (gameState.showCustomCard || !currentPlayer) {
-        drawCustomCard(currentPlayer.cards.length); // Zeige card33.gif an
-        gameState.showCustomCard = false; // Setze zurück für nächsten Durchlauf
-    } else {
-        drawCards(currentPlayer.cards, currentPlayer.ausgewaehlt); // Lade die Karten des aktuellen Spielers
-        gameState.showCustomCard = true; // Nächstes Mal card33.gif anzeigen
-		document.getElementById("playCardBtn").style.display = "block";
-    }
-
-    // Gehe zum nächsten Spieler über oder zurück zu Vorhand, wenn alle durch sind
-    if (!gameState.showCustomCard) {
-        gameState.currentState = (gameState.currentState + 1) % 3;
-    }
-}
 
   
 // Event Listener für den Button "confirmGameBtn"
@@ -914,7 +895,8 @@ document.getElementById("handBtn").addEventListener("click", function () {
 	console.log("Event handBtn");
     // Setze isHandGame auf true, da Hand gespielt wird
     isHandGame = true;
-    highestBidder.stich.push(...skatcards);
+	let player = getPlayer(highestBidder.id);
+	player.stich.push(...skatcards);
 
     skatcards = [];
 
@@ -1122,7 +1104,7 @@ document.getElementById("stockDrueckenBtn").addEventListener("click", function s
     // Überprüfe, ob der Spieler existiert und ob ausgewählte Karten vorhanden sind
     if (player && player.selectcards.length > 0) {
         // Füge die ausgewählten Karten zum Stich des höchsten Bieters hinzu
-        highestBidder.stich.push(...player.selectcards);
+		player.stich.push(...player.selectcards);
 
         // Entferne die ausgewählten Karten aus dem Array der Karten des Spielers
         player.selectcards.forEach(selectedCard => {
@@ -1175,88 +1157,68 @@ document.getElementById("openCardsBtn").addEventListener("click", function openC
 	
 });
 
-document.getElementById("playCardBtn").addEventListener("click", function playCardBtn() {
-	
-	let Playe;
-    let textToShow;
-	
-	console.log("NamePlay " + NamePlay);
-	console.log("displayTextOnCanvas");
 
-    switch (NamePlay) {
-    case "Vorhand":
-        Playe = player1;
-        textToShow = `${player2.name} du bist dran`;
-		NamePlay = "Mittelhand";
-        break;
-    case "Mittelhand":
-        Playe = player2;
-        textToShow = `${player3.name} du bist dran`;
-		NamePlay = "Hinterhand";
-        break;
-	case "Hinterhand":
-        Playe = player3;
-        textToShow = `Wer bekommt den Stich`;
-        NamePlay = "WerBekommtStich"; // Zurücksetzen für den nächsten Durchlauf
-        break;
-		case "WerBekommtStich":
-        Playe = player3;
-        textToShow = `${player1.name} du bist dran`;
-        NamePlay = "Vorhand"; // Zurücksetzen für den nächsten Durchlauf
-        break;
-    default:
-    }
-	 if (NamePlay !== "") {
-        displayTextOnCanvas(textToShow); // Aktualisiere Text im sekundären Canvas
-	  
-    }
+    document.getElementById("playCardBtn").addEventListener("click", function playCardBtn() {
+        let player = getPlayer(gameState.currentPlayerIndex); // wer spielt gerade?
+        if (player.selectcards.length !== 1) { // Wächter, ob die Funktion wirklich arbeiten darf
+            return;
+        }
+        let card = player.selectcards[0]; // die Karte, die jetzt gespielt wird
+        clearCardArea();
 
-	
-	clearCardArea();
+        // nimm die Karte aus der Hand des Spielers
+        const cardIndex = player.cards.indexOf(card);
+        if (cardIndex !== -1) {
+            player.cards.splice(cardIndex, 1);
+            player.selectcards = [];
+            console.log("cardIndex " + cardIndex);
+            console.log("player " + player);
+            console.log(player);
+        }
 
-	let player = getPlayer(gameState.currentPlayerIndex);
-	if (player.selectcards.length !== 1) {  // Wächter, ob die Funktion wirklich arbeiten darf
-		return;
-	}
-	let card = player.selectcards[0];
-	
-	
-	
-	
-	tablecards.push(card);
-	drawCards(tablecards, []);
-	console.log("tablecards " + tablecards);
-	console.log(tablecards);
+        // lege Karte auf den Tisch
+        tablecards.push(card);
+        drawCards(tablecards, []);
+        console.log("tablecards " + tablecards);
+        console.log(tablecards);
 
-	const cardIndex = player.cards.indexOf(card);
-	if (cardIndex !== -1) {
-		player.cards.splice(cardIndex, 1);
-		player.selectcards = [];
-		console.log("cardIndex " + cardIndex);
-		console.log("player " + player);
-		console.log(player);
-	}
-	 // Nachdem tablecards aktualisiert wurde, überprüfe, ob wir die Spielerbuttons anzeigen/verstecken müssen
-   
-	console.log("Event Text");
-	 if (tablecards.length === 3) {
-        // Wenn drei Karten auf dem Tisch liegen, zeige die Buttons an
-		document.getElementById("nextPlayerBtn").style.display = "none";
-        document.getElementById("player1Btn").style.display = "block";
-        document.getElementById("player2Btn").style.display = "block";
-        document.getElementById("player3Btn").style.display = "block";
-    } else {
-        // Andernfalls verstecke sie
-        document.getElementById("nextPlayerBtn").style.display = "block";
-        
-    }
+        // Nachdem tablecards aktualisiert wurde, überprüfe, ob wir die Spielerbuttons anzeigen/verstecken müssen
+        console.log("Event Text");
+        if (tablecards.length === 3) {
+            // Wenn drei Karten auf dem Tisch liegen, zeige die Buttons an
+            document.getElementById("nextPlayerBtn").style.display = "none";
+			document.getElementById("stich").style.display = "block";
 
-	
-	
-	drawCustomCard(player.cards.length);
-	
-	document.getElementById("playCardBtn").style.display = "none";
-	
+            let winnerPlayer = werteStichAus(tablecards, aktiverSpielwert);
+            //winnerPlayer.stich.push(...tablecards);
+            tablecards=[];
+            //gameState.currentPlayerIndex = winnerPlayer.id;
+        } else {
+            let nextPlayer = getNextPlayer(player);
+            gameState.currentPlayerIndex = nextPlayer.id;
+            document.getElementById("nextPlayerBtn").style.display = "block";
+            textToShow = `${nextPlayer.name} du bist dran`;
+            displayTextOnCanvas(textToShow);
+        }
+
+        drawCustomCard(player.cards.length+1);
+        document.getElementById("playCardBtn").style.display = "none"; 
 });
+
+
+				document.getElementById("stich").addEventListener("click", () => {
+                document.getElementById("dialog-Stich").showModal();
+            });
+
+            document.getElementById("player1Btn").addEventListener("click", () => {
+                document.getElementById("dialog-Stich").close();
+            });
+			document.getElementById("player2Btn").addEventListener("click", () => {
+                document.getElementById("dialog-Stich").close();
+			});	
+				
+				document.getElementById("player3Btn").addEventListener("click", () => {
+                document.getElementById("dialog-Stich").close();
+			});
 
 resetGame();
