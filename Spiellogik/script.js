@@ -1281,8 +1281,25 @@ function verarbeiteStichFuer(winnerPlayer) {
 	document.getElementById("nextPlayerBtn").style.display = "block"; 
 }
 
+function calcCardValues(cards) {
+	console.log("calcCardValues ");
+	let value = 0;
+	cards.forEach(card => {
+		console.log(card + ": " + cardWerte.get(card));
+		value += cardWerte.get(card);
+	});
+	return value;
+}
+
 function werteSpielAus() {
+	console.log("werteSpielAus fuer " + getPlayer(highestBidder.id).name);
+	console.log(highestBidder);
+	console.log(highestBidder.id);
+	console.log(getPlayer(highestBidder.id));
+	console.log(getPlayer(highestBidder.id).cards);
 	// Hat Spieler oder haben die Gegner gewonnen?
+	let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).cards);
+	console.log("ergebnisReizGewinner" + ergebnisReizGewinner);
 	// Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
 	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
 	// ansonsten wieder zum Reizen übergehen
