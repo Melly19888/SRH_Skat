@@ -130,6 +130,9 @@ let passCount = 0; // Zähler für die Anzahl der Pässe
 let currentState = 0;
 let NamePlay = "Vorhand";
 
+let canClickFieldForStock = false; // Für "stockDrueckenBtn"
+let canClickFieldForNextPlayer = false; // Für "nextPlayerBtn"
+
 player1Points.addEventListener('change', function () {
     player2Points.value = this.value;
     player3Points.value = this.value;
@@ -743,8 +746,50 @@ function loadNextPlayerCards() {
 
 }
 
+function verarbeiteStichFuer(winnerPlayer) {
+	console.log("verarbeiteStichFuer ");
+	if (winnerPlayer === undefined) {
+		console.log("undefined !!!! ");
+		return;
+	}
+	console.log(winnerPlayer);
+	winnerPlayer.stich.push(...tablecards);
+	tablecards=[];
+	gameState.currentPlayerIndex = winnerPlayer.id;
+	if (winnerPlayer.cards.length === 0){
+		werteSpielAus();
+	} else {
+		textToShow = `${winnerPlayer.name} du bist dran`;
+		displayTextOnCanvas(textToShow);
+	}
+	document.getElementById("stichBtn").style.display = "none"; 
+	document.getElementById("nextPlayerBtn").style.display = "block"; 
+}
 
-  
+function calcCardValues(cards) {
+	console.log("calcCardValues ");
+	let value = 0;
+	cards.forEach(card => {
+		console.log(card + ": " + cardWerte.get(card));
+		value += cardWerte.get(card);
+	});
+	return value;
+}
+
+function werteSpielAus() {
+	console.log("werteSpielAus fuer " + getPlayer(highestBidder.id).name);
+	console.log(highestBidder);
+	console.log(highestBidder.id);
+	console.log(getPlayer(highestBidder.id));
+	console.log(getPlayer(highestBidder.id).stich);
+	// Hat Spieler oder haben die Gegner gewonnen?
+	let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).stich);
+	console.log("ergebnisReizGewinner" + ergebnisReizGewinner);
+	// Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
+	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
+	// ansonsten wieder zum Reizen übergehen
+}
+
 // Event Listener für den Button "confirmGameBtn"
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	console.log("Event confirmGameBtn");
@@ -1001,7 +1046,9 @@ document.getElementById("skatAufnehmenBtn").addEventListener("click", function s
 
     // Optional: Verstecke den skatAufnehmenBtn nach dem Aufnehmen der Karten
     this.style.display = 'none';
-
+	
+	 canClickFieldForStock = true; // Erlaube Klicken auf das Spielfeld
+	 
     // Verstecke auch den Handbutton
     document.getElementById("handBtn").style.display = 'none';
 
@@ -1050,6 +1097,9 @@ document.getElementById("skatAufnehmenBtn").addEventListener("click", function s
 
 // Event Listener für das Anklicken von Karten hinzufügen
 spielfeld.addEventListener('click', function spielfeldClick (event) {
+	  if (!canClickFieldForStock && !canClickFieldForNextPlayer) {
+        return; // Frühzeitige Rückkehr, wenn Klicken nicht erlaubt ist
+    }
 	console.log("Event Karten anklicken");
     const rect = spielfeld.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
@@ -1139,7 +1189,9 @@ document.getElementById("stockDrueckenBtn").addEventListener("click", function s
 	console.log("Event stockDruecken");
     // Verstecke den "stockDrueckenBtn" Button
     this.style.display = "none";
-
+	
+	canClickFieldForStock = false;
+	
     // Zeige alle Buttons an
     document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
         button.style.display = 'block';
@@ -1199,7 +1251,7 @@ document.getElementById("nextPlayerBtn").addEventListener("click", function () {
     clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
     loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
 	
-	 
+    canClickFieldForNextPlayer = true; // Erlaube Klicken auf das Spielfeld
 	document.getElementById("nextPlayerBtn").style.display = "none";
     document.getElementById("playCardBtn").style.display = "none";
 });
@@ -1256,54 +1308,12 @@ document.getElementById("openCardsBtn").addEventListener("click", function openC
             textToShow = `${nextPlayer.name} du bist dran`;
             displayTextOnCanvas(textToShow);
         }
-
+		
+		canClickFieldForNextPlayer = false;
         drawCustomCard(player.cards.length+1);
         document.getElementById("playCardBtn").style.display = "none"; 
 });
 
-function verarbeiteStichFuer(winnerPlayer) {
-	console.log("verarbeiteStichFuer ");
-	if (winnerPlayer === undefined) {
-		console.log("undefined !!!! ");
-		return;
-	}
-	console.log(winnerPlayer);
-	winnerPlayer.stich.push(...tablecards);
-	tablecards=[];
-	gameState.currentPlayerIndex = winnerPlayer.id;
-	if (winnerPlayer.cards.length === 0){
-		werteSpielAus();
-	} else {
-		textToShow = `${winnerPlayer.name} du bist dran`;
-		displayTextOnCanvas(textToShow);
-	}
-	document.getElementById("stichBtn").style.display = "none"; 
-	document.getElementById("nextPlayerBtn").style.display = "block"; 
-}
-
-function calcCardValues(cards) {
-	console.log("calcCardValues ");
-	let value = 0;
-	cards.forEach(card => {
-		console.log(card + ": " + cardWerte.get(card));
-		value += cardWerte.get(card);
-	});
-	return value;
-}
-
-function werteSpielAus() {
-	console.log("werteSpielAus fuer " + getPlayer(highestBidder.id).name);
-	console.log(highestBidder);
-	console.log(highestBidder.id);
-	console.log(getPlayer(highestBidder.id));
-	console.log(getPlayer(highestBidder.id).stich);
-	// Hat Spieler oder haben die Gegner gewonnen?
-	let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).stich);
-	console.log("ergebnisReizGewinner" + ergebnisReizGewinner);
-	// Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
-	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
-	// ansonsten wieder zum Reizen übergehen
-}
 
 document.getElementById("stichBtn").addEventListener("click", () => {
             document.getElementById("dialog-Stich").showModal();
