@@ -129,7 +129,7 @@ document.getElementById("skatAufnehmenBtn").style.display = 'none';
 document.getElementById("stockDrueckenBtn").style.display = 'none';
 document.getElementById("playCardBtn").style.display = 'none';
 document.getElementById("openCardsBtn").style.display = 'none';
-document.getElementById("stich").style.display = 'none';
+document.getElementById("stichBtn").style.display = 'none';
 
 
 // Verstecke alle Buttons zu Beginn
@@ -629,11 +629,26 @@ function displayTextOnCanvas(text) {
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
 
-function werteStichAus(cards, spielwert) {
+function werteStichAus(cards, spielwert, playerDerAngespieltHat) {
     console.log("werteStichAus");
     displayTextOnCanvas(textToShow);
+	if (playerDerAngespieltHat === player1) {
+		document.getElementById("player1Btn").textContent  = "*" + player1.name + "*";
+	} else {
+		document.getElementById("player1Btn").textContent  = player1.name;
+	}
+	if (playerDerAngespieltHat === player2) {
+		document.getElementById("player2Btn").textContent  = "*" + player2.name + "*";
+	} else {
+		document.getElementById("player2Btn").textContent  = player2.name;
+	}
+	if (playerDerAngespieltHat === player3) {
+		document.getElementById("player3Btn").textContent  = "*" + player3.name + "*";
+	} else {
+		document.getElementById("player3Btn").textContent  = player3.name;
+	}
 
-    return new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
         document.getElementById("player1Btn").addEventListener('click', () => {
             resolve(player1);
         });
@@ -646,6 +661,7 @@ function werteStichAus(cards, spielwert) {
             resolve(player3);
         });
     });
+	return undefined;
 }
 // Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
 function loadNextPlayerCards() {
@@ -1187,12 +1203,17 @@ document.getElementById("openCardsBtn").addEventListener("click", function openC
         if (tablecards.length === 3) {
             // Wenn drei Karten auf dem Tisch liegen, zeige die Buttons an
             document.getElementById("nextPlayerBtn").style.display = "none";
-			document.getElementById("stich").style.display = "block";
+			document.getElementById("stichBtn").style.display = "block";
+			
+			console.log("*******player*******");
+			console.log(player);
 
-            let winnerPlayer = werteStichAus(tablecards, aktiverSpielwert);
-            //winnerPlayer.stich.push(...tablecards);
-            tablecards=[];
-            //gameState.currentPlayerIndex = winnerPlayer.id;
+            let winnerPlayer = werteStichAus(tablecards, aktiverSpielwert, getNextPlayer(player));
+			if (winnerPlayer !== undefined) {
+				verarbeiteStichFuer(winnerPlayer);
+			} else {
+				console.log("werteStichaus liefert undefined");
+			}
         } else {
             let nextPlayer = getNextPlayer(player);
             gameState.currentPlayerIndex = nextPlayer.id;
@@ -1205,19 +1226,47 @@ document.getElementById("openCardsBtn").addEventListener("click", function openC
         document.getElementById("playCardBtn").style.display = "none"; 
 });
 
+function verarbeiteStichFuer(winnerPlayer) {
+	console.log("verarbeiteStichFuer ");
+	if (winnerPlayer === undefined) {
+		console.log("undefined !!!! ");
+		return;
+	}
+	console.log(winnerPlayer);
+	winnerPlayer.stich.push(...tablecards);
+	tablecards=[];
+	gameState.currentPlayerIndex = winnerPlayer.id;
+	if (winnerPlayer.cards.length === 0){
+		werteSpielAus();
+	} else {
+		textToShow = `${winnerPlayer.name} du bist dran`;
+		displayTextOnCanvas(textToShow);
+	}
+	document.getElementById("stichBtn").style.display = "none"; 
+	document.getElementById("nextPlayerBtn").style.display = "block"; 
+}
 
-				document.getElementById("stich").addEventListener("click", () => {
-                document.getElementById("dialog-Stich").showModal();
+function werteSpielAus() {
+	// Hat Spieler oder haben die Gegner gewonnen?
+	// Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
+	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
+	// ansonsten wieder zum Reizen übergehen
+}
+
+document.getElementById("stichBtn").addEventListener("click", () => {
+            document.getElementById("dialog-Stich").showModal();
             });
 
             document.getElementById("player1Btn").addEventListener("click", () => {
+				verarbeiteStichFuer(player1);
                 document.getElementById("dialog-Stich").close();
             });
 			document.getElementById("player2Btn").addEventListener("click", () => {
+				verarbeiteStichFuer(player2);
                 document.getElementById("dialog-Stich").close();
-			});	
-				
-				document.getElementById("player3Btn").addEventListener("click", () => {
+			});
+			document.getElementById("player3Btn").addEventListener("click", () => {
+				verarbeiteStichFuer(player3);
                 document.getElementById("dialog-Stich").close();
 			});
 
