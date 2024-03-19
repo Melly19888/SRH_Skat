@@ -553,28 +553,7 @@ function resetGame() {
     document.getElementById("handBtn").style.display = "none";
     document.getElementById("skatAufnehmenBtn").style.display = "none";
 
-    document.addEventListener('click', function (event) {
-        if (event.target.id === "startGameBtn") {
-            if (!rolesChosenFlag && (player1.name !== "" && player2.name !== "" && player3.name !== "")) {
-                showPlayerRoles();
-                rolesChosenFlag = true;
-
-                [player1Points, player2Points, player3Points].forEach((select, index) => {
-                    const selectedValue = select.options[select.selectedIndex].text;
-                    const playerName = [player1.name, player2.name, player3.name][index];
-                    const textElement = document.createElement("input");
-                    const inputId = `playerInput` + index++;
-                    textElement.type = "text";
-                    textElement.value = `${playerName}: ${selectedValue}`;
-                    textElement.readOnly = true;
-                    textElement.id = inputId;
-                    select.parentNode.replaceChild(textElement, select);
-                });
-            }
-        }
-
-    });
-
+   
 }
 
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
@@ -789,8 +768,13 @@ function werteSpielAus() {
 	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
 	// ansonsten wieder zum Reizen übergehen
 }
+function showCardsAndChooseReiz() {
+    // Implementierung der Funktion hier
+    console.log("showCardsAndChooseReiz wurde aufgerufen");
+}
 
-// Event Listener für den Button "confirmGameBtn"
+
+
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	console.log("Event confirmGameBtn");
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
@@ -940,10 +924,14 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
 });
 
 document.addEventListener('click', function (event) {
-	console.log("Event document");
+    console.log("Event document");
     if (event.target.id === "startGameBtn") {
+        // Holen Sie sich die Namen aus den Eingabefeldern
+        const player1Name = document.getElementById("player1Name").value;
+        const player2Name = document.getElementById("player2Name").value;
+        const player3Name = document.getElementById("player3Name").value;
 
-        if (!rolesChosenFlag && (player1.name !== "" && player2.name !== "" && player3.name !== "")) {
+        if (!rolesChosenFlag && (player1Name !== "" && player2Name !== "" && player3Name !== "")) {
             showPlayerRoles();
             rolesChosenFlag = true;
 
@@ -952,6 +940,18 @@ document.addEventListener('click', function (event) {
             document.getElementById("player2Name").readOnly = true;
             document.getElementById("player3Name").readOnly = true;
 
+            // Ersetzen Sie die Dropdowns durch Textfelder mit den ausgewählten Punkten
+            [player1Points, player2Points, player3Points].forEach((select, index) => {
+                const selectedValue = select.options[select.selectedIndex].text;
+                const playerName = [player1Name, player2Name, player3Name][index];
+                const textElement = document.createElement("input");
+                const inputId = `playerInput${index}`;
+                textElement.type = "text";
+                textElement.value = `${playerName}: ${selectedValue}`;
+                textElement.readOnly = true;
+                textElement.id = inputId;
+                select.parentNode.replaceChild(textElement, select);
+            });
         } else {
             showCustomPopup("Bitte geben Sie die Namen aller drei Spieler ein.");
         }
