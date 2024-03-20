@@ -324,7 +324,7 @@ function showPlayerRoles() {
 function drawPlayerRoles() {
     const innerCanvas = document.getElementById("innerCanvas");
     const ctxInner = innerCanvas.getContext("2d");
-
+	console.log("Spielerrolle schreiben");
     // Lösche das Canvas vor dem Neuzeichnen
     ctxInner.clearRect(0, 0, innerCanvas.width, innerCanvas.height);
 
@@ -477,11 +477,15 @@ function showGameOptions() {
     document.getElementById("skatAufnehmenBtn").style.display = "block"; // Zeige den skatAufnehmenBtn wieder an
 }
 function rotatePlayers() {
+	console.log("Spielerrolle setzten");
+	console.log(player1);
+	console.log(player2);
+	console.log(player3);
     // Rotiere die Spielerpositionen
-    let temp = player1;
-    player1 = player2;
+   let Temp = player1;
+	player1 = player2;
     player2 = player3;
-    player3 = temp;
+    player3 = Temp;
 
     // Aktualisiere auch die IDs der Spieler entsprechend ihrer neuen Position
     player1.id = 0;
@@ -489,6 +493,7 @@ function rotatePlayers() {
     player3.id = 2;
 	// Zeichne die Spielerrollen neu
     drawPlayerRoles();
+	
 }
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
@@ -804,7 +809,7 @@ function showCardsAndChooseReiz() {
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	console.log("Event confirmGameBtn");
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
-
+	drawPlayerRoles();
     switch (currentPlayer) {
     case "Vorhand":
 
@@ -991,6 +996,7 @@ document.addEventListener('click', function (event) {
             showCustomPopup("Bitte geben Sie die Namen aller drei Spieler ein.");
         }
 		drawPlayerRoles();
+		rotatePlayers();
     }
 });
 /// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
@@ -1367,7 +1373,8 @@ document.getElementById("neuesSpielBtn").addEventListener("click", function neue
 	document.getElementById("startGameBtn").style.display = "none";
     stichCount = 0; // Setze den Zähler für die bewerteten Stiche zurück auf 0
 });
-
+	
 // Zeichne die Spielerrollen neu
     drawPlayerRoles();
 	resetGame();
+	rotatePlayers();
