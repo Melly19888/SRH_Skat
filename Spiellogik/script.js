@@ -153,6 +153,7 @@ document.getElementById("stockDrueckenBtn").style.display = 'none';
 document.getElementById("playCardBtn").style.display = 'none';
 document.getElementById("openCardsBtn").style.display = 'none';
 document.getElementById("stichBtn").style.display = 'none';
+document.getElementById("neuesSpielBtn").style.display = "none";
 
 // Verstecke alle Buttons zu Beginn
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -457,12 +458,7 @@ function showGameOptions() {
     document.getElementById("handBtn").style.display = "block"; // Zeige den handBtn wieder an
     document.getElementById("skatAufnehmenBtn").style.display = "block"; // Zeige den skatAufnehmenBtn wieder an
 }
-function updatestartGameBtnButtonText(text) {
-    const startGameBtn = document.getElementById("startGameBtn");
-    if (startGameBtn) {
-        startGameBtn.textContent = text;
-    }
-}
+
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
 	
@@ -644,24 +640,57 @@ function werteStichAus(cards, spielwert, playerDerAngespieltHat) {
     });
 	return undefined;
 }
+let stichCount = 0; // Zähler für die Anzahl der bewerteten Stiche
+
 function verarbeiteStichFuer(winnerPlayer) {
-	console.log("verarbeiteStichFuer ");
-	if (winnerPlayer === undefined) {
-		console.log("undefined !!!! ");
-		return;
-	}
-	console.log(winnerPlayer);
-	winnerPlayer.stich.push(...tablecards);
-	tablecards=[];
-	gameState.currentPlayerIndex = winnerPlayer.id;
-	if (winnerPlayer.cards.length === 0){
-		werteSpielAus();
-	} else {
-		textToShow = `${winnerPlayer.name} du bist dran`;
-		displayTextOnCanvas(textToShow);
-	}
-	document.getElementById("stichBtn").style.display = "none"; 
-	document.getElementById("nextPlayerBtn").style.display = "block"; 
+    console.log("verarbeiteStichFuer ");
+    if (winnerPlayer === undefined) {
+        console.log("undefined !!!! ");
+        return;
+    }
+    console.log(winnerPlayer);
+
+    // Füge die Tischkarten zum Stich des Gewinners hinzu
+    winnerPlayer.stich.push(...tablecards);
+    tablecards = [];
+
+    // Setze den aktuellen Spielerindex auf den Gewinner
+    gameState.currentPlayerIndex = winnerPlayer.id;
+
+    // Überprüfe, ob der Gewinner keine Karten mehr hat und werte das Spiel aus
+    if (winnerPlayer.cards.length === 0) {
+        werteSpielAus();
+    } else {
+        textToShow = `${winnerPlayer.name} du bist dran`;
+        displayTextOnCanvas(textToShow);
+    }
+
+    // Verstecke den Button für den nächsten Stich und zeige den Button für den nächsten Spieler an
+    document.getElementById("stichBtn").style.display = "none";
+    document.getElementById("nextPlayerBtn").style.display = "block";
+
+    // Erhöhe den Zähler für die bewerteten Stiche
+    stichCount++;
+
+    // Überprüfe, ob das Limit von 10 Bewertungen erreicht wurde
+    if (stichCount >= 10) {
+        // Schließe den Dialog und zeige den Button für ein neues Spiel an
+        document.getElementById("dialog-Stich").close();
+        document.getElementById("neuesSpielBtn").style.display = "block";
+		document.getElementById("nextPlayerBtn").style.display = "none";
+
+        // Setze stichCount zurück auf 0 für das nächste Spiel
+        stichCount = 0;
+
+        // Optional: Führe weitere Aktionen aus, wenn das Spiel endet (z.B. Punkte anzeigen)
+
+    } else {
+        // Zeige weiterhin den Dialog für die nächste Stichbewertung an
+        document.getElementById("dialog-Stich").showModal();
+
+        // Optional: Bereite alles vor für den nächsten Stich (z.B. Karten neu zeichnen)
+
+    }
 }
 function calcCardValues(cards) {
 	console.log("calcCardValues ");
@@ -672,16 +701,55 @@ function calcCardValues(cards) {
 	});
 	return value;
 }
+function calcBubePlus1(cards) {
+	return 3; //TODO gilt für Prototyp, richtige Rechnung folgt noch
+}
+function calcWertPunkte(cards, spielwert, istGewonnen, istSchneider, istSchwarz) {
+	let faktor = 0;
+	switch(spielwert) {
+		case 9: // karo
+		case 10: // herz
+		case 11: // pik
+		case 12: // kreuz
+		case 24: // grand
+			faktor = calcBubePlus1(cards);
+			if (istSchneider) faktor ++;
+			if (istSchwarz) faktor ++;
+			return istGewonnen ? faktor * spielwert : -2 * faktor * spielwert;
+			break;
+		case 23: // null
+		case 35: // null hand
+		case 46: // null over
+		case 59: // null hand over
+			return istSchwarz ? spielwert : -2 * spielwert;
+			break;
+	}
+}
 function werteSpielAus() {
-	console.log("werteSpielAus fuer " + getPlayer(highestBidder.id).name);
-	console.log(highestBidder);
-	console.log(highestBidder.id);
-	console.log(getPlayer(highestBidder.id));
-	console.log(getPlayer(highestBidder.id).stich);
-	// Hat Spieler oder haben die Gegner gewonnen?
-	let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).stich);
-	console.log("ergebnisReizGewinner" + ergebnisReizGewinner);
-	// Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
+    console.log("werteSpielAus fuer " + getPlayer(highestBidder.id).name);
+    console.log(highestBidder);
+    console.log(highestBidder.id);
+    console.log(getPlayer(highestBidder.id));
+    console.log(getPlayer(highestBidder.id).stich);
+
+    // Hat Spieler oder haben die Gegner gewonnen?
+    let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).stich);
+    console.log("ergebnisReizGewinner" + ergebnisReizGewinner);
+
+    // Überprüfe auf Schwarz
+    let istSchwarz = getPlayer(highestBidder.id).stich.length === 0 ||
+                     (getNextPlayer(getPlayer(highestBidder.id)).stich.length === 0 &&
+                      getNextPlayer(getNextPlayer(getPlayer(highestBidder.id))).stich.length === 0);
+
+    // Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
+    let wertPunkte = calcWertPunkte(
+        highestBidder.card,
+        aktiverSpielwert, // welche Trumpf
+        ergebnisReizGewinner > 60, // hat gewonnen
+        ergebnisReizGewinner <= 30 || ergebnisReizGewinner >= 90, // schneider
+        istSchwarz,
+        isHandGame
+    );
 	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
 	// ansonsten wieder zum Reizen übergehen
 }
@@ -762,9 +830,11 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     loadHighestBidderCards();
     // Überprüfe, ob das Spiel eingepasst wurde
     if (passCount === 3) {
+		document.getElementById("handBtn").style.display = "none";
+        document.getElementById("skatAufnehmenBtn").style.display = "none";
         // Ändere den Text des Buttons "startGameBtn" zu "Nächstes Spiel"
-        updatestartGameBtnText("Nächstes Spiel");
-        // Starte das Spiel neu
+		document.getElementById("neuesSpielBtn").style.display = "none";
+     
     }
 
     // Überprüfe, welcher Spieler der Höchstbietende ist
@@ -810,6 +880,7 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
         highestBidder.bid = selectedReizValue;
         highestBidder.name = getPlayerName(currentBidderIndex);
         highestBidder.id = currentBidderIndex;
+		highestBidder.cards = getPlayer(currentBidderIndex).cards.concat(skatcards) ;
         gameState.currentPlayerIndex = currentBidderIndex;
 
         displayBidValueOnThirdCanvas(selectedReizValue);
@@ -1238,5 +1309,12 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player3);
                 document.getElementById("dialog-Stich").close();
 			});
+document.getElementById("neuesSpielBtn").addEventListener("click", function() {
+    resetGame(); // Beispiel: Funktion zum Zurücksetzen des Spiels aufrufen
+
+    this.style.display = "none"; // Verstecke den Button für ein neues Spiel wieder
+
+    stichCount = 0; // Setze den Zähler für die bewerteten Stiche zurück auf 0
+});
 
 resetGame();
