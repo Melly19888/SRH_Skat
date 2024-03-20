@@ -181,6 +181,7 @@ player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 
+
 // Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
 function extractCardNumber(card) {
     return parseInt(card.match(/\d+/)[0]);
@@ -320,6 +321,23 @@ function showPlayerRoles() {
 
     ctxSecondary.fillText(textToShow, xPosition, yPosition);
 }
+function drawPlayerRoles() {
+    const innerCanvas = document.getElementById("innerCanvas");
+    const ctxInner = innerCanvas.getContext("2d");
+
+    // Lösche das Canvas vor dem Neuzeichnen
+    ctxInner.clearRect(0, 0, innerCanvas.width, innerCanvas.height);
+
+    ctxInner.fillStyle = "magenta";
+    ctxInner.font = "bold 60px Arial";
+
+    const lineHeight = 150;
+    const rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
+
+    for (let i = 0; i < rolesArray.length; i++) {
+        ctxInner.fillText(`${rolesArray[i]}: ${getPlayerName(i)}`, 50, lineHeight * (i + 1));
+    }
+}
 function getPlayerName(index) {
     switch (index) {
     case 0:
@@ -458,11 +476,25 @@ function showGameOptions() {
     document.getElementById("handBtn").style.display = "block"; // Zeige den handBtn wieder an
     document.getElementById("skatAufnehmenBtn").style.display = "block"; // Zeige den skatAufnehmenBtn wieder an
 }
+function rotatePlayers() {
+    // Rotiere die Spielerpositionen
+    let temp = player1;
+    player1 = player2;
+    player2 = player3;
+    player3 = temp;
 
+    // Aktualisiere auch die IDs der Spieler entsprechend ihrer neuen Position
+    player1.id = 0;
+    player2.id = 1;
+    player3.id = 2;
+	// Zeichne die Spielerrollen neu
+    drawPlayerRoles();
+}
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
 	
-
+	updateUI();
+	rotatePlayers();
     shuffle(cards); // Mische die Karten neu
 
     // Ausblenden des leftGameBtn
@@ -521,6 +553,17 @@ function resetGame() {
 
    
 }
+function updateUI() {
+    // Aktualisiere die UI mit den neuen Namen und Punkten
+    document.getElementById("player1Name").value = player1.name;
+    document.getElementById("player2Name").value = player2.name;
+    document.getElementById("player3Name").value = player3.name;
+
+    
+
+    // Weitere UI-Updates hier...
+}
+
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
 	
@@ -830,10 +873,13 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     loadHighestBidderCards();
     // Überprüfe, ob das Spiel eingepasst wurde
     if (passCount === 3) {
+		reset;
+		
 		document.getElementById("handBtn").style.display = "none";
         document.getElementById("skatAufnehmenBtn").style.display = "none";
+		 document.getElementById("confirmGameBtn").style.display = "none";
         // Ändere den Text des Buttons "startGameBtn" zu "Nächstes Spiel"
-		document.getElementById("neuesSpielBtn").style.display = "none";
+		document.getElementById("neuesSpielBtn").style.display = "block";
      
     }
 
@@ -851,6 +897,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
     // Verstecke den confirmGameBtn nach dem Laden der Karten
     document.getElementById("confirmGameBtn").style.display = "none";
+	drawPlayerRoles();
 
 });
 // Event Listener für den Button "leftGameBtn"
@@ -868,8 +915,11 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
         passCount++; // Erhöhe den Pass-Zähler
         if (passCount === 3) {
             drawCustomCard(10);
-            document.getElementById("leftGameBtn").style.display = "none";
-            document.getElementById("confirmGameBtn").style.display = "block";
+            document.getElementById("handBtn").style.display = "none";
+        document.getElementById("skatAufnehmenBtn").style.display = "none";
+		 document.getElementById("confirmGameBtn").style.display = "none";
+        // Ändere den Text des Buttons "startGameBtn" zu "Nächstes Spiel"
+		document.getElementById("neuesSpielBtn").style.display = "block";
             displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
             return; // Beende die Funktion frühzeitig
         }
@@ -940,6 +990,7 @@ document.addEventListener('click', function (event) {
         } else {
             showCustomPopup("Bitte geben Sie die Namen aller drei Spieler ein.");
         }
+		drawPlayerRoles();
     }
 });
 /// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
@@ -1309,12 +1360,14 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player3);
                 document.getElementById("dialog-Stich").close();
 			});
-document.getElementById("neuesSpielBtn").addEventListener("click", function() {
+document.getElementById("neuesSpielBtn").addEventListener("click", function neuesSpielBtn() {
     resetGame(); // Beispiel: Funktion zum Zurücksetzen des Spiels aufrufen
-
+	drawPlayerRoles();
     this.style.display = "none"; // Verstecke den Button für ein neues Spiel wieder
-
+	document.getElementById("startGameBtn").style.display = "none";
     stichCount = 0; // Setze den Zähler für die bewerteten Stiche zurück auf 0
 });
 
-resetGame();
+// Zeichne die Spielerrollen neu
+    drawPlayerRoles();
+	resetGame();
