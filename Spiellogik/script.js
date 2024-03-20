@@ -8,16 +8,13 @@ const ctx = spielfeld.getContext('2d');
 const ctxSecondary = canvasSecondary.getContext('2d');
 const ctxthirdCanvas = thirdCanvas.getContext('2d');
 const startGameBtn = document.getElementById('startGameBtn');
-
 const cardWidth = 170;
 const cardHeight = 200;
 const player1Points = document.getElementById('player1Points');
 const player2Points = document.getElementById('player2Points');
 const player3Points = document.getElementById('player3Points');
-
 // Startposition der Karten
 const startY = spielfeld.height - cardHeight;
-
 const spielWerte = new Map([
             ['karo', 9],
             ['herz', 10],
@@ -29,7 +26,6 @@ const spielWerte = new Map([
             ['grand', 24],
             ['nulloverHand', 59]
         ]);
-
 // Array mit Kartennamen erstellen und mischen
 const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif',
     'img/card5.gif', 'img/card6.gif', 'img/card7.gif', 'img/card8.gif', 'img/card9.gif',
@@ -38,7 +34,6 @@ const cards = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif
     'img/card20.gif', 'img/card21.gif', 'img/card22.gif', 'img/card23.gif', 'img/card24.gif',
     'img/card25.gif', 'img/card26.gif', 'img/card27.gif', 'img/card28.gif', 'img/card29.gif',
     'img/card30.gif', 'img/card31.gif', 'img/card32.gif']; // Hier sind alle Kartennamen aufgeführt
-
 const cardWerte = new Map([
             ['img/card1.gif', 2],
             ['img/card2.gif', 2],
@@ -73,7 +68,7 @@ const cardWerte = new Map([
             ['img/card31.gif', 0],
             ['img/card32.gif', 0]
         ]);
-
+		
 let gameState = {
     currentPlayerIndex: 0,
     showCustomCard: false
@@ -87,15 +82,11 @@ let highestBidder = {
     bid: 0
 };
 // Button zum Anzeigen der Karten
-
 let hasPickedUpSkat = false;
-
 // Globale Variable für den Hand-Spielzustand
 let isHandGame = false;
-
 let skatcards = [];
 let tablecards = [];
-
 // Spieler Namen und Kartenmaße
 let player1 = {
 	id: 0,
@@ -119,17 +110,13 @@ let player3 = {
     stich: []
 };
 let aktiverSpielwert = -1;
-
 // Aktueller Spieler und Flagge für Spielerrollenwahl
 let currentPlayer = "Vorhand";
 let rolesChosenFlag = false; // Variable für die Bestätigung der Spielerrollen
-
 let passCount = 0; // Zähler für die Anzahl der Pässe
-
 // Globale Variable für den Index des aktuellen Spielers
 let currentState = 0;
 let NamePlay = "Vorhand";
-
 let canClickFieldForStock = false; // Für "stockDrueckenBtn"
 let canClickFieldForNextPlayer = false; // Für "nextPlayerBtn"
 
@@ -137,12 +124,10 @@ player1Points.addEventListener('change', function () {
     player2Points.value = this.value;
     player3Points.value = this.value;
 });
-
 player2Points.addEventListener('change', function () {
     player1Points.value = this.value;
     player3Points.value = this.value;
 });
-
 player3Points.addEventListener('change', function () {
     player1Points.value = this.value;
     player2Points.value = this.value;
@@ -168,7 +153,6 @@ document.getElementById("stockDrueckenBtn").style.display = 'none';
 document.getElementById("playCardBtn").style.display = 'none';
 document.getElementById("openCardsBtn").style.display = 'none';
 document.getElementById("stichBtn").style.display = 'none';
-
 
 // Verstecke alle Buttons zu Beginn
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -257,7 +241,6 @@ function drawCards(cards, selectcards) {
         });
     }
 }
-
 // Funktion zum Anzeigen der Karten-Deckblätter
 function drawCustomCard(anzahl) {
 	
@@ -271,7 +254,6 @@ function drawCustomCard(anzahl) {
         drawCard(spielfeld.width / 2 + cardWidth / 2 - 10, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
     }
 }
-
 // Spielerrollen anzeigen
 function showPlayerRoles() {
     let rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
@@ -396,7 +378,6 @@ function updateCanvasSecondaryText(text) {
 
     ctxSecondary.fillText(text, xPosition, yPosition);
 }
-
 // Funktion zum Anzeigen des höchsten Bieters in der Konsole und auf dem Canvas
 function displayHighestBidder() {
     if (highestBidder.name !== "") {
@@ -405,7 +386,6 @@ function displayHighestBidder() {
         updateCanvasSecondaryText(textToShow);
     }
 }
-
 function showCustomPopup(message) {
     const popup = document.createElement("div");
     popup.classList.add("custom-popup");
@@ -421,12 +401,6 @@ function showCustomPopup(message) {
         document.body.removeChild(popup);
     }, 2000); // Schließe das Popup nach 2 Sekunden automatisch
 }
-
-// Funktion zum Anzeigen des höchsten Bieters in der Konsole
-function displayHighestBidderInConsole() {
-    if (highestBidder.name !== "") {}
-}
-
 function displayHighestBidderAndHideCards() {
     if (highestBidder.name !== "") {
         const textToShow = `${highestBidder.name} : ${highestBidder.bid}`;
@@ -442,7 +416,6 @@ function displayHighestBidderAndHideCards() {
 
     }
 }
-
 // Funktion zum Anzeigen des ausgewählten Spiels auf dem canvasSecondary
 function displaySelectedGame(gameName) {
     const ctxInner = canvasSecondary.getContext("2d");
@@ -459,7 +432,6 @@ function displaySelectedGame(gameName) {
 
     ctxInner.fillText(textToShow, xPosition, yPosition);
 }
-
 function showGameOptions() {
     // Zeige den handBtn wieder an
     document.getElementById("handBtn").style.display = "block";
@@ -467,7 +439,6 @@ function showGameOptions() {
     // Zeige den skatAufnehmenBtn wieder an
     document.getElementById("skatAufnehmenBtn").style.display = "block";
 }
-
 function loadHighestBidderCards() {
     // Überprüfe, welcher Spieler der Höchstbietende ist
     if (highestBidder.name === player1.name) {
@@ -481,20 +452,17 @@ function loadHighestBidderCards() {
     // Verstecke den confirmGameBtn nach dem Laden der Karten und Anzeigen der Optionen
     document.getElementById("confirmGameBtn").style.display = "none";
 }
-
 // Hilfsfunktion zum Anzeigen der Spieloptionen-Buttons
 function showGameOptions() {
     document.getElementById("handBtn").style.display = "block"; // Zeige den handBtn wieder an
     document.getElementById("skatAufnehmenBtn").style.display = "block"; // Zeige den skatAufnehmenBtn wieder an
 }
-
 function updatestartGameBtnButtonText(text) {
     const startGameBtn = document.getElementById("startGameBtn");
     if (startGameBtn) {
         startGameBtn.textContent = text;
     }
 }
-
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
 	
@@ -531,6 +499,8 @@ function resetGame() {
 
     highestBidder.name = "";
     highestBidder.bid = 0;
+    highestBidder.cards = 0;
+	
 
     passCount = 0; // Setze den Pass-Zähler zurück
 
@@ -555,7 +525,6 @@ function resetGame() {
 
    
 }
-
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
 	
@@ -573,7 +542,6 @@ function clearMiddleCards() {
     // Lösche den Bereich für die zweite Karte (wenn vorhanden)
     ctxSpielfeld.clearRect(middleCardX2, middleCardY, cardWidth, cardHeight);
 }
-
 function displayPassedGame() {
 	
     const canvasSecondary = document.getElementById("canvasSecondary");
@@ -603,7 +571,6 @@ function displayPassedGame() {
     document.getElementById("confirmGameBtn").style.display = "block";
 
 }
-
 function getPlayer(id) {
 	console.log("getPlayer " + id);
     switch (id) {
@@ -617,7 +584,6 @@ function getPlayer(id) {
         return null;
     }
 }
-
 function clearTextFromCanvas() {
     const textHeight = 60; // Angenommene Höhe des Textes basierend auf der Schriftgröße
     const padding = 10; // Ein wenig zusätzlicher Platz um den Text herum
@@ -629,7 +595,6 @@ function clearTextFromCanvas() {
     // Lösche den Bereich, wo der Text gezeichnet wird
     ctxSecondary.clearRect(0, yPositionToClear, canvasSecondary.width, heightToClear);
 }
-
 function displayTextOnCanvas(text) {
 	console.log("displayTextOnCanvas");
     clearTextFromCanvas(); // Lösche nur den Bereich des alten Textes
@@ -645,7 +610,6 @@ function displayTextOnCanvas(text) {
 
     ctxSecondary.fillText(text, xPosition, yPosition); // Zeichne den neuen Text
 }
-
 function werteStichAus(cards, spielwert, playerDerAngespieltHat) {
     console.log("werteStichAus");
     displayTextOnCanvas(textToShow);
@@ -680,51 +644,6 @@ function werteStichAus(cards, spielwert, playerDerAngespieltHat) {
     });
 	return undefined;
 }
-// Funktion zum Laden der Karten des nächsten Spielers und Anzeigen des Textes
-function loadNextPlayerCards() {
-	
-	console.log("loadNextPlayerCards");
-	
-
-    let nextPlayer;
-    let textToShow;
-	
-	console.log("currentState " + currentState);
-
-    switch (currentState) {
-    case 0:
-        nextPlayer = player1;
-      
-        break;
-    case 1:
-        nextPlayer = player2;
-        
-        break;
-	case 2:
-        nextPlayer = player3;
-        
-      
-        currentState = -1; // Zurücksetzen für den nächsten Durchlauf
-        break;
-    default:
-    }
-    gameState.currentPlayerIndex = nextPlayer.id;
-	console.log("nextPlayer");
-	console.log(nextPlayer);
-
-    drawCards(nextPlayer.cards, []);
-    drawCards(tablecards, []);
-    
-    currentState++; // Gehe zum nächsten Spieler über
-
-    if (currentState > 3 ) {
-        //nextPlayer = player1; // Zurück zu Vorhand, wenn alle durch sind
-		tablecards = [];
-		currentState = 0;
-    }
-
-}
-
 function verarbeiteStichFuer(winnerPlayer) {
 	console.log("verarbeiteStichFuer ");
 	if (winnerPlayer === undefined) {
@@ -744,7 +663,6 @@ function verarbeiteStichFuer(winnerPlayer) {
 	document.getElementById("stichBtn").style.display = "none"; 
 	document.getElementById("nextPlayerBtn").style.display = "block"; 
 }
-
 function calcCardValues(cards) {
 	console.log("calcCardValues ");
 	let value = 0;
@@ -754,7 +672,6 @@ function calcCardValues(cards) {
 	});
 	return value;
 }
-
 function werteSpielAus() {
 	console.log("werteSpielAus fuer " + getPlayer(highestBidder.id).name);
 	console.log(highestBidder);
@@ -772,8 +689,6 @@ function showCardsAndChooseReiz() {
     // Implementierung der Funktion hier
     console.log("showCardsAndChooseReiz wurde aufgerufen");
 }
-
-
 
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	console.log("Event confirmGameBtn");
@@ -922,7 +837,6 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
         document.getElementById("reizwerteMnu").style.display = "none";
     }
 });
-
 document.addEventListener('click', function (event) {
     console.log("Event document");
     if (event.target.id === "startGameBtn") {
@@ -957,7 +871,6 @@ document.addEventListener('click', function (event) {
         }
     }
 });
-
 /// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
 	console.log("Event ReihenfolgeButton festlegen");
@@ -985,7 +898,6 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         document.getElementById("playBeginBtn").style.display = "block";
     });
 });
-
 // Event Listener für den Button "handBtn"
 document.getElementById("handBtn").addEventListener("click", function () {
 	console.log("Event handBtn");
@@ -1018,7 +930,6 @@ document.getElementById("handBtn").addEventListener("click", function () {
         handBtn
     });
 });
-
 // Event Listener für den Button "skatAufnehmenBtn"
 document.getElementById("skatAufnehmenBtn").addEventListener("click", function skatAufnehmenBtn () {
 	console.log("Event skatAufnehmenBtn");
@@ -1094,7 +1005,6 @@ document.getElementById("skatAufnehmenBtn").addEventListener("click", function s
     });
 
 });
-
 // Event Listener für das Anklicken von Karten hinzufügen
 spielfeld.addEventListener('click', function spielfeldClick (event) {
 	  if (!canClickFieldForStock && !canClickFieldForNextPlayer) {
@@ -1183,7 +1093,6 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
     }
 
 });
-
 // Event Listener für den Button "stockDrueckenBtn"
 document.getElementById("stockDrueckenBtn").addEventListener("click", function stockDrueckenBtnClick () {
 	console.log("Event stockDruecken");
@@ -1229,7 +1138,6 @@ document.getElementById("stockDrueckenBtn").addEventListener("click", function s
 
     }
 });
-
 // Event Listener für den Button "handBtn"
 document.getElementById("playBeginBtn").addEventListener("click", function () {
 	console.log("Event playBegin");
@@ -1244,24 +1152,26 @@ document.getElementById("playBeginBtn").addEventListener("click", function () {
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
 
 });
-
 document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	
 	drawCards(tablecards, []);
     clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-    loadNextPlayerCards(); // Lade die Karten des nächsten Spielers beim Klicken
+	console.log(gameState.currentPlayerIndex);
+    let nextPlayer = getPlayer(gameState.currentPlayerIndex);
+	console.log("nextPlayer");
+	console.log(nextPlayer);
+
+    drawCards(nextPlayer.cards, []);
+    drawCards(tablecards, []);
 	
     canClickFieldForNextPlayer = true; // Erlaube Klicken auf das Spielfeld
 	document.getElementById("nextPlayerBtn").style.display = "none";
     document.getElementById("playCardBtn").style.display = "none";
 });
-
 document.getElementById("openCardsBtn").addEventListener("click", function openCardsBtn() {
 	
 });
-
-
-    document.getElementById("playCardBtn").addEventListener("click", function playCardBtn() {
+document.getElementById("playCardBtn").addEventListener("click", function playCardBtn() {
         let player = getPlayer(gameState.currentPlayerIndex); // wer spielt gerade?
         if (player.selectcards.length !== 1) { // Wächter, ob die Funktion wirklich arbeiten darf
             return;
@@ -1313,21 +1223,18 @@ document.getElementById("openCardsBtn").addEventListener("click", function openC
         drawCustomCard(player.cards.length+1);
         document.getElementById("playCardBtn").style.display = "none"; 
 });
-
-
 document.getElementById("stichBtn").addEventListener("click", () => {
             document.getElementById("dialog-Stich").showModal();
             });
-
-            document.getElementById("player1Btn").addEventListener("click", () => {
+document.getElementById("player1Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player1);
                 document.getElementById("dialog-Stich").close();
             });
-			document.getElementById("player2Btn").addEventListener("click", () => {
+document.getElementById("player2Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player2);
                 document.getElementById("dialog-Stich").close();
 			});
-			document.getElementById("player3Btn").addEventListener("click", () => {
+document.getElementById("player3Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player3);
                 document.getElementById("dialog-Stich").close();
 			});
