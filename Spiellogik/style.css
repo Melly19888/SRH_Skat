@@ -186,9 +186,23 @@ border: none;
     left: 10%;
     font-size: 1em;
   }
+  
+  #neuesSpielBtn{
+	  border: none;
+      border-radius: 0.4em;
+      position: absolute ;
+      top: 7.5%;
+      left: 40%;
+      width: 20%;
+      height: 4.5%;
+      font-size: 150%;
+      overflow: hidden;
+	 
+    }
+  
 
   /* Buttons auf der Gameseite */
-    #startGameBtn {
+    #startGameBtn  {
       border: none;
       border-radius: 0.4em;
       position: absolute ;
@@ -200,7 +214,7 @@ border: none;
       overflow: hidden;
     }
 
-	#SpielAusWertenBtn, #confirmGameBtn,#neuesSpielBtn, #nextPlayerBtn, #playBeginBtn, #openCardsBtn, #playCardBtn, #stockDrueckenBtn, #stichBtn {
+	#SpielAusWertenBtn, #confirmGameBtn, #nextPlayerBtn, #playBeginBtn, #openCardsBtn, #playCardBtn, #stockDrueckenBtn, #stichBtn {
       border: none;
       border-radius: 0.4em;
       display: block;

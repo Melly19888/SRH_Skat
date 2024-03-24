@@ -85,7 +85,7 @@ let highestBidder = {
     bid: 0
 };
 // Button zum Anzeigen der Karten
-let hasPickedUpSkat = false;
+
 // Globale Variable für den Hand-Spielzustand
 let isHandGame = false;
 let skatcards = [];
@@ -229,8 +229,6 @@ function addMultiplierToGameValue(gameValue, multiplier) {
             return gameValue; 
     }
 }
-
-
 
 let playerCards = player1.cards; // Ersetze dies durch die tatsächlichen Karten des Spielers.
 const grandBaseValue = spielWerte.get('grand'); // Basiswert für Grand aus dem Map holen.
@@ -637,7 +635,8 @@ function displayPassedGame() {
 
     // Blende den leftGameBtn aus und zeige nur den confirmGameBtn an
     document.getElementById("leftGameBtn").style.display = "none";
-    document.getElementById("confirmGameBtn").style.display = "block";
+    document.getElementById("confirmGameBtn").style.display = "none";
+	    document.getElementById("neuesSpielBtn").style.display = "block";
 
 }
 function getPlayer(id) {
@@ -654,8 +653,8 @@ function getPlayer(id) {
     }
 }
 function clearTextFromCanvas() {
-    const textHeight = 60; // Angenommene Höhe des Textes basierend auf der Schriftgröße
-    const padding = 10; // Ein wenig zusätzlicher Platz um den Text herum
+    const textHeight = 80; // Angenommene Höhe des Textes basierend auf der Schriftgröße
+    const padding = 80; // Ein wenig zusätzlicher Platz um den Text herum
 
     // Berechne die Y-Position für das Löschen basierend auf der Position, wo der Text gezeichnet wird
     const yPositionToClear = (canvasSecondary.height / 2) + 200 - textHeight - padding;
@@ -747,7 +746,8 @@ function verarbeiteStichFuer(winnerPlayer) {
     if (stichCount >= 10) {
         // Schließe den Dialog und zeige den Button für ein neues Spiel an
         document.getElementById("dialog-Stich").close();
-        document.getElementById("neuesSpielBtn").style.display = "block";
+        document.getElementById("neuesSpielBtn").style.display = "none";
+		document.getElementById("SpielAusWertenBtn").style.display = "block";
 		document.getElementById("nextPlayerBtn").style.display = "none";
 
         // Setze stichCount zurück auf 0 für das nächste Spiel
@@ -958,7 +958,7 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
         document.getElementById("skatAufnehmenBtn").style.display = "none";
 		 document.getElementById("confirmGameBtn").style.display = "none";
         // Ändere den Text des Buttons "startGameBtn" zu "Nächstes Spiel"
-		document.getElementById("SpielAusWertenBtn").style.display = "block";
+		
             displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
             return; // Beende die Funktion frühzeitig
         }
@@ -1301,7 +1301,7 @@ document.getElementById("stockDrueckenBtn").addEventListener("click", function s
     }
 });
 // Event Listener für den Button "handBtn"
-document.getElementById("playBeginBtn").addEventListener("click", function () {
+document.getElementById("playBeginBtn").addEventListener("click", startNewGame, function () {
 	
 	console.log("Event playBegin");
     // Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
@@ -1313,6 +1313,7 @@ document.getElementById("playBeginBtn").addEventListener("click", function () {
     document.getElementById("nextPlayerBtn").style.display = "block";
     document.getElementById("playBeginBtn").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
+	window.onload = startNewGame;
 
 });
 document.getElementById("nextPlayerBtn").addEventListener("click", function () {
@@ -1401,16 +1402,81 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player3);
                 document.getElementById("dialog-Stich").close();
 			});
-document.getElementById("neuesSpielBtn").addEventListener("click", function neuesSpielBtn() {
+document.getElementById("SpielAusWertenBtn").addEventListener("click", function () {
+	document.getElementById("neuesSpielBtn").style.display = "block";
+});
+function startNewGame() {
+    // Setze alle relevanten Spielvariablen zurück
+    currentPlayerIndex = 0;
+    stichCount = 0;
+    gameState = {
+        currentPlayerIndex: 0,
+        showCustomCard: false
+    };
+    textToShow = "";
+    currentBidderIndex = 0;
+    highestBidder = {
+        id: -1,
+        name: "",
+        bid: 0
+    };
+ 
+    isHandGame = false;
+    skatcards = [];
+    tablecards = [];
+
+    // Setze die Spielerinformationen zurück
+    player1 = { id: 0, name: "", cards: [], ausgewaehlt: [], stich: [] };
+    player2 = { id: 1, name: "", cards: [], ausgewaehlt: [], stich: [] };
+    player3 = { id: 2, name: "", cards: [], ausgewaehlt: [], stich: [] };
+
+    aktiverSpielwert = -1;
+
+    // Setze UI-Elemente zurück
+    resetUI();
+
+    // Mische die Karten und verteile sie erneut
+    shuffle(cards);
+
+    // Verteile die Karten an die Spieler und den Skat neu
+    distributeCards();
+
+    // Zeige die Rollen der Spieler an und beginne das Reizen
+    showPlayerRoles();
+}
+function resetUI() {
+
+
+    // Lösche den Bereich des Canvas, wo Karten gezeichnet werden könnten
+    clearCardArea();
+}
+function distributeCards() {
+    // Verteile die Karten an die Spieler und den Skat neu
+    player1.cards = cards.slice(0, 10);
+    player2.cards = cards.slice(10, 20);
+    player3.cards = cards.slice(20, 30);
+    skatcards = cards.slice(30, 32);
+
+    // Sortiere die Karten jedes Spielers nach ihrer Größe
+    player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+    player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+    player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+}
+
+
+document.getElementById("neuesSpielBtn").addEventListener("click",  function neuesSpielBtn() {
+	drawCustomCard(10);
+	drawCards();
+	clearTextFromCanvas();
+	startNewGame();
 	clearCardArea(); 
     resetGame(); // Beispiel: Funktion zum Zurücksetzen des Spiels aufrufen
 	drawPlayerRoles();
     this.style.display = "none"; // Verstecke den Button für ein neues Spiel wieder
 	document.getElementById("startGameBtn").style.display = "none";
     stichCount = 0; // Setze den Zähler für die bewerteten Stiche zurück auf 0
-});
-	
+});	
 // Zeichne die Spielerrollen neu
     drawPlayerRoles();
 	resetGame();
-	drawCards();
+	drawCustomCard(10);
