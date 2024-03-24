@@ -142,6 +142,7 @@ localStorage.removeItem('gameStarted');
 document.getElementById("SpielAusWertenBtn").style.display = "none";
 document.getElementById("playBeginBtn").style.display = "none";
 document.getElementById("nextPlayerBtn").style.display = "none";
+document.getElementById("nextPlayerBtn1").style.display = "none";
 document.getElementById("confirmGameBtn").style.display = "none";
 document.getElementById("leftGameBtn").style.display = "none";
 document.getElementById("startGameBtn").style.display = "block";
@@ -154,6 +155,8 @@ document.getElementById("playCardBtn").style.display = 'none';
 document.getElementById("openCardsBtn").style.display = 'none';
 document.getElementById("stichBtn").style.display = 'none';
 document.getElementById("neuesSpielBtn").style.display = "none";
+
+
 
 // Verstecke alle Buttons zu Beginn
 document.querySelectorAll('.ReihenfolgeButtons button').forEach(button => {
@@ -333,9 +336,9 @@ function showPlayerRoles() {
     currentPlayer = rolesArray[0];
 
     // Zeige den Bestätigen-Button an und verstecke den Karten-Anzeigen-Button
-    document.getElementById("confirmGameBtn").style.display = "block";
+    document.getElementById("confirmGameBtn").style.display = "none";
     document.getElementById("leftGameBtn").style.display = "none";
-    document.getElementById("startGameBtn").style.display = "none";
+    
 
     // Ändern des Textes im Sekundär-Canvas
     let textToShow = "";
@@ -356,7 +359,8 @@ function showPlayerRoles() {
 
     const canvasSecondary = document.getElementById("canvasSecondary");
     const ctxSecondary = canvasSecondary.getContext("2d");
-
+	
+	ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height);
     ctxSecondary.fillStyle = "red";
     ctxSecondary.font = "bold 60px Arial";
 
@@ -553,12 +557,6 @@ function rotatePlayers() {
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
 	    shuffle(cards); // Mische die Karten neu
-
-    // Verteile die Karten an die Spieler und den Skat neu
-    player1.cards = cards.slice(0, 10);
-    player2.cards = cards.slice(10, 20);
-    player3.cards = cards.slice(20, 30);
-    skatcards = cards.slice(30, 32);
 
     tablecards = [];
 
@@ -904,7 +902,7 @@ function startNewGame() {
 
     // Zeige die Rollen der Spieler an und beginne das Reizen
     showPlayerRoles();
-	rotatePlayers();
+	
 }
 function resetUI() {
 
@@ -958,7 +956,6 @@ function rotatePlayerRoles() {
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
-	drawPlayerRoles();
     switch (currentPlayer) {
     case "Vorhand":
 	
@@ -1048,7 +1045,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
     // Verstecke den confirmGameBtn nach dem Laden der Karten
     document.getElementById("confirmGameBtn").style.display = "none";
-	drawPlayerRoles();
+	
 
 });
 // Event Listener für den Button "leftGameBtn"
@@ -1125,6 +1122,8 @@ document.addEventListener('click', function (event) {
             document.getElementById("player1Name").readOnly = true;
             document.getElementById("player2Name").readOnly = true;
             document.getElementById("player3Name").readOnly = true;
+			document.getElementById("confirmGameBtn").style.display = "block";
+			document.getElementById("startGameBtn").style.display = "none";
 
             // Ersetzen Sie die Dropdowns durch Textfelder mit den ausgewählten Punkten
             [player1Points, player2Points, player3Points].forEach((select, index) => {
@@ -1144,7 +1143,9 @@ document.addEventListener('click', function (event) {
 		
 		drawPlayerRoles();
 		
+		
     }
+	
 });
 /// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
 document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => {
@@ -1294,9 +1295,9 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
 	
     if (aktiverSpielwert < 0) {
         // Überprüfe, ob der Klick innerhalb des gültigen Bereichs liegt
-        if (clickY - startY + cardHeight * 1.5 > 0) {
+        if (clickY > 4/5.5*(rect.height-rect.top)) {
 
-            const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
+            const cardNummber = Math.floor(clickX / ((rect.width - rect.left)/12));
             let player = getPlayer(gameState.currentPlayerIndex);
             console.log(player);
             console.log(gameState.currentPlayerIndex);
@@ -1327,9 +1328,9 @@ spielfeld.addEventListener('click', function spielfeldClick (event) {
     } else {
         // Spielen
 		
-        if (clickY - startY + cardHeight * 1.5 > 0) {
+        if (clickY > 4/5.5*(rect.height-rect.top)) {
 
-            const cardNummber = Math.floor(1.2 * (clickX) / (cardWidth));
+            const cardNummber = Math.floor(clickX / ((rect.width - rect.left)/12));
             let player = getPlayer(gameState.currentPlayerIndex);
 
             // Stelle sicher, dass die angeklickte Karte gültig ist
@@ -1419,7 +1420,7 @@ document.getElementById("playBeginBtn").addEventListener("click", function () {
     displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
 
     drawCustomCard(10);
-    document.getElementById("nextPlayerBtn").style.display = "block";
+    document.getElementById("nextPlayerBtn1").style.display = "block";
     document.getElementById("playBeginBtn").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
 });
@@ -1436,6 +1437,19 @@ document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	
     canClickFieldForNextPlayer = true; // Erlaube Klicken auf das Spielfeld
 	document.getElementById("nextPlayerBtn").style.display = "none";
+    document.getElementById("playCardBtn").style.display = "none";
+});
+document.getElementById("nextPlayerBtn1").addEventListener("click", function () {
+	
+	
+    clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
+	
+    
+	drawCards(player1.cards, player1.selectcards);
+    
+	
+    canClickFieldForNextPlayer = true; // Erlaube Klicken auf das Spielfeld
+	document.getElementById("nextPlayerBtn1").style.display = "none";
     document.getElementById("playCardBtn").style.display = "none";
 });
 document.getElementById("openCardsBtn").addEventListener("click", function openCardsBtn() {
@@ -1510,24 +1524,25 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 			});
 document.getElementById("SpielAusWertenBtn").addEventListener("click", function () {
 	document.getElementById("neuesSpielBtn").style.display = "block";
+	document.getElementById("SpielAusWertenBtn").style.display = "none";
 	rotatePlayers();
 	
 });
 document.getElementById("neuesSpielBtn").addEventListener("click",  function neuesSpielBtn() {
+	rotatePlayers();
 	drawCustomCard(10);
 	drawCards();
 	clearTextFromCanvas();
 	startNewGame();
 	clearCardArea(); 
     resetGame(); // Beispiel: Funktion zum Zurücksetzen des Spiels aufrufen
-	drawPlayerRoles();
+
     this.style.display = "none"; // Verstecke den Button für ein neues Spiel wieder
 	document.getElementById("startGameBtn").style.display = "none";
     stichCount = 0; // Setze den Zähler für die bewerteten Stiche zurück auf 0
 	
 });	
 // Zeichne die Spielerrollen neu
-
-    drawPlayerRoles();
+	startNewGame();
 	resetGame();
 	drawCustomCard(10);
