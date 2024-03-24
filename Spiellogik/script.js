@@ -305,33 +305,36 @@ function drawCustomCard(anzahl) {
         drawCard(spielfeld.width / 2 + cardWidth / 2 - 10, spielfeld.height / 2 - cardHeight / 2, 'img/card33.gif');
     }
 }
-// Spielerrollen anzeigen
+function clearCanvas(canvas) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 function showPlayerRoles() {
-    let rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
-    shuffle(rolesArray);
-    rolesArray.sort((a, b) => {
-        if (a === "Vorhand")
-            return -1;
-        if (b === "Vorhand")
-            return 1;
-        if (a === "Mittelhand")
-            return -1;
-        if (b === "Mittelhand")
-            return 1;
-        return 0;
-    });
+  // Lösche zuerst den Canvas
+  clearCanvas(innerCanvas);
 
-    const innerCanvas = document.getElementById("innerCanvas");
-    const ctxInner = innerCanvas.getContext("2d");
+  // Zeichne dann die Spielerrollen neu
+  const ctxInner = innerCanvas.getContext("2d");
+  ctxInner.fillStyle = "magenta";
+  ctxInner.font = "bold 60px Arial";
+  const lineHeight = 150;
 
-    ctxInner.fillStyle = "magenta";
-    ctxInner.font = "bold 60px Arial";
+  let rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
 
-    const lineHeight = 150;
+  // Mischen der Rollen und Sortieren, damit Vorhand immer zuerst kommt
+  shuffle(rolesArray);
+  rolesArray.sort((a, b) => {
+    if (a === "Vorhand") return -1;
+    if (b === "Vorhand") return 1;
+    if (a === "Mittelhand") return -1;
+    if (b === "Mittelhand") return 1;
+    return 0;
+  });
 
-    for (let i = 0; i < rolesArray.length; i++) {
-        ctxInner.fillText(`${rolesArray[i]}: ${getPlayerName(i)}`, 50, lineHeight * (i + 1));
-    }
+  for (let i = 0; i < rolesArray.length; i++) {
+    ctxInner.fillText(`${rolesArray[i]}: ${getPlayerName(i)}`, 50, lineHeight * (i + 1));
+  }
 
     currentPlayer = rolesArray[0];
 
@@ -1107,6 +1110,10 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
     }
 });
 document.addEventListener('click', function (event) {
+	console.log("Spielerrolle setzten");
+	console.log(player1);
+	console.log(player2);
+	console.log(player3);
     
     if (event.target.id === "startGameBtn") {
         // Holen Sie sich die Namen aus den Eingabefeldern
@@ -1525,7 +1532,7 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 document.getElementById("SpielAusWertenBtn").addEventListener("click", function () {
 	document.getElementById("neuesSpielBtn").style.display = "block";
 	document.getElementById("SpielAusWertenBtn").style.display = "none";
-	rotatePlayers();
+	
 	
 });
 document.getElementById("neuesSpielBtn").addEventListener("click",  function neuesSpielBtn() {
@@ -1539,10 +1546,16 @@ document.getElementById("neuesSpielBtn").addEventListener("click",  function neu
 
     this.style.display = "none"; // Verstecke den Button für ein neues Spiel wieder
 	document.getElementById("startGameBtn").style.display = "none";
+	document.getElementById("confirmGameBtn").style.display = "block";
     stichCount = 0; // Setze den Zähler für die bewerteten Stiche zurück auf 0
 	
 });	
 // Zeichne die Spielerrollen neu
+
+console.log("Spielerrolle setzten");
+	console.log(player1);
+	console.log(player2);
+	console.log(player3);
 	startNewGame();
 	resetGame();
 	drawCustomCard(10);
