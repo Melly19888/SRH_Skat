@@ -200,7 +200,7 @@ border: none;
       overflow: hidden;
     }
 
-    #confirmGameBtn,#neuesSpielBtn, #nextPlayerBtn, #playBeginBtn, #openCardsBtn, #playCardBtn, #stockDrueckenBtn, #stichBtn {
+	#SpielAusWertenBtn, #confirmGameBtn,#neuesSpielBtn, #nextPlayerBtn, #playBeginBtn, #openCardsBtn, #playCardBtn, #stockDrueckenBtn, #stichBtn {
       border: none;
       border-radius: 0.4em;
       display: block;

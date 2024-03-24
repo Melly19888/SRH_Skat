@@ -143,6 +143,7 @@ localStorage.removeItem('player3Name');
 localStorage.removeItem('player4Name');
 localStorage.removeItem('gameStarted');
 
+document.getElementById("SpielAusWertenBtn").style.display = "none";
 document.getElementById("playBeginBtn").style.display = "none";
 document.getElementById("nextPlayerBtn").style.display = "none";
 document.getElementById("confirmGameBtn").style.display = "none";
@@ -183,6 +184,60 @@ window.onload = function () {
 player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+
+
+// Funktion zum Berechnen des Multiplikators für Grand
+function calcMultiplierForGrand(playerCards) {
+    // Definiere die Karten-IDs der Buben
+    const bubeIds = ['img/card1.gif', 'img/card2.gif', 'img/card3.gif', 'img/card4.gif'];
+
+    // Zähle wie viele Buben vorhanden sind
+    let bubenCount = 0;
+    for (let i = 0; i < bubeIds.length; i++) {
+        if (playerCards.includes(bubeIds[i])) {
+            bubenCount++;
+        }
+    }
+
+    // Berechne den Multiplikator basierend auf der Anzahl der fehlenden Buben
+    const missingBuben = 4 - bubenCount;
+    const multiplier = missingBuben === 0 ? "mit 1" : `ohne ${missingBuben}`;
+
+    return multiplier;
+}
+
+// Funktion zum Hinzufügen des Multiplikators zum Spielwert
+function addMultiplierToGameValue(gameValue, multiplier) {
+    switch(multiplier) {
+        case "mit 1":
+            return gameValue * 2; 
+        case "ohne 1":
+            return gameValue * 2; 
+        case "mit 2":
+            return gameValue * 3; 
+		 case "ohne 2":
+            return gameValue * 3; 
+        case "mit 3":
+            return gameValue * 4; 
+		case "ohne 3":
+            return gameValue * 4; 
+		case "mit 4":
+            return gameValue * 5; 
+		case "ohne 4":
+            return gameValue * 5; 
+        default:
+            return gameValue; 
+    }
+}
+
+
+
+let playerCards = player1.cards; // Ersetze dies durch die tatsächlichen Karten des Spielers.
+const grandBaseValue = spielWerte.get('grand'); // Basiswert für Grand aus dem Map holen.
+const grandMultiplier = calcMultiplierForGrand(playerCards); // Multiplikator berechnen.
+const grandFinalValue = addMultiplierToGameValue(grandBaseValue, grandMultiplier); // Endgültigen Wert berechnen.
+
+console.log(`Der Wert für Grand ist: ${grandFinalValue}`);
 
 // Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
 function extractCardNumber(card) {
@@ -903,7 +958,7 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
         document.getElementById("skatAufnehmenBtn").style.display = "none";
 		 document.getElementById("confirmGameBtn").style.display = "none";
         // Ändere den Text des Buttons "startGameBtn" zu "Nächstes Spiel"
-		document.getElementById("neuesSpielBtn").style.display = "block";
+		document.getElementById("SpielAusWertenBtn").style.display = "block";
             displayPassedGame(); // Zeige die Nachricht an, dass das Spiel eingepasst wurde
             return; // Beende die Funktion frühzeitig
         }
@@ -1254,7 +1309,7 @@ document.getElementById("playBeginBtn").addEventListener("click", function () {
 
     displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
 
-    drawCustomCard();
+    drawCustomCard(10);
     document.getElementById("nextPlayerBtn").style.display = "block";
     document.getElementById("playBeginBtn").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
@@ -1346,8 +1401,6 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player3);
                 document.getElementById("dialog-Stich").close();
 			});
-			
-
 document.getElementById("neuesSpielBtn").addEventListener("click", function neuesSpielBtn() {
 	clearCardArea(); 
     resetGame(); // Beispiel: Funktion zum Zurücksetzen des Spiels aufrufen
