@@ -1418,7 +1418,9 @@ document.getElementById("stockDrueckenBtn").addEventListener("click", function s
     }
 });
 // Event Listener für den Button "handBtn"
-document.getElementById("playBeginBtn").addEventListener("click", startNewGame, function () {
+
+	
+document.getElementById("playBeginBtn").addEventListener("click", function () {
 	
 	console.log("Event playBegin");
     // Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
@@ -1430,9 +1432,6 @@ document.getElementById("playBeginBtn").addEventListener("click", startNewGame, 
     document.getElementById("nextPlayerBtn").style.display = "block";
     document.getElementById("playBeginBtn").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
-	startNewGame();
-
-
 });
 document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	
