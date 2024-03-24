@@ -70,6 +70,7 @@ const cardWerte = new Map([
         ]);
 const playerRoles = ["Vorhand", "Mittelhand", "Hinterhand"];
 
+
 let currentPlayerIndex = 0;
 let stichCount = 0; // Zähler für die Anzahl der bewerteten Stiche		
 let gameState = {
@@ -84,34 +85,28 @@ let highestBidder = {
     name: "",
     bid: 0
 };
-// Button zum Anzeigen der Karten
-
 // Globale Variable für den Hand-Spielzustand
 let isHandGame = false;
 let skatcards = [];
 let tablecards = [];
 // Spieler Namen und Kartenmaße
-let player1 = {
-	id: 0,
-    name: "",
+let player1 = {id: 0,
     cards: [],
     ausgewaehlt: [],
-    stich: []
-};
-let player2 = {
-	id: 1,
-    name: "",
+    stich: [],
+	name: "",
+	role: "Vorhand" };
+let player2 = {id: 1,
     cards: [],
     ausgewaehlt: [],
-    stich: []
-};
-let player3 = {
-	id: 2,
-    name: "",
+    stich: [], name: "",
+	role: "Mittelhand" };
+let player3 = {id: 2,
     cards: [],
     ausgewaehlt: [],
-    stich: []
-};
+    stich: [], 
+	name: "",
+	role: "Hinterhand" };
 let aktiverSpielwert = -1;
 // Aktueller Spieler und Flagge für Spielerrollenwahl
 let currentPlayer = "Vorhand";
@@ -122,6 +117,7 @@ let currentState = 0;
 let NamePlay = "Vorhand";
 let canClickFieldForStock = false; // Für "stockDrueckenBtn"
 let canClickFieldForNextPlayer = false; // Für "nextPlayerBtn"
+let playerCards = player1.cards; // Ersetze dies durch die tatsächlichen Karten des Spielers.
 
 player1Points.addEventListener('change', function () {
     player2Points.value = this.value;
@@ -205,7 +201,6 @@ function calcMultiplierForGrand(playerCards) {
 
     return multiplier;
 }
-
 // Funktion zum Hinzufügen des Multiplikators zum Spielwert
 function addMultiplierToGameValue(gameValue, multiplier) {
     switch(multiplier) {
@@ -229,13 +224,9 @@ function addMultiplierToGameValue(gameValue, multiplier) {
             return gameValue; 
     }
 }
-
-let playerCards = player1.cards; // Ersetze dies durch die tatsächlichen Karten des Spielers.
 const grandBaseValue = spielWerte.get('grand'); // Basiswert für Grand aus dem Map holen.
 const grandMultiplier = calcMultiplierForGrand(playerCards); // Multiplikator berechnen.
 const grandFinalValue = addMultiplierToGameValue(grandBaseValue, grandMultiplier); // Endgültigen Wert berechnen.
-
-console.log(`Der Wert für Grand ist: ${grandFinalValue}`);
 
 // Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
 function extractCardNumber(card) {
@@ -379,20 +370,27 @@ function showPlayerRoles() {
 function drawPlayerRoles() {
     const innerCanvas = document.getElementById("innerCanvas");
     const ctxInner = innerCanvas.getContext("2d");
-	console.log("Spielerrolle schreiben");
-    // Lösche das Canvas vor dem Neuzeichnen
+
+    // Lösche das gesamte Canvas vor dem Neuzeichnen
     ctxInner.clearRect(0, 0, innerCanvas.width, innerCanvas.height);
 
+    // Setze Stil für den Text
     ctxInner.fillStyle = "magenta";
     ctxInner.font = "bold 60px Arial";
 
+    // Definiere die Zeilenhöhe für den Text
     const lineHeight = 150;
-    const rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
 
+    // Hole die aktuellen Rollen der Spieler
+    let rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
+
+    // Zeichne die Rollen der Spieler auf das Canvas
     for (let i = 0; i < rolesArray.length; i++) {
         ctxInner.fillText(`${rolesArray[i]}: ${getPlayerName(i)}`, 50, lineHeight * (i + 1));
     }
 }
+// Aufruf der Funktion zum Testen (dies würde irgendwo in Ihrem Code passieren)
+drawPlayerRoles();
 function getPlayerName(index) {
     switch (index) {
     case 0:
@@ -549,12 +547,12 @@ function rotatePlayers() {
     player3.id = 2;
 	// Zeichne die Spielerrollen neu
     drawPlayerRoles();
+	rotatePlayerRolesAndDisplay();
 	
 }
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
-	rotatePlayers();
-    shuffle(cards); // Mische die Karten neu
+	    shuffle(cards); // Mische die Karten neu
 
     // Verteile die Karten an die Spieler und den Skat neu
     player1.cards = cards.slice(0, 10);
@@ -581,16 +579,33 @@ function resetGame() {
     highestBidder.id = -1;  // Setze die ID des höchsten Bieters zurück
 
     passCount = 0;            // Setze den Pass-Zähler zurück
+	 gameState.currentPlayerIndex = 0;
+    gameState.showCustomCard = false;
+
+    textToShow = "";
+
+    isHandGame = false;       // Setze den Hand-Spielzustand zurück
+
+    aktiverSpielwert = -1;     // Setze den aktiven Spielwert zurück
+
+    // Weitere UI-Elemente und Zustände zurücksetzen...
+
+    // Zeichne die neuen Rollen auf dem Bildschirm
+    drawPlayerRoles();
+
+    // Aktualisiere das UI entsprechend der neuen Zustände
+    updateUI();
+
 }
+// Hilfsfunktion zum Aktualisieren des UIs nach dem Zurücksetzen des Spiels
 function updateUI() {
-    // Aktualisiere die UI mit den neuen Namen und Punkten
-    document.getElementById("player1Name").value = player1.name;
-    document.getElementById("player2Name").value = player2.name;
-    document.getElementById("player3Name").value = player3.name;
+    // Aktualisiere Punktestände, Namen und andere UI-Elemente hier...
 
-    
-
-    // Weitere UI-Updates hier...
+    // Beispiel: Setze Punktestände auf Anfangswerte zurück
+    player1Points.value = '0';
+    player2Points.value = '0';
+    player3Points.value = '0';
+    // ... Weitere UI-Aktualisierungen ...
 }
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
@@ -842,6 +857,107 @@ function updateAndDisplayCurrentPlayerRole() {
     // Hier können Sie auch weitere Aktionen durchführen,
     // z.B. Karten zeichnen oder andere UI-Elemente aktualisieren
 }
+function startNewGame() {
+    // Setze alle relevanten Spielvariablen zurück
+    currentPlayerIndex = 0;
+    stichCount = 0;
+    gameState = {
+        currentPlayerIndex: 0,
+        showCustomCard: false
+    };
+    textToShow = "";
+    currentBidderIndex = 0;
+    highestBidder = {
+        id: -1,
+        name: "",
+        bid: 0
+    };
+ 
+    isHandGame = false;
+    skatcards = [];
+    tablecards = [];
+
+    // Setze die Spielerinformationen zurück
+    let player1 = {id: 0,
+    cards: [],
+    ausgewaehlt: [],
+    stich: [],
+	name: "Spieler A",
+	role: "Vorhand" };
+	let player2 = {id: 1,
+    cards: [],
+    ausgewaehlt: [],
+    stich: [], name: "Spieler B",
+	role: "Mittelhand" };
+	let player3 = {id: 2,
+    cards: [],
+    ausgewaehlt: [],
+    stich: [], 
+	name: "Spieler C",
+	role: "Hinterhand" };
+    aktiverSpielwert = -1;
+
+    // Setze UI-Elemente zurück
+    resetUI();
+
+    // Mische die Karten und verteile sie erneut
+    shuffle(cards);
+
+    // Verteile die Karten an die Spieler und den Skat neu
+    distributeCards();
+
+    // Zeige die Rollen der Spieler an und beginne das Reizen
+    showPlayerRoles();
+	rotatePlayers();
+}
+function resetUI() {
+
+
+    // Lösche den Bereich des Canvas, wo Karten gezeichnet werden könnten
+    clearCardArea();
+}
+function distributeCards() {
+    // Verteile die Karten an die Spieler und den Skat neu
+    player1.cards = cards.slice(0, 10);
+    player2.cards = cards.slice(10, 20);
+    player3.cards = cards.slice(20, 30);
+    skatcards = cards.slice(30, 32);
+
+    // Sortiere die Karten jedes Spielers nach ihrer Größe
+    player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+    player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+    player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+}
+function rotatePlayerRolesAndDisplay() {
+	
+  // Rotiere die Rollen der Spieler
+  const tempRole = player1.role;
+  player1.role = player2.role;
+  player2.role = player3.role;
+  player3.role = tempRole;
+
+  // Aktualisiere die Anzeige auf dem thirdCanvas
+  drawPlayerRoles();
+  rotatePlayerRoles();
+}
+function rotatePlayerRoles() {
+  // Speichere die aktuelle Vorhand (erster Spieler) temporär
+  let tempPlayer = player1;
+
+  // Verschiebe die Rollen und Namen der Spieler
+  player1 = player2; // Aus Mittelhand wird Vorhand
+  player2 = player3; // Aus Hinterhand wird Mittelhand
+  player3 = tempPlayer; // Aus Vorhand wird Hinterhand
+
+  // Aktualisiere auch die IDs der Spieler entsprechend ihrer neuen Position
+  player1.id = 0;
+  player2.id = 1;
+  player3.id = 2;
+
+  // Zeichne die aktualisierten Rollen und Namen neu (falls erforderlich)
+  drawPlayerRoles();
+}
+
 
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	console.log("Event confirmGameBtn");
@@ -1029,6 +1145,7 @@ document.addEventListener('click', function (event) {
         } else {
             showCustomPopup("Bitte geben Sie die Namen aller drei Spieler ein.");
         }
+		rotatePlayers();
 		drawPlayerRoles();
 		
     }
@@ -1313,7 +1430,8 @@ document.getElementById("playBeginBtn").addEventListener("click", startNewGame, 
     document.getElementById("nextPlayerBtn").style.display = "block";
     document.getElementById("playBeginBtn").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
-	window.onload = startNewGame;
+	startNewGame();
+
 
 });
 document.getElementById("nextPlayerBtn").addEventListener("click", function () {
@@ -1405,63 +1523,6 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 document.getElementById("SpielAusWertenBtn").addEventListener("click", function () {
 	document.getElementById("neuesSpielBtn").style.display = "block";
 });
-function startNewGame() {
-    // Setze alle relevanten Spielvariablen zurück
-    currentPlayerIndex = 0;
-    stichCount = 0;
-    gameState = {
-        currentPlayerIndex: 0,
-        showCustomCard: false
-    };
-    textToShow = "";
-    currentBidderIndex = 0;
-    highestBidder = {
-        id: -1,
-        name: "",
-        bid: 0
-    };
- 
-    isHandGame = false;
-    skatcards = [];
-    tablecards = [];
-
-    // Setze die Spielerinformationen zurück
-    player1 = { id: 0, name: "", cards: [], ausgewaehlt: [], stich: [] };
-    player2 = { id: 1, name: "", cards: [], ausgewaehlt: [], stich: [] };
-    player3 = { id: 2, name: "", cards: [], ausgewaehlt: [], stich: [] };
-
-    aktiverSpielwert = -1;
-
-    // Setze UI-Elemente zurück
-    resetUI();
-
-    // Mische die Karten und verteile sie erneut
-    shuffle(cards);
-
-    // Verteile die Karten an die Spieler und den Skat neu
-    distributeCards();
-
-    // Zeige die Rollen der Spieler an und beginne das Reizen
-    showPlayerRoles();
-}
-function resetUI() {
-
-
-    // Lösche den Bereich des Canvas, wo Karten gezeichnet werden könnten
-    clearCardArea();
-}
-function distributeCards() {
-    // Verteile die Karten an die Spieler und den Skat neu
-    player1.cards = cards.slice(0, 10);
-    player2.cards = cards.slice(10, 20);
-    player3.cards = cards.slice(20, 30);
-    skatcards = cards.slice(30, 32);
-
-    // Sortiere die Karten jedes Spielers nach ihrer Größe
-    player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-    player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-    player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-}
 
 
 document.getElementById("neuesSpielBtn").addEventListener("click",  function neuesSpielBtn() {
@@ -1475,8 +1536,10 @@ document.getElementById("neuesSpielBtn").addEventListener("click",  function neu
     this.style.display = "none"; // Verstecke den Button für ein neues Spiel wieder
 	document.getElementById("startGameBtn").style.display = "none";
     stichCount = 0; // Setze den Zähler für die bewerteten Stiche zurück auf 0
+	
 });	
 // Zeichne die Spielerrollen neu
+
     drawPlayerRoles();
 	resetGame();
 	drawCustomCard(10);
