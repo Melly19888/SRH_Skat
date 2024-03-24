@@ -952,13 +952,12 @@ function rotatePlayerRoles() {
   // Zeichne die aktualisierten Rollen und Namen neu (falls erforderlich)
   drawPlayerRoles();
 }
-
-document.getElementById("confirmGameBtn").addEventListener("click", function () {
-	
-    textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
+function spielerwechsel(){
+	 textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
     switch (currentPlayer) {
     case "Vorhand":
-	
+		console.log(player1);
+		console.log("Spieler1");
         drawCards(player1.cards, player1.selectcards);
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
@@ -968,7 +967,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
         break;
 
     case "Mittelhand":
-
+		console.log(player2);
+		console.log("Spieler2");
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player2.cards, player2.selectcards); // Lade card33.gif über die Karten von Mittelhand
@@ -978,7 +978,8 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
         break;
 
     case "Hinterhand":
-        
+        console.log(player3);
+		console.log("Spieler3");
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player3.cards, player3.selectcards); // Lade card33.gif über die Karten von Mittelhand
@@ -1028,20 +1029,13 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
      
     }
 
-    // Überprüfe, welcher Spieler der Höchstbietende ist
-    if (highestBidder.name === player1.name) {
-        drawCards(player3.cards, player3.selectcards); // Lade die Karten von Spieler 1
-
-    } else if (highestBidder.name === player2.name) {
-        drawCards(player1.cards, player1.selectcards); // Lade die Karten von Spieler 2
-
-    } else if (highestBidder.name === player3.name) {
-        drawCards(player2.cards, player2.selectcards); // Lade die Karten von Spieler 3
-
-    }
 	loadHighestBidderCards();
     // Verstecke den confirmGameBtn nach dem Laden der Karten
     document.getElementById("confirmGameBtn").style.display = "none";
+}
+document.getElementById("confirmGameBtn").addEventListener("click", function () {
+	spielerwechsel();
+   
 	
 console.log(highestBidder);
 console.log(loadHighestBidderCards);
@@ -1548,9 +1542,7 @@ document.getElementById("neuesSpielBtn").addEventListener("click",  function neu
 // Zeichne die Spielerrollen neu
 
 console.log("Spielerrolle setzten");
-	console.log(player1);
-	console.log(player2);
-	console.log(player3);
+	
 	startNewGame();
 	resetGame();
 	drawCustomCard(10);
