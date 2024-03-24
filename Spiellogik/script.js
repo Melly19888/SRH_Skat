@@ -298,6 +298,7 @@ function drawCustomCard(anzahl) {
     for (let i = 0; i < anzahl; i++) {
         drawCard(i * (cardWidth - 10) + 1, startY, 'img/card33.gif');
     }
+	
 
     // Zwei Karten nebeneinander in der Mitte des Canvas laden
     if (skatcards.length > 0) {
@@ -311,68 +312,73 @@ function clearCanvas(canvas) {
 }
 
 function showPlayerRoles() {
-  // Lösche zuerst den Canvas
-  clearCanvas(innerCanvas);
+    const innerCanvas = document.getElementById("innerCanvas");
+    clearCanvas(innerCanvas); // Lösche zuerst den Canvas
 
-  // Zeichne dann die Spielerrollen neu
-  const ctxInner = innerCanvas.getContext("2d");
-  ctxInner.fillStyle = "magenta";
-  ctxInner.font = "bold 60px Arial";
-  const lineHeight = 150;
+    const ctxInner = innerCanvas.getContext("2d");
+    ctxInner.fillStyle = "magenta";
+    ctxInner.font = "bold 60px Arial";
+    const lineHeight = 150;
 
-  let rolesArray = ["Vorhand", "Mittelhand", "Hinterhand"];
+    // Verwende die aktuellen Rollen der Spieler
+    let rolesArray = [player1.role, player2.role, player3.role];
 
-  // Mischen der Rollen und Sortieren, damit Vorhand immer zuerst kommt
-  shuffle(rolesArray);
-  rolesArray.sort((a, b) => {
-    if (a === "Vorhand") return -1;
-    if (b === "Vorhand") return 1;
-    if (a === "Mittelhand") return -1;
-    if (b === "Mittelhand") return 1;
-    return 0;
-  });
+    // Mischen der Rollen und Sortieren, damit Vorhand immer zuerst kommt
+    shuffle(rolesArray);
+    rolesArray.sort((a, b) => {
+        if (a === "Vorhand") return -1;
+        if (b === "Vorhand") return 1;
+        if (a === "Mittelhand") return -1;
+        if (b === "Mittelhand") return 1;
+        return 0;
+    });
 
-  for (let i = 0; i < rolesArray.length; i++) {
-    ctxInner.fillText(`${rolesArray[i]}: ${getPlayerName(i)}`, 50, lineHeight * (i + 1));
-  }
+    // Zeichne die Rollen der Spieler auf das Canvas
+    for (let i = 0; i < rolesArray.length; i++) {
+        let playerName = getPlayerName(i); // Hole den Namen des Spielers basierend auf der Rolle
+        ctxInner.fillText(`${rolesArray[i]}: ${playerName}`, 50, lineHeight * (i + 1));
+    }
 
-    currentPlayer = rolesArray[0];
-
-    // Zeige den Bestätigen-Button an und verstecke den Karten-Anzeigen-Button
-    document.getElementById("confirmGameBtn").style.display = "none";
-    document.getElementById("leftGameBtn").style.display = "none";
-    
+    currentPlayer = rolesArray[0]; // Setze den aktuellen Spieler
 
     // Ändern des Textes im Sekundär-Canvas
     let textToShow = "";
 
     switch (currentPlayer) {
-    case "Vorhand":
-        textToShow = `${getPlayerName(0)} du bist dran`;
-        break;
-    case "Mittelhand":
-        textToShow = `${getPlayerName(1)} du bist dran`;
-        break;
-    case "Hinterhand":
-        textToShow = `${getPlayerName(2)} du bist dran`;
-        break;
-    default:
-        break;
+        case "Vorhand":
+            textToShow = `${getPlayerName(0)} du bist dran`;
+            break;
+        case "Mittelhand":
+            textToShow = `${getPlayerName(1)} du bist dran`;
+            break;
+        case "Hinterhand":
+            textToShow = `${getPlayerName(2)} du bist dran`;
+            break;
+        default:
+            break;
     }
 
     const canvasSecondary = document.getElementById("canvasSecondary");
     const ctxSecondary = canvasSecondary.getContext("2d");
-	
-	ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height);
+
+    ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height);
     ctxSecondary.fillStyle = "red";
     ctxSecondary.font = "bold 60px Arial";
 
     const textWidth = ctxSecondary.measureText(textToShow).width;
-
     const xPosition = (canvasSecondary.width - textWidth) / 2;
     const yPosition = (canvasSecondary.height - 40) / 2 + canvasSecondary.offsetTop;
 
     ctxSecondary.fillText(textToShow, xPosition, yPosition);
+
+    // Zeige oder verstecke Buttons basierend auf dem aktuellen Zustand des Spiels
+    updateButtonDisplay();
+}
+
+// Diese Funktion könnte existieren oder muss entsprechend Ihrer Logik implementiert werden.
+function updateButtonDisplay() {
+   // Implementierung abhängig von Ihrem Spielzustand.
+   // Zum Beispiel könnten Sie hier entscheiden, welche Buttons angezeigt oder versteckt werden sollen.
 }
 function drawPlayerRoles() {
     const innerCanvas = document.getElementById("innerCanvas");
@@ -397,17 +403,17 @@ function drawPlayerRoles() {
     }
 }
 // Aufruf der Funktion zum Testen (dies würde irgendwo in Ihrem Code passieren)
-drawPlayerRoles();
+
 function getPlayerName(index) {
     switch (index) {
-    case 0:
-        return document.getElementById("player1Name").value || "Spieler 1";
-    case 1:
-        return document.getElementById("player2Name").value || "Spieler 2";
-    case 2:
-        return document.getElementById("player3Name").value || "Spieler 3";
-    default:
-        return "";
+        case 0: 
+			return player1.name || "Spieler 1";
+        case 1: 
+			return player2.name || "Spieler 2";
+        case 2: 
+			return player3.name || "Spieler 3";
+        default: 
+			return "";
     }
 }
 function getNextPlayer(player){
