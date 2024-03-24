@@ -179,12 +179,6 @@ window.onload = function () {
     document.getElementById("player3Name").value = "";
 };
 
-// Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
-player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-
-
 // Funktion zum Berechnen des Multiplikators für Grand
 function calcMultiplierForGrand(playerCards) {
     // Definiere die Karten-IDs der Buben
@@ -227,6 +221,7 @@ function addMultiplierToGameValue(gameValue, multiplier) {
             return gameValue; 
     }
 }
+
 const grandBaseValue = spielWerte.get('grand'); // Basiswert für Grand aus dem Map holen.
 const grandMultiplier = calcMultiplierForGrand(playerCards); // Multiplikator berechnen.
 const grandFinalValue = addMultiplierToGameValue(grandBaseValue, grandMultiplier); // Endgültigen Wert berechnen.
@@ -310,7 +305,6 @@ function clearCanvas(canvas) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 function showPlayerRoles() {
     const innerCanvas = document.getElementById("innerCanvas");
     clearCanvas(innerCanvas); // Lösche zuerst den Canvas
@@ -374,7 +368,6 @@ function showPlayerRoles() {
     // Zeige oder verstecke Buttons basierend auf dem aktuellen Zustand des Spiels
     updateButtonDisplay();
 }
-
 // Diese Funktion könnte existieren oder muss entsprechend Ihrer Logik implementiert werden.
 function updateButtonDisplay() {
    // Implementierung abhängig von Ihrem Spielzustand.
@@ -403,7 +396,6 @@ function drawPlayerRoles() {
     }
 }
 // Aufruf der Funktion zum Testen (dies würde irgendwo in Ihrem Code passieren)
-
 function getPlayerName(index) {
     switch (index) {
         case 0: 
@@ -961,7 +953,6 @@ function rotatePlayerRoles() {
   drawPlayerRoles();
 }
 
-
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	
     textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
@@ -971,7 +962,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
         drawCards(player1.cards, player1.selectcards);
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
-        drawCards(player1.cards, player1.selectcards); // Lade card33.gif über die Karten von Mittelhand
         updateAndDisplayCurrentPlayerRole();
         currentPlayer = "Mittelhand";
 
@@ -979,7 +969,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
     case "Mittelhand":
 
-        drawCards(player2.cards, player2.selectcards);
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player2.cards, player2.selectcards); // Lade card33.gif über die Karten von Mittelhand
@@ -990,7 +979,6 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 
     case "Hinterhand":
         
-        drawCards(player3.cards, player3.selectcards);
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player3.cards, player3.selectcards); // Lade card33.gif über die Karten von Mittelhand
@@ -1018,7 +1006,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
     if (currentPlayer !== "") {
         updateCanvasSecondaryText(textToShow); // Aktualisiere Text im sekundären Canvas
         document.getElementById("confirmGameBtn").style.display = "none"; // Verstecke confirmGameBtn
-        
+		
     } else {
         // Alle Spieler haben gereizt, verstecke alle Buttons und zeige das Ergebnis an
         document.getElementById("reizwerteMnu").style.display = "none";
@@ -1027,7 +1015,7 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
         updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
     }
 
-    loadHighestBidderCards();
+    
     // Überprüfe, ob das Spiel eingepasst wurde
     if (passCount === 3) {
 		reset;
@@ -1051,11 +1039,12 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
         drawCards(player2.cards, player2.selectcards); // Lade die Karten von Spieler 3
 
     }
-
+	loadHighestBidderCards();
     // Verstecke den confirmGameBtn nach dem Laden der Karten
     document.getElementById("confirmGameBtn").style.display = "none";
 	
-
+console.log(highestBidder);
+console.log(loadHighestBidderCards);
 });
 // Event Listener für den Button "leftGameBtn"
 document.getElementById("leftGameBtn").addEventListener("click", function () {
