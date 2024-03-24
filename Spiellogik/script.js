@@ -68,7 +68,10 @@ const cardWerte = new Map([
             ['img/card31.gif', 0],
             ['img/card32.gif', 0]
         ]);
-		
+const playerRoles = ["Vorhand", "Mittelhand", "Hinterhand"];
+
+let currentPlayerIndex = 0;
+let stichCount = 0; // Zähler für die Anzahl der bewerteten Stiche		
 let gameState = {
     currentPlayerIndex: 0,
     showCustomCard: false
@@ -180,7 +183,6 @@ window.onload = function () {
 player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-
 
 // Funktion zum Extrahieren der Kartennummer aus dem Dateinamen
 function extractCardNumber(card) {
@@ -483,6 +485,7 @@ function rotatePlayers() {
 	console.log(player3);
     // Rotiere die Spielerpositionen
    let Temp = player1;
+   
 	player1 = player2;
     player2 = player3;
     player3 = Temp;
@@ -497,66 +500,34 @@ function rotatePlayers() {
 }
 // Funktion zum Zurücksetzen des Spiels und Neuverteilung der Karten
 function resetGame() {
-	
-	updateUI();
 	rotatePlayers();
     shuffle(cards); // Mische die Karten neu
 
-    // Ausblenden des leftGameBtn
-    const leftGameBtn = document.getElementById("leftGameBtn");
-    if (leftGameBtn) {
-        leftGameBtn.style.display = "none";
-    }
-
-    // Ausblenden des reizwerte Elements
-    const reizwerteElement = document.getElementById("reizwerteMnu");
-    if (reizwerteElement) {
-        reizwerteElement.style.display = "none";
-    }
-
+    // Verteile die Karten an die Spieler und den Skat neu
     player1.cards = cards.slice(0, 10);
     player2.cards = cards.slice(10, 20);
     player3.cards = cards.slice(20, 30);
     skatcards = cards.slice(30, 32);
+
     tablecards = [];
-    player1.selectcards = [];
-    player2.selectcards = [];
-    player3.selectcards = [];
-    // Sortiere die Karten nach ihrer Größe, nachdem Player1 die Karten erhalten hat
-    player1.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-    player2.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
-    player3.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
 
-    currentPlayer = "Vorhand"; // Beginne wieder bei Spieler 1
-    currentBidderIndex = 0;
+    // Setze ausgewählte Karten und Stiche zurück
+    [player1, player2, player3].forEach(player => {
+        player.selectcards = [];
+        player.stich = [];
+        // Sortiere die Karten nach ihrer Größe
+        player.cards.sort((a, b) => extractCardNumber(a) - extractCardNumber(b));
+    });
+	drawCards();
 
-    highestBidder.name = "";
+    currentPlayerIndex = 0;   // Beginne mit dem ersten Spieler als aktiver Spieler
+    currentBidderIndex = 0;   // Beginne mit dem ersten Spieler als Bieter
+
+    highestBidder.name = "";  // Setze den höchsten Bieter zurück
     highestBidder.bid = 0;
-    highestBidder.cards = 0;
-	
+    highestBidder.id = -1;  // Setze die ID des höchsten Bieters zurück
 
-    passCount = 0; // Setze den Pass-Zähler zurück
-
-    rolesChosenFlag = false;
-
-    document.getElementById("player1Name").readOnly = false;
-    document.getElementById("player2Name").readOnly = false;
-    document.getElementById("player3Name").readOnly = false;
-
-    updateCanvasSecondaryText(""); // Leere Text im sekundären Canvas
-
-    drawCustomCard(10); // Blende alle Karten aus mit card33.gif
-
-
-    // Stelle sicher, dass der startGameBtn-Button sichtbar ist und andere Buttons versteckt sind
-    document.getElementById("startGameBtn").style.display = "block";
-
-    // Verstecke die Buttons "Hand" und "Aufnehmen"
-
-    document.getElementById("handBtn").style.display = "none";
-    document.getElementById("skatAufnehmenBtn").style.display = "none";
-
-   
+    passCount = 0;            // Setze den Pass-Zähler zurück
 }
 function updateUI() {
     // Aktualisiere die UI mit den neuen Namen und Punkten
@@ -568,7 +539,6 @@ function updateUI() {
 
     // Weitere UI-Updates hier...
 }
-
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
 	
@@ -688,8 +658,6 @@ function werteStichAus(cards, spielwert, playerDerAngespieltHat) {
     });
 	return undefined;
 }
-let stichCount = 0; // Zähler für die Anzahl der bewerteten Stiche
-
 function verarbeiteStichFuer(winnerPlayer) {
     console.log("verarbeiteStichFuer ");
     if (winnerPlayer === undefined) {
@@ -805,6 +773,20 @@ function showCardsAndChooseReiz() {
     // Implementierung der Funktion hier
     console.log("showCardsAndChooseReiz wurde aufgerufen");
 }
+function updateAndDisplayCurrentPlayerRole() {
+    // Aktualisiere den Index des aktuellen Spielers
+    currentPlayerIndex = (currentPlayerIndex + 1) % playerRoles.length;
+
+    // Hole den Namen des aktuellen Spielers basierend auf dem Index
+    const currentPlayerRole = playerRoles[currentPlayerIndex];
+    const playerName = getPlayerName(currentPlayerIndex);
+
+    // Zeige die Rolle und den Namen des Spielers an
+    displayTextOnCanvas(`${currentPlayerRole}: ${playerName}`);
+
+    // Hier können Sie auch weitere Aktionen durchführen,
+    // z.B. Karten zeichnen oder andere UI-Elemente aktualisieren
+}
 
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	console.log("Event confirmGameBtn");
@@ -812,37 +794,34 @@ document.getElementById("confirmGameBtn").addEventListener("click", function () 
 	drawPlayerRoles();
     switch (currentPlayer) {
     case "Vorhand":
-
-        textToShow = `${player1.name} du bist dran`;
+	
         drawCards(player1.cards, player1.selectcards);
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player1.cards, player1.selectcards); // Lade card33.gif über die Karten von Mittelhand
-        textToShow = `${player1.name} du bist dran`;
+        updateAndDisplayCurrentPlayerRole();
         currentPlayer = "Mittelhand";
 
         break;
 
     case "Mittelhand":
 
-        textToShow = `${player2.name} du bist dran`;
         drawCards(player2.cards, player2.selectcards);
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player2.cards, player2.selectcards); // Lade card33.gif über die Karten von Mittelhand
-        textToShow = `${player2.name} du bist dran`;
+        updateAndDisplayCurrentPlayerRole();
         currentPlayer = "Hinterhand";
 
         break;
 
     case "Hinterhand":
-
-        textToShow = `${player3.name} du bist dran`;
+        
         drawCards(player3.cards, player3.selectcards);
         document.getElementById("reizwerteMnu").style.display = "block";
         document.getElementById("leftGameBtn").style.display = "block";
         drawCards(player3.cards, player3.selectcards); // Lade card33.gif über die Karten von Mittelhand
-        textToShow = `${player3.name} du bist dran`;
+        updateAndDisplayCurrentPlayerRole();
         currentPlayer = "Skat";
         break;
     case "Skat":
@@ -996,7 +975,7 @@ document.addEventListener('click', function (event) {
             showCustomPopup("Bitte geben Sie die Namen aller drei Spieler ein.");
         }
 		drawPlayerRoles();
-		rotatePlayers();
+		
     }
 });
 /// Event Listener für alle Buttons mit der Klasse "Reihenfolge"
@@ -1268,13 +1247,14 @@ document.getElementById("stockDrueckenBtn").addEventListener("click", function s
 });
 // Event Listener für den Button "handBtn"
 document.getElementById("playBeginBtn").addEventListener("click", function () {
+	
 	console.log("Event playBegin");
     // Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
     const playerNameText = `${player1.name} du bist dran`;
 
     displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
 
-    drawCustomCard(10);
+    drawCustomCard();
     document.getElementById("nextPlayerBtn").style.display = "block";
     document.getElementById("playBeginBtn").style.display = "none";
     // Zeige das ausgewählte Spiel und den aktuellen Spieler an
@@ -1366,7 +1346,10 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 				verarbeiteStichFuer(player3);
                 document.getElementById("dialog-Stich").close();
 			});
+			
+
 document.getElementById("neuesSpielBtn").addEventListener("click", function neuesSpielBtn() {
+	clearCardArea(); 
     resetGame(); // Beispiel: Funktion zum Zurücksetzen des Spiels aufrufen
 	drawPlayerRoles();
     this.style.display = "none"; // Verstecke den Button für ein neues Spiel wieder
@@ -1377,4 +1360,4 @@ document.getElementById("neuesSpielBtn").addEventListener("click", function neue
 // Zeichne die Spielerrollen neu
     drawPlayerRoles();
 	resetGame();
-	rotatePlayers();
+	drawCards();
