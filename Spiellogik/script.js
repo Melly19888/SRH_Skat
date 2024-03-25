@@ -834,7 +834,10 @@ function werteSpielAus() {
     } else {
         // Wenn der Alleinspieler verloren hat, ziehe ihm zur Strafe 80 Punkte ab
         getPlayer(highestBidder.id).points -= 80;
-    }
+    } 
+	document.getElementById("playerInput0").value = player1.name + ' : ' + player1.points;
+	document.getElementById("playerInput1").value = player2.name + ' : ' + player2.points;
+	document.getElementById("playerInput2").value = player3.name + ' : ' + player3.points;
 
     // Aktualisiere die Anzeige der Punktestände
     updateUI();
