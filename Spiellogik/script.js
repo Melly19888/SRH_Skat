@@ -736,7 +736,7 @@ function verarbeiteStichFuer(winnerPlayer) {
 
     // Überprüfe, ob der Gewinner keine Karten mehr hat und werte das Spiel aus
     if (winnerPlayer.cards.length === 0) {
-        werteSpielAus();
+
     } else {
         textToShow = `${winnerPlayer.name} du bist dran`;
         displayTextOnCanvas(textToShow);
@@ -812,26 +812,33 @@ function werteSpielAus() {
                      (getNextPlayer(getPlayer(highestBidder.id)).stich.length === 0 &&
                       getNextPlayer(getNextPlayer(getPlayer(highestBidder.id))).stich.length === 0);
 
+    // Überprüfe auf Schneider
+    let istSchneider = ergebnisReizGewinner > 90; // Angenommen, über 90 Punkte bedeutet Schneider
+
     // Hat der Alleinspieler gewonnen?
     let alleinspielerGewonnen = ergebnisReizGewinner > 60;
 
     if (alleinspielerGewonnen) {
-        // Wenn der Alleinspieler gewonnen hat, ziehe 50 Punkte von den anderen Spielern ab
+        // Wenn der Alleinspieler gewonnen hat, ziehe Punkte von den anderen Spielern ab
         [player1, player2, player3].forEach(player => {
             if (player.id !== highestBidder.id) {
-                player.points -= 600; // Ziehe Punkte ab
+                if (istSchwarz) {
+                    player.points -= 20; // Ziehe 20 Punkte ab für Schwarz
+                } else if (istSchneider) {
+                    player.points -= 15; // Ziehe 15 Punkte ab für Schneider
+                } else {
+                    player.points -= 10; // Ziehe 10 Punkte ab für normal gewonnen
+                }
             }
         });
     } else {
-        // Wenn der Alleinspieler verloren hat, ziehe 100 Punkte vom Alleinspieler ab
-        getPlayer(highestBidder.id).points -= 600;
+        // Wenn der Alleinspieler verloren hat, ziehe ihm zur Strafe 80 Punkte ab
+        getPlayer(highestBidder.id).points -= 80;
     }
 
     // Aktualisiere die Anzeige der Punktestände
     updateUI();
-	updatePointsAndCheckForLoss();
-
-    // Optional: Weitere Aktionen nach dem Auswerten des Spiels
+    updatePointsAndCheckForLoss();
 }
 function showCardsAndChooseReiz() {
     // Implementierung der Funktion hier
@@ -968,6 +975,50 @@ function endGame(losingPlayer) {
     alert(`${losingPlayer.name} hat verloren! Das Spiel ist vorbei.`);
     // Hier könnten Sie zusätzliche Logik hinzufügen,
     // z.B. das Zurücksetzen des Spiels oder das Anzeigen von Endbildschirmen.
+}
+function displayGameResultOnThirdCanvas() {
+    const thirdCanvas = document.getElementById("thirdCanvas");
+    const ctxThird = thirdCanvas.getContext('2d');
+
+    // Lösche den Canvas nicht, da wir das höchste Gebot und den Namen beibehalten wollen
+    ctxThird.clearRect(0, 0, thirdCanvas.width, thirdCanvas.height);
+
+    // Setze Schriftart und Farbe für das Ergebnis
+    ctxThird.fillStyle = "green";
+    ctxThird.font = "bold 80px Arial";
+
+    // Überprüfe das Ergebnis des Alleinspielers
+    let alleinspielerGewonnen = getPlayer(highestBidder.id).points > 0; // Angenommen, positive Punkte bedeuten Gewinn
+
+    // Erstelle eine Nachricht basierend auf dem Ergebnis
+    let ergebnisNachricht;
+    if (alleinspielerGewonnen) {
+        ergebnisNachricht = "hat gewonnen!";
+    } else {
+        ergebnisNachricht = "hat verloren.";
+    }
+
+    // Berechne die Position für den Namen des Höchstbietenden
+    const bidderName = getPlayerName(highestBidder.id);
+    const nameTextWidth = ctxThird.measureText(bidderName).width;
+    const nameXPosition = (thirdCanvas.width - nameTextWidth) / 2;
+
+    // Positioniere den Namen des Höchstbietenden im oberen Drittel des Canvas
+    const nameYPosition = thirdCanvas.height / 3;
+
+    // Zeichne den Namen des Höchstbietenden auf den Canvas
+    ctxThird.fillText(bidderName, nameXPosition, nameYPosition);
+
+    // Berechne die Position für das Ergebnis unterhalb des Namens des Höchstbietenden
+    ctxThird.font = "bold 80px Arial"; // Kleinere Schriftgröße für das Ergebnis
+    const resultTextWidth = ctxThird.measureText(ergebnisNachricht).width;
+    const resultXPosition = (thirdCanvas.width - resultTextWidth) / 2;
+
+    // Positioniere das Ergebnis etwas unterhalb des Namens des Höchstbietenden
+    const resultYPosition = nameYPosition + 300; // Abstand zum Namen
+
+    // Zeichne das Ergebnis auf den Canvas
+    ctxThird.fillText(ergebnisNachricht, resultXPosition, resultYPosition);
 }
 function displayHighestBidderOnThirdCanvas() {
     const thirdCanvas = document.getElementById("thirdCanvas");
@@ -1569,7 +1620,8 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 document.getElementById("SpielAusWertenBtn").addEventListener("click", function () {
 	document.getElementById("neuesSpielBtn").style.display = "block";
 	document.getElementById("SpielAusWertenBtn").style.display = "none";
-	
+	        werteSpielAus();
+			displayGameResultOnThirdCanvas();
 });
 document.getElementById("neuesSpielBtn").addEventListener("click",  function neuesSpielBtn() {
 	rotatePlayers();
