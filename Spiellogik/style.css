@@ -215,7 +215,7 @@ border: none;
     }
 
 	#SpielAusWertenBtn, #confirmGameBtn, #nextPlayerBtn, #playBeginBtn, #openCardsBtn, 
-	#playCardBtn, #stockDrueckenBtn, #stichBtn, #nextPlayerBtn1 {
+	#playCardBtn, #stockDrueckenBtn, #stichBtn {
       border: none;
       border-radius: 0.4em;
       display: block;

@@ -148,7 +148,6 @@ localStorage.removeItem('gameStarted');
 document.getElementById("SpielAusWertenBtn").style.display = "none";
 document.getElementById("playBeginBtn").style.display = "none";
 document.getElementById("nextPlayerBtn").style.display = "none";
-document.getElementById("nextPlayerBtn1").style.display = "none";
 document.getElementById("confirmGameBtn").style.display = "none";
 document.getElementById("leftGameBtn").style.display = "none";
 document.getElementById("startGameBtn").style.display = "block";
@@ -1424,15 +1423,21 @@ document.getElementById("playBeginBtn").addEventListener("click", function () {
 	console.log(player2);
 	console.log(player3);
 	
+	  // Setze den aktuellen Spieler auf Vorhand
+    gameState.currentPlayerIndex = 0; // Index von Vorhand ist 0
+    let currentPlayer = getPlayer(gameState.currentPlayerIndex);
+	
     // Zeige an, dass Player1 dran ist (ersetzen Sie 'player1.name' durch den tatsächlichen Namen)
-    const playerNameText = `${player1.name} du bist dran`;
+     // Zeige an, dass Vorhand dran ist
+    textToShow = `${currentPlayer.name} du bist dran`;
+    displayTextOnCanvas(textToShow); // Zeige den Text auf dem Canvas an
 
-    displayTextOnCanvas(playerNameText); // Zeige den Text auf dem Canvas an
-
+     // Blende die Karten von Vorhand ein und zeige den Button für den nächsten Spieler an
     drawCustomCard(10);
-    document.getElementById("nextPlayerBtn1").style.display = "block";
+    document.getElementById("nextPlayerBtn").style.display = "block";
+
+    // Verstecke den Button "playBeginBtn"
     document.getElementById("playBeginBtn").style.display = "none";
-    // Zeige das ausgewählte Spiel und den aktuellen Spieler an
 });
 document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	
@@ -1449,19 +1454,7 @@ document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	document.getElementById("nextPlayerBtn").style.display = "none";
     document.getElementById("playCardBtn").style.display = "none";
 });
-document.getElementById("nextPlayerBtn1").addEventListener("click", function () {
-	
-	
-    clearCardArea(); // Lösche den Bereich vor dem Neuzeichnen
-	
-    
-	drawCards(player1.cards, player1.selectcards);
-    
-	
-    canClickFieldForNextPlayer = true; // Erlaube Klicken auf das Spielfeld
-	document.getElementById("nextPlayerBtn1").style.display = "none";
-    document.getElementById("playCardBtn").style.display = "none";
-});
+
 document.getElementById("openCardsBtn").addEventListener("click", function openCardsBtn() {
 	
 });
@@ -1535,7 +1528,7 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 document.getElementById("SpielAusWertenBtn").addEventListener("click", function () {
 	document.getElementById("neuesSpielBtn").style.display = "block";
 	document.getElementById("SpielAusWertenBtn").style.display = "none";
-	werteSpielAus();
+	
 });
 document.getElementById("neuesSpielBtn").addEventListener("click",  function neuesSpielBtn() {
 	rotatePlayers();
