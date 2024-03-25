@@ -834,16 +834,17 @@ function werteSpielAus() {
         // Wenn der Alleinspieler gewonnen hat, ziehe 50 Punkte von den anderen Spielern ab
         [player1, player2, player3].forEach(player => {
             if (player.id !== highestBidder.id) {
-                player.points -= 50; // Ziehe Punkte ab
+                player.points -= 600; // Ziehe Punkte ab
             }
         });
     } else {
         // Wenn der Alleinspieler verloren hat, ziehe 100 Punkte vom Alleinspieler ab
-        getPlayer(highestBidder.id).points -= 100;
+        getPlayer(highestBidder.id).points -= 600;
     }
 
     // Aktualisiere die Anzeige der Punktestände
     updateUI();
+	updatePointsAndCheckForLoss();
 
     // Optional: Weitere Aktionen nach dem Auswerten des Spiels
 }
@@ -964,6 +965,31 @@ function rotatePlayerRoles() {
 
   // Zeichne die aktualisierten Rollen und Namen neu (falls erforderlich)
   drawPlayerRoles();
+}
+// Funktion zum Überprüfen, ob ein Spieler verloren hat
+function checkIfPlayerLost() {
+    let loser = null;
+    [player1, player2, player3].forEach(player => {
+        if (player.points <= 0) {
+            loser = player; // Speichere den Verlierer
+        }
+    });
+    if (loser) {
+        endGame(loser); // Beende das Spiel mit dem Verlierer als Argument
+    }
+}
+// Funktion zum Beenden des Spiels
+function endGame(losingPlayer) {
+    alert(`${losingPlayer.name} hat verloren! Das Spiel ist vorbei.`);
+    // Hier könnten Sie zusätzliche Logik hinzufügen,
+    // z.B. das Zurücksetzen des Spiels oder das Anzeigen von Endbildschirmen.
+}
+// Beispiel: Aufruf der Funktion checkIfPlayerLost nach dem Aktualisieren der Punkte
+function updatePointsAndCheckForLoss() {
+    // ... (Ihre Logik zum Aktualisieren der Punkte)
+
+    // Nachdem die Punkte aktualisiert wurden, überprüfen Sie auf Verlust
+    checkIfPlayerLost();
 }
 function spielerwechsel(){
 	 textToShow = ""; // Verwende die bereits global deklarierte Variable textToShow
@@ -1454,7 +1480,6 @@ document.getElementById("nextPlayerBtn").addEventListener("click", function () {
 	document.getElementById("nextPlayerBtn").style.display = "none";
     document.getElementById("playCardBtn").style.display = "none";
 });
-
 document.getElementById("openCardsBtn").addEventListener("click", function openCardsBtn() {
 	
 });
