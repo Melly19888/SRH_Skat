@@ -415,8 +415,8 @@ dialog[open]::backdrop{
     left: 38%;
   }
 
-  #grand {
-    background-color: rgb(133, 133, 133);
+  #nullover {
+    background-color: rgb(72, 72, 72);
     border: none;
     top: 36%;
     left: 34%;
@@ -429,8 +429,8 @@ dialog[open]::backdrop{
     left: 30%;
   }
 
-  #nullover {
-    background-color: rgb(72, 72, 72);
+  #grand {
+    background-color: rgb(133, 133, 133);
     border: none;
     top: 31.5%;
     left: 38%;

@@ -70,7 +70,6 @@ const cardWerte = new Map([
         ]);
 const playerRoles = ["Vorhand", "Mittelhand", "Hinterhand"];
 
-
 let currentPlayerIndex = 0;
 let stichCount = 0; // Zähler für die Anzahl der bewerteten Stiche		
 let gameState = {
@@ -95,18 +94,21 @@ let player1 = {id: 0,
     ausgewaehlt: [],
     stich: [],
 	name: "",
-	role: "Vorhand" };
+	role: "Vorhand",
+	 points: 0};
 let player2 = {id: 1,
     cards: [],
     ausgewaehlt: [],
     stich: [], name: "",
-	role: "Mittelhand" };
+	role: "Mittelhand",
+	points: 0};
 let player3 = {id: 2,
     cards: [],
     ausgewaehlt: [],
     stich: [], 
 	name: "",
-	role: "Hinterhand" };
+	role: "Hinterhand",
+ points: 0};
 let aktiverSpielwert = -1;
 // Aktueller Spieler und Flagge für Spielerrollenwahl
 let currentPlayer = "Vorhand";
@@ -118,6 +120,10 @@ let NamePlay = "Vorhand";
 let canClickFieldForStock = false; // Für "stockDrueckenBtn"
 let canClickFieldForNextPlayer = false; // Für "nextPlayerBtn"
 let playerCards = player1.cards; // Ersetze dies durch die tatsächlichen Karten des Spielers.
+
+player1.points = parseInt(player1Points.value);
+player2.points = parseInt(player2Points.value);
+player3.points = parseInt(player3Points.value);
 
 player1Points.addEventListener('change', function () {
     player2Points.value = this.value;
@@ -178,6 +184,7 @@ window.onload = function () {
     document.getElementById("player2Name").value = "";
     document.getElementById("player3Name").value = "";
 };
+
 
 // Funktion zum Berechnen des Multiplikators für Grand
 function calcMultiplierForGrand(playerCards) {
@@ -365,14 +372,9 @@ function showPlayerRoles() {
 
     ctxSecondary.fillText(textToShow, xPosition, yPosition);
 
-    // Zeige oder verstecke Buttons basierend auf dem aktuellen Zustand des Spiels
-    updateButtonDisplay();
+    
 }
 // Diese Funktion könnte existieren oder muss entsprechend Ihrer Logik implementiert werden.
-function updateButtonDisplay() {
-   // Implementierung abhängig von Ihrem Spielzustand.
-   // Zum Beispiel könnten Sie hier entscheiden, welche Buttons angezeigt oder versteckt werden sollen.
-}
 function drawPlayerRoles() {
     const innerCanvas = document.getElementById("innerCanvas");
     const ctxInner = innerCanvas.getContext("2d");
@@ -528,6 +530,7 @@ function loadHighestBidderCards() {
 
     // Verstecke den confirmGameBtn nach dem Laden der Karten und Anzeigen der Optionen
     document.getElementById("confirmGameBtn").style.display = "none";
+	
 }
 // Hilfsfunktion zum Anzeigen der Spieloptionen-Buttons
 function showGameOptions() {
@@ -598,13 +601,19 @@ function resetGame() {
 }
 // Hilfsfunktion zum Aktualisieren des UIs nach dem Zurücksetzen des Spiels
 function updateUI() {
-    // Aktualisiere Punktestände, Namen und andere UI-Elemente hier...
+    // Stellen Sie sicher, dass die Elemente existieren
+    const player1PointsDisplay = document.getElementById("player1PointsDisplay");
+    const player2PointsDisplay = document.getElementById("player2PointsDisplay");
+    const player3PointsDisplay = document.getElementById("player3PointsDisplay");
 
-    // Beispiel: Setze Punktestände auf Anfangswerte zurück
-    player1Points.value = '0';
-    player2Points.value = '0';
-    player3Points.value = '0';
-    // ... Weitere UI-Aktualisierungen ...
+    if (player1PointsDisplay && player2PointsDisplay && player3PointsDisplay) {
+        // Aktualisiere Punktestände nur, wenn die Elemente vorhanden sind
+        player1PointsDisplay.textContent = `Punkte Spieler 1: ${player1.points}`;
+        player2PointsDisplay.textContent = `Punkte Spieler 2: ${player2.points}`;
+        player3PointsDisplay.textContent = `Punkte Spieler 3: ${player3.points}`;
+    } else {
+        
+    }
 }
 // Funktion zum Löschen der Karten von Player4 aus der Mitte des Canvas
 function clearMiddleCards() {
@@ -811,28 +820,33 @@ function calcWertPunkte(cards, spielwert, istGewonnen, istSchneider, istSchwarz)
 	}
 }
 function werteSpielAus() {
-   
-
-    // Hat Spieler oder haben die Gegner gewonnen?
+    // Berechne die Gesamtpunktzahl des Alleinspielers
     let ergebnisReizGewinner = calcCardValues(getPlayer(highestBidder.id).stich);
-   
 
     // Überprüfe auf Schwarz
     let istSchwarz = getPlayer(highestBidder.id).stich.length === 0 ||
                      (getNextPlayer(getPlayer(highestBidder.id)).stich.length === 0 &&
                       getNextPlayer(getNextPlayer(getPlayer(highestBidder.id))).stich.length === 0);
 
-    // Punkte der Runde errechnen und beim aktiven Spieler addieren oder bei Niederlage abziehen
-    let wertPunkte = calcWertPunkte(
-        highestBidder.card,
-        aktiverSpielwert, // welche Trumpf
-        ergebnisReizGewinner > 60, // hat gewonnen
-        ergebnisReizGewinner <= 30 || ergebnisReizGewinner >= 90, // schneider
-        istSchwarz,
-        isHandGame
-    );
-	// Falls die Punkte 0 oder negativ werden, ist das Spiel komplett vorbei
-	// ansonsten wieder zum Reizen übergehen
+    // Hat der Alleinspieler gewonnen?
+    let alleinspielerGewonnen = ergebnisReizGewinner > 60;
+
+    if (alleinspielerGewonnen) {
+        // Wenn der Alleinspieler gewonnen hat, ziehe 50 Punkte von den anderen Spielern ab
+        [player1, player2, player3].forEach(player => {
+            if (player.id !== highestBidder.id) {
+                player.points -= 50; // Ziehe Punkte ab
+            }
+        });
+    } else {
+        // Wenn der Alleinspieler verloren hat, ziehe 100 Punkte vom Alleinspieler ab
+        getPlayer(highestBidder.id).points -= 100;
+    }
+
+    // Aktualisiere die Anzeige der Punktestände
+    updateUI();
+
+    // Optional: Weitere Aktionen nach dem Auswerten des Spiels
 }
 function showCardsAndChooseReiz() {
     // Implementierung der Funktion hier
@@ -1158,7 +1172,7 @@ document.querySelectorAll('.ReihenfolgeButtons .Reihenfolge').forEach(button => 
         document.getElementById("kreuz").style.display = "none";
         document.getElementById("grand").style.display = "none";
         document.getElementById("null").style.display = "none";
-        document.getElementById("nullover").style.display = "none";
+        //document.getElementById("nullover").style.display = "none";
 
         isHandGame = false;
 
@@ -1521,8 +1535,7 @@ document.getElementById("player3Btn").addEventListener("click", () => {
 document.getElementById("SpielAusWertenBtn").addEventListener("click", function () {
 	document.getElementById("neuesSpielBtn").style.display = "block";
 	document.getElementById("SpielAusWertenBtn").style.display = "none";
-	
-	
+	werteSpielAus();
 });
 document.getElementById("neuesSpielBtn").addEventListener("click",  function neuesSpielBtn() {
 	rotatePlayers();
