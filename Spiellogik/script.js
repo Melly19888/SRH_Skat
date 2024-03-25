@@ -430,21 +430,6 @@ function displayText(textToShow) {
 
     ctxSecondary.fillText(textToShow, xPosition, yPosition);
 }
-// Funktion zum Anzeigen des Reizwerts auf dem dritten Canvas
-function displayBidValueOnThirdCanvas(bidValue) {
-    const thirdCanvas = document.getElementById("thirdCanvas");
-    const ctxThird = thirdCanvas.getContext('2d');
-    ctxThird.clearRect(0, 0, thirdCanvas.width, thirdCanvas.height); // Altes Canvas löschen
-    ctxThird.fillStyle = "black"; // Ändere die Farbe zu Schwarz
-    ctxThird.font = "bold 60px Arial"; // Wählen Sie die Schriftgröße und -art
-
-    const textToShow = bidValue.toString();
-    const textWidth = ctxThird.measureText(textToShow).width;
-    const xPosition = (thirdCanvas.width - textWidth) / 2;
-    const yPosition = (thirdCanvas.height / 2) + (60 / 2); // Vertikale Mitte plus halbe Schriftgröße
-
-    ctxThird.fillText(textToShow, xPosition, yPosition);
-}
 function updateCanvasSecondaryText(text) {
     ctxSecondary.clearRect(0, 0, canvasSecondary.width, canvasSecondary.height); // Altes Canvas löschen
     ctxSecondary.fillStyle = "red";
@@ -984,6 +969,35 @@ function endGame(losingPlayer) {
     // Hier könnten Sie zusätzliche Logik hinzufügen,
     // z.B. das Zurücksetzen des Spiels oder das Anzeigen von Endbildschirmen.
 }
+function displayHighestBidderOnThirdCanvas() {
+    const thirdCanvas = document.getElementById("thirdCanvas");
+    const ctxThird = thirdCanvas.getContext('2d');
+
+    // Löschen des Canvas vor dem Zeichnen
+    ctxThird.clearRect(0, 0, thirdCanvas.width, thirdCanvas.height);
+
+    // Setzen der Schriftart und Farbe für den Text
+    ctxThird.fillStyle = "Blue";
+    ctxThird.font = "bold 100px Arial";
+
+    // Berechnen der Position für das Reizgebot
+    const bidText = highestBidder.bid.toString();
+    const bidTextWidth = ctxThird.measureText(bidText).width;
+    const bidXPosition = (thirdCanvas.width - bidTextWidth) / 2;
+    const bidYPosition = thirdCanvas.height / 1/3; // Mittelpunkt des Canvas
+
+    // Zeichnen des Reizgebots
+    ctxThird.fillText(bidText, bidXPosition, bidYPosition);
+
+    // Berechnen der Position für den Namen des Höchstbietenden
+    const bidderName = highestBidder.name;
+    const nameTextWidth = ctxThird.measureText(bidderName).width;
+    const nameXPosition = (thirdCanvas.width - nameTextWidth) / 2;
+    const nameYPosition = bidYPosition + 300; // Etwas unterhalb des Reizgebots
+
+    // Zeichnen des Namens des Höchstbietenden
+    ctxThird.fillText(bidderName, nameXPosition, nameYPosition);
+}
 // Beispiel: Aufruf der Funktion checkIfPlayerLost nach dem Aktualisieren der Punkte
 function updatePointsAndCheckForLoss() {
     // ... (Ihre Logik zum Aktualisieren der Punkte)
@@ -1052,7 +1066,8 @@ function spielerwechsel(){
         document.getElementById("reizwerteMnu").style.display = "none";
         document.getElementById("leftGameBtn").style.display = "none";
         document.getElementById("confirmGameBtn").style.display = "none";
-        updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`); // Zeige Gewinner und Gebot an
+        updateCanvasSecondaryText(`${highestBidder.name}: ${highestBidder.bid}`);
+		// Zeige Gewinner und Gebot an
     }
 
     
@@ -1074,6 +1089,7 @@ function spielerwechsel(){
 }
 document.getElementById("confirmGameBtn").addEventListener("click", function () {
 	spielerwechsel();
+	displayHighestBidderOnThirdCanvas();
    
 	
 console.log(highestBidder);
@@ -1112,7 +1128,7 @@ document.getElementById("leftGameBtn").addEventListener("click", function () {
 		highestBidder.cards = getPlayer(currentBidderIndex).cards.concat(skatcards) ;
         gameState.currentPlayerIndex = currentBidderIndex;
 
-        displayBidValueOnThirdCanvas(selectedReizValue);
+
         passCount = 0; // Setze den Pass-Zähler zurück, da ein gültiges Gebot abgegeben wurde
     }
 
